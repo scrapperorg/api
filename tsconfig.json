@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@controllers": ["app/controllers"],
+      "@controllers/*": ["app/controllers/*"],
+      "@services": ["app/services"],
+      "@services/*": ["app/services/*"],
+      "@domain": ["domain/"],
+      "@domain/*": ["domain/*"],
+      "@repos": ["domain/repos"],
+      "@repos/*": ["domain/repos/*"],
+    }
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"],
+}

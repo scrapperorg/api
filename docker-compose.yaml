@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=$MIKRO_ORM_USER
+      - POSTGRES_PASSWORD=$MIKRO_ORM_PASSWORD
+      - POSTGRES_DB=$MIKRO_ORM_DB_NAME
+    volumes:
+      - postgres-volume:/var/lib/postresql/data
+
+  screening-server:
+    build:
+      context: ./
+      target: development
+    ports:
+      - 3000:3000
+    environment:
+      - MIKRO_ORM_HOST=host.docker.internal
+    depends_on:
+      - "postgres"
+    env_file:
+      - .env
+    volumes:
+      - ./src:/home/anap-screening-server/src
+    command: nodemon -L
+
+volumes:
+  postgres-volume:
