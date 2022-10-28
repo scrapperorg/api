@@ -1,10 +1,9 @@
 
 import { UserMap } from 'app/mappers/User.map';
-import { UserRepository } from 'persistence/User';
-import { IUserDTO } from '../../domain/User'
+import { IUserDTO, IUserRepository } from '../../domain/User'
 
 export class UserService {
-  constructor(private repository: UserRepository, private userMap: UserMap) {}
+  constructor(private repository: IUserRepository, private userMap: UserMap) {}
   async getAll(): Promise<IUserDTO[]> {
     const users = await this.repository.getAll()
     return users.map(u => this.userMap.toDTO(u))
