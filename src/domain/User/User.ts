@@ -5,20 +5,30 @@ export enum Role {
   GU = 'GU' // Generic User
 }
 
-export interface IUser {
-  id: string;
-  name: string;
-  surname: string;
-  role: Role;
+export interface IUserProps {
+  id: string
+  name: string
+  surname: string
+  role: string
 }
 
-export class User implements IUser {
-  constructor(
-    public id: string,
-    public name: string,
-    public surname: string,
-    public role: Role,
+export class User{
+  name: string
+  id: string
+  surname: string
+  role: string
+  private constructor(
+    props: IUserProps
   ) {
-    //
+    this.name = props.name
+    this.id = props.id ?? 'random generated string'
+    this.surname = props.surname
+    this.role = props.role
   }
+  
+  public static create(props: IUserProps) {
+    //validate if necessary
+    return new User(props)
+  }
+
 }

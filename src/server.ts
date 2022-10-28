@@ -1,3 +1,4 @@
+import { UserMap } from './app/mappers/User.map';
 import { UserRepository } from './persistence/User';
 import 'reflect-metadata'
 import express from 'express'
@@ -14,8 +15,9 @@ const port = process.env.PORT ?? 3000;
 export const init = (async () => {
   const orm = await MikroORM.init();
 
-  const userRepository = new UserRepository(orm)
-  const userService = new UserService(userRepository)
+  const userMapper = new UserMap()
+  const userRepository = new UserRepository(orm, userMapper)
+  const userService = new UserService(userRepository, userMapper)
   const userController = new UserController(userService).router
 
   app.use(express.json());
