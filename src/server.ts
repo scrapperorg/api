@@ -1,11 +1,12 @@
-import { UserMap } from './app/mappers/User.map';
-import { UserRepository } from './persistence/User';
 import 'reflect-metadata'
 import express from 'express'
 import * as dotenv from 'dotenv'
 import { MikroORM, RequestContext } from '@mikro-orm/core';
+import bodyParser from 'body-parser'
 import { UserController } from './app/controllers';
 import { UserService } from './app/services';
+import { UserMap } from './app/mappers/User.map';
+import { UserRepository } from './persistence/User';
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ export const init = (async () => {
   const userController = new UserController(userService).router
 
   app.use(express.json());
+  app.use(bodyParser.json())
   app.use((req, res, next) => RequestContext.create(orm.em, next));
   app.get('/', (req, res) => res.json({ message: 'Welcome to anap screening app!!' }));
   app.use('/user', userController);
