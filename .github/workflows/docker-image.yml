@@ -10,17 +10,21 @@ on:
 
 jobs:
   build:
-    name: builds image
+    name: builds and tests
     runs-on: ubuntu-latest
-    run: docker build --target testing -t anap-screening/server:latest .
-    # permissions:
-    #   contents: read
-    #   packages: write
+    permissions:
+      contents: read
+      packages: write
 
-    # steps:
-    #   - name: Checkout repository
-    #     uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      - name: Builds image
+        run: docker build --target testing -t anap-screening/server:latest .
+
+      - name: Runs tests
+        run: yarn test
     #   - name: Log in to the Container registry
     #     uses: docker/login-action@v2
     #     with:
@@ -43,6 +47,6 @@ jobs:
     #       tags: ${{ steps.meta.outputs.tags }}
     #       labels: ${{ steps.meta.outputs.labels }}
 
-  test:
-    name: run tests
-    run: yarn test
+  # test:
+  #   name: run tests
+  #   run: yarn test
