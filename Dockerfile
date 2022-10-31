@@ -4,12 +4,10 @@ COPY package.json yarn.lock tsconfig.json nodemon.json ./
 RUN npm install -g nodemon
 RUN yarn install
 
-FROM development as testing
+FROM development as build
 COPY src src
 COPY tests tests
-
-FROM tester AS compiling
 RUN yarn compile
 
 FROM node:19-alpine as production
-COPY --from=compiling dist dist
+COPY --from=build dist dist
