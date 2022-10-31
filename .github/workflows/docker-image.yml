@@ -52,7 +52,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/${{ github.repository }}:${{ needs.build.outputs.imagetags }}
+      image: ghcr.io/${{ needs.build.outputs.imagetags }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
