@@ -12,4 +12,4 @@ FROM tester AS compiling
 RUN yarn compile
 
 FROM node:19-alpine as production
-COPY --from=builder dist ./dist
+COPY --from=compiling dist dist
