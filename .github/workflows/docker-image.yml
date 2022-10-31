@@ -16,7 +16,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      imageid: ${{ steps.push.outputs.imageid }}
+      imagetags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -33,9 +33,10 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=pr
 
       - name: Build and push Docker image
-        id: push
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -51,7 +52,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/${{ github.repository }}:${{ needs.build.outputs.imageid }}
+      image: ghcr.io/${{ github.repository }}:${{ needs.build.outputs.imagetags[0] }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
