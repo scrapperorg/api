@@ -41,7 +41,6 @@ jobs:
           target: 'build'
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
   test:
     name: Tests
     runs-on: ubuntu-latest
