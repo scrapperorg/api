@@ -48,7 +48,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.numer }}
+      image: ghcr.io/${{ github.repository }}:pr-${{ github.event.numer }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
