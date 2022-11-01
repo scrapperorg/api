@@ -17,9 +17,6 @@ COPY src ./src
 COPY tests ./tests
 RUN yarn compile
 
-FROM build as dev
-RUN yarn start
-
 FROM base as production
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 COPY --from=dependencies /app/package.json ./package.json

@@ -5,21 +5,21 @@
   "license": "MIT",
   "scripts": {
     "compile": "rm -rf ./dist && tsc",
-    "start": "node dist/server",
-    "dev": "nodemon",
-    "dev:docker": "docker-compose --env-file .env up -d && docker-compose logs -f screening-server",
+    "start": "docker-compose --env-file .env up -d postgres && node dist/server",
+    "dev": "docker-compose --env-file .env up -d postgres && nodemon",
+    "dev:container": "docker-compose --env-file .env up -d && docker-compose logs -f screening-server",
     "test": "jest --env=node --colors",
     "lint": "eslint . --ext .ts",
-    "decrypt:env": "sops --decrypt .enc.env > .env",
+    "decrypt": "sops --decrypt .enc.env > .env",
     "migration:create": "npx mikro-orm migration:create",
     "migration:up": "npx mikro-orm migration:up",
     "migration:down": "npx mikro-orm migration:down",
     "migration:list": "npx mikro-orm migration:list",
     "migration:pending": "npx mikro-orm migration:pending",
     "migration:fresh": "npx mikro-orm migration:fresh",
-    "build:container": "docker build --target production -t anap-screening/server:latest .",
-    "start:cotainer": "docker run --env-file ./env --expose 3000:3000 anap-screening/server:latest",
-    "go:container": "yarn build:container && yarn start:container"
+    "container:build:prod": "docker build --target production -t anap-screening/server:prod .",
+    "container:start:prod": "docker run --env-file ./env --expose 3000:3000 anap-screening/server:prod",
+    "container:prod": "yarn container:build:prod && yarn container:start:prod"
   },
   "dependencies": {
     "@mikro-orm/cli": "^5.4.2",
