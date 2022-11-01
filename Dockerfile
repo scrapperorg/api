@@ -11,6 +11,8 @@ RUN yarn install --frozen-lockfile --production && \
     yarn cache clean
 
 FROM dependencies as build
+RUN rm -rf prod_node_modules
+RUN rm prod_yarn.lock
 COPY src ./src
 COPY tests ./tests
 RUN yarn compile
