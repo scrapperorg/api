@@ -58,5 +58,5 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Run test
-        working-directory: ./home/anap-screening-server
+        working-directory: /app
         run: yarn test
