@@ -8,5 +8,5 @@ module.exports = {
   testRegex: "(/tests/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   testPathIgnorePatterns: ["/lib/", "/node_modules/", "/tests/testServer.ts"],
   moduleFileExtensions: ["ts", "js", "json", "node"],
-  collectCoverage: true,
+  collectCoverage: false,
 };
