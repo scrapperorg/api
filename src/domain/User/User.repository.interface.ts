@@ -4,6 +4,11 @@ export interface IUserAPIDTO {
   name: string,
   surname: string,
   role: string,
+  email: string,
+}
+
+export interface IUserAPIincomingDTO extends IUserAPIDTO {
+  plainPassword: string,
 }
 
 export interface IUserPersistenceDTO {
@@ -11,6 +16,8 @@ export interface IUserPersistenceDTO {
   name: string,
   surname: string,
   role: string,
+  password: string,
+  email: string,
 }
 
 export interface IUserRepository {

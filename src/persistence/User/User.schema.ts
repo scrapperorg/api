@@ -7,6 +7,8 @@ export const UserSchema = new EntitySchema<User>({
     id: { type: 'string', primary: true },
     name: { type: 'string' },
     surname: { type: 'string' },
-    role: { type: 'string' }
+    role: { type: 'string' },
+    email: { type: 'string' },
+    password: { type: 'string' }
   }
 })

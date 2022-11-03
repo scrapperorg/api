@@ -10,13 +10,17 @@ export class UserTestRepository implements IUserRepository {
       id: '1',
       name: 'ion',
       surname: 'popescu',
-      role: 'LSE'
+      role: 'LSE',
+      email: 'ion@fundatiax.ro',
+      password: 'hashedpassowrd'
     },
     {
       id: '1',
       name: 'gheorghe',
       surname: 'ionescu',
-      role: 'LSS'
+      role: 'LSS',
+      email: 'gheorghe@fundatiax.ro',
+      password: 'hashedpassowrd'
     }
   ]
 

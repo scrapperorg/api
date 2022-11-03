@@ -1,6 +1,5 @@
 import { UserService } from "@services";
 import { Router, Request, Response } from "express";
-// import Router from 'express-promise-router'
 
 export class UserController {
   public router: Router = Router()
@@ -14,14 +13,18 @@ export class UserController {
       res.send(user)
     })
     this.router.post('/create', async (req: Request, res: Response) => {
-      const { name, surname, role } = req.body;
+      const { name, surname, role, password, email } = req.body;
       const users = await this.userService.create({
         name,
         surname,
-        role, 
+        role,
+        email,
+        plainPassword: password
       })
       res.send(users)
     })
+    this.router.post('/recover-password', async (req:Request, res: Response) => { return })
+    this.router.post('/reset-password', async (req:Request, res: Response) => { return })
   }
 }
 
