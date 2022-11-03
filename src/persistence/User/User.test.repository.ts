@@ -1,10 +1,10 @@
 import { UserMap } from './../../app/mappers/User.map';
-import { IUserDTO } from './../../domain/User/User.repository.interface';
+import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 import { User, IUserRepository } from '../../domain/User';
 
 export class UserTestRepository implements IUserRepository {
   constructor(private readonly userMap: UserMap) {}
-  private dummyUsers: Array<IUserDTO> = 
+  private dummyUsers: Array<IUserPersistenceDTO> = 
   [
     {
       id: '1',
@@ -24,7 +24,7 @@ export class UserTestRepository implements IUserRepository {
     const users = this.dummyUsers
     return users.map(user => this.userMap.toDomain(user))
   }
-  async save(user: IUserDTO): Promise<boolean|Error> {
+  async save(user: IUserPersistenceDTO): Promise<boolean|Error> {
     return Promise.resolve(true)
   }
 
