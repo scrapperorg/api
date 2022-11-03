@@ -10,6 +10,8 @@ export interface IUserProps {
   name: string
   surname: string
   role: string
+  password: string,
+  email: string,
 }
 
 export class User{
@@ -17,6 +19,8 @@ export class User{
   id: string
   surname: string
   role: string
+  email: string
+  password: string
   private constructor(
     props: IUserProps
   ) {
@@ -24,6 +28,8 @@ export class User{
     this.id = props.id ?? 'random generated string'
     this.surname = props.surname
     this.role = props.role
+    this.email = props.email
+    this.password = props.password
   }
   
   public static create(props: IUserProps) {
