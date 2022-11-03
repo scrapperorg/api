@@ -6,7 +6,7 @@ export enum Role {
 }
 
 export interface IUserProps {
-  id: string
+  id?: string
   name: string
   surname: string
   role: string
