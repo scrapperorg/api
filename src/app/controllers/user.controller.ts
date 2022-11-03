@@ -23,8 +23,27 @@ export class UserController {
       })
       res.send(users)
     })
-    this.router.post('/recover-password', async (req:Request, res: Response) => { return })
-    this.router.post('/reset-password', async (req:Request, res: Response) => { return })
+    this.router.post('/recover-password', async (req:Request, res: Response) => { 
+      const { email } = req.body
+      // get user
+      // create reset password token for user with expiration
+      // send email with url containint reset-password-token
+      return 
+     })
+    this.router.get('/validate-reset-password-token/:token', async (req: Request, rest: Response) => {
+      const token = req.params.token
+      // get reset password token
+      // check if expiry date pasted
+      // if not exists or expired return 400
+      // else return 200
+    })
+    this.router.post('/reset-password', async (req:Request, res: Response) => { 
+      const { token, password } = req.body // plain password
+      // get user by token
+      // hash new password
+      // update user with hashed password
+      return 
+     })
   }
 }
 
