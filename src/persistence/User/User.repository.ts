@@ -16,12 +16,10 @@ export class UserRepository implements IUserRepository {
     return users.map(u => this.userMap.toDomain(u))
   }
   async save(userDTO: IUserPersistenceDTO): Promise<boolean|Error> {
-    return new Promise((resolve, reject) => {
-      const user = this.userEM.create(userDTO)
-      this.userEM.persistAndFlush(user)
-        .then(() => resolve(true))
-        .catch(err => reject(new Error(err)))
-    })
+    const user = this.userEM.create(userDTO)
+    return this.userEM.persistAndFlush(user)
+        .then(() => true)
+        .catch(err => new Error(err))
   }
 
   async getById(id: string): Promise<User|null> {

@@ -23,5 +23,5 @@ export interface IUserPersistenceDTO {
 export interface IUserRepository {
   getAll(): Promise<User[]>
   save(userProps: IUserPersistenceDTO): Promise<boolean|Error>
-  getById(id: string): Promise<User|null>
+  getById(id: string): Promise<IUserPersistenceDTO|null>
 }

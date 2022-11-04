@@ -6,12 +6,12 @@ export enum Role {
 }
 
 export interface IUserProps {
-  id?: string
-  name: string
-  surname: string
-  role: string
-  password: string,
-  email: string,
+  id?: string;
+  name: string;
+  surname: string;
+  role: string;
+  password: string;
+  email: string;
 }
 
 export class User{

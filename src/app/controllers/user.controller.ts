@@ -1,9 +1,12 @@
-import { UserService } from "@services";
+import { UserService, ResetPasswordService } from './../services';
 import { Router, Request, Response } from "express";
 
 export class UserController {
   public router: Router = Router()
-  constructor(private userService: UserService) {
+  constructor(
+    private readonly userService: UserService,
+    private readonly resetPasswordService: ResetPasswordService
+  ) {
     this.router.get('/', async (req: Request, res: Response) => {
       const users = await this.userService.getAll()
       res.send(users)
@@ -23,8 +26,21 @@ export class UserController {
       })
       res.send(users)
     })
-    this.router.post('/recover-password', async (req:Request, res: Response) => { return })
-    this.router.post('/reset-password', async (req:Request, res: Response) => { return })
+    this.router.post('/recover-password', async (req:Request, res: Response) => { 
+      const { email } = req.body
+      this.resetPasswordService.generateResetPasswordToken(email)
+      res.send('insert response')
+    })
+    this.router.get('/validate-reset-password-token/:token', async (req: Request, res: Response) => {
+      const token = req.params.token
+      this.resetPasswordService.validateResetPasswordToken()
+      res.send('insert response')
+    })
+    this.router.post('/reset-password', async (req:Request, res: Response) => { 
+      const { token, password } = req.body // plain password
+      this.resetPasswordService.resetUserPassword()
+      res.send('insert response')
+    })
   }
 }
 
