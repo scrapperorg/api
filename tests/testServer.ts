@@ -1,7 +1,7 @@
 import express, { Application } from 'express'
 import bodyParser from 'body-parser'
 import { UserMap } from '../src/app/mappers/User.map'
-import { UserTestRepository } from '../src/persistence/User/User.repository.mock'
+import { UserMockRepository } from '../src/persistence/User/User.repository.mock'
 import { ResetPasswordService, UserService } from '../src/app/services'
 import { ResetPasswordTokenMap } from '../src/app/mappers/ResetPasswordToken.map'
 import { ResetPasswordTokenTestRepository } from '../src/persistence/ResetPasswordToken/ResetPasswordToken.test.repository'
@@ -9,7 +9,7 @@ import { EmailService } from '../src/app/services/Email.service'
 import { UserController } from '../src/app/controllers'
 
 const userMapper = new UserMap()
-const userRepository = new UserTestRepository(userMapper)
+const userRepository = new UserMockRepository(userMapper)
 const userService = new UserService(userRepository, userMapper)
 const resetPasswordTokenMapper = new ResetPasswordTokenMap()
 const resetPasswordTokenRepository = new ResetPasswordTokenTestRepository(resetPasswordTokenMapper)

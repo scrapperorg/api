@@ -1,10 +1,14 @@
+import { TYPES } from './../../server/types/index';
 import { UserService, ResetPasswordService } from './../services';
 import { Router, Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
 
+@injectable()
 export class UserController {
   public router: Router = Router();
   constructor(
-    private readonly userService: UserService,
+    @inject(TYPES.USER_SERVICE) private readonly userService: UserService,
+    @inject(TYPES.RESET_PASSWORD_SERVICE)
     private readonly resetPasswordService: ResetPasswordService,
   ) {
     this.router.get('/', async (req: Request, res: Response) => {

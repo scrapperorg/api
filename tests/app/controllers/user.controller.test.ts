@@ -3,13 +3,6 @@ import { IUserRepository } from '../../../src/domain/User'
 import { app } from '../../testServer'
 
 describe('User controller test', () => {
-  test('root path should return welcome message', async () => {
-    const result = await request(app).get('/')
-    const resultJSON = JSON.parse(result.text)
-    expect(resultJSON).toHaveProperty('message')
-    expect(resultJSON.message).toBe('Welcome to anap screening app!!')
-  })
-
   test('/user/ should return all users', async () => {
     const response = await request(app)
       .get('/user')

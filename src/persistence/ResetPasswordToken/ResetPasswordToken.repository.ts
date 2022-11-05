@@ -1,15 +1,19 @@
+import { inject, injectable } from 'inversify';
+import { EntityRepository, MikroORM } from '@mikro-orm/core';
+import { TYPES } from './../../server/types/index';
 import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
 import { ResetPasswordTokenSchema } from './ResetPasswordToken.schema';
-import { EntityRepository, MikroORM } from '@mikro-orm/core';
 import {
   IResetPasswordTokenRepository,
   IResetPasswordTokenPersistenceDTO,
 } from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
 
+@injectable()
 export class ResetPasswordTokenRepository implements IResetPasswordTokenRepository {
   private rptEM: EntityRepository<IResetPasswordTokenPersistenceDTO>;
   constructor(
-    private readonly orm: MikroORM,
+    @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
+    @inject(TYPES.RESET_PASSWORD_TOKEN_MAP)
     private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
   ) {
     const em = this.orm.em.fork();

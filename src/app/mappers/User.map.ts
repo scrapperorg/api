@@ -1,6 +1,8 @@
+import { injectable } from 'inversify';
 import { User } from '../../domain/User';
 import { IUserAPIDTO, IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 
+@injectable()
 export class UserMap {
   toDomain(user: IUserPersistenceDTO): User {
     return User.create(user);

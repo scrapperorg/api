@@ -1,9 +1,11 @@
+import { injectable } from 'inversify';
 import {
   IResetPasswordTokenPersistenceDTO,
   ResetPasswordToken,
   IResetPasswordTokenAPIDTO,
 } from './../../domain/ResetPasswordToken';
 
+@injectable()
 export class ResetPasswordTokenMap {
   toPersistence(resetPasswordToken: ResetPasswordToken): IResetPasswordTokenPersistenceDTO {
     return {
