@@ -27,7 +27,8 @@ const userRouter = new UserController(userService, resetPasswordService).router
 export const app: Application = express();
 app.use(express.json());
 app.use(bodyParser.json())
-app.set('userRepo', userRepository)
+app.set('repositories', {userRepository, resetPasswordTokenRepository})
+app.set('services', {userService, resetPasswordService})
 app.get('/', (req, res) => res.json({ message: 'Welcome to anap screening app!!' }));
 app.use('/user', userRouter);
 app.use((req, res) => res.status(404).json({ message: 'No route found' }));

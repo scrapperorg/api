@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "rm -rf ./dist && tsc",
     "start": "docker-compose --env-file .env up -d postgres && yarn migration:up && yarn compile && node dist/server",
-    "dev": "docker-compose --env-file .env up -d postgres && yarn migration:up && nodemon",
+    "dev": "docker-compose --env-file .env up -d postgres && yarn migration:up && yarn compile && nodemon",
     "dev:container": "docker-compose --env-file .env up -d && docker-compose logs -f screening-server",
     "test": "jest --env=node --colors",
     "lint": "eslint . --ext .ts",
