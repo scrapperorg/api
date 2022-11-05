@@ -1,2 +1,2 @@
-export * from './User.service'
-export * from './ResetPassword.service'
+export * from './User.service';
+export * from './ResetPassword.service';

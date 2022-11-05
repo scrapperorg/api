@@ -3,7 +3,7 @@ import { IUserAPIDTO, IUserPersistenceDTO } from './../../domain/User/User.repos
 
 export class UserMap {
   toDomain(user: IUserPersistenceDTO): User {
-    return User.create(user)
+    return User.create(user);
   }
   toPersistence(user: User): IUserPersistenceDTO {
     return {
@@ -13,14 +13,14 @@ export class UserMap {
       role: user.role,
       password: user.password,
       email: user.email,
-    }
+    };
   }
   toDTO(user: User): IUserAPIDTO {
     return {
       name: user.name,
       surname: user.surname,
       role: user.role,
-      email: user.email
-    }
+      email: user.email,
+    };
   }
 }

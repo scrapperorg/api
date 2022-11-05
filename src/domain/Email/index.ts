@@ -1,2 +1,2 @@
-export * from './Email'
-export * from './ForgotPassword.email'
+export * from './Email';
+export * from './ForgotPassword.email';

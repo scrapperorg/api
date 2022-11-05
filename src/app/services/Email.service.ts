@@ -1,7 +1,7 @@
-import { Email } from "../../domain/Email";
+import { Email } from '../../domain/Email';
 
 export class EmailService {
   send(email: Email): void {
-    console.log({params: email.properties})
+    console.log({ params: email.properties });
   }
 }

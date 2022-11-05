@@ -7,6 +7,6 @@ export const ResetPasswordTokenSchema = new EntitySchema<IResetPasswordTokenPers
     id: { type: 'string', primary: true },
     user: { reference: 'm:1', entity: 'User' },
     token: { type: 'string' },
-    expirationDate: { type: 'Date' }
-  }
-})
+    expirationDate: { type: 'Date' },
+  },
+});

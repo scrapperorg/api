@@ -12,31 +12,31 @@ export class ResetPasswordService {
     private readonly resetPasswordTokenRepository: IResetPasswordTokenRepository,
     private readonly userMap: UserMap,
     private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
   ) {}
 
   async generateResetPasswordToken(userEmail: string) {
-    const user = await this.userRepository.getByEmail(userEmail)
-    if (!user) return null
-    const id = v4()
-    const token = v4()
-    const expirationDate = new Date()
-    expirationDate.setDate(expirationDate.getDate()+1)
+    const user = await this.userRepository.getByEmail(userEmail);
+    if (!user) return null;
+    const id = v4();
+    const token = v4();
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 1);
     this.resetPasswordTokenRepository.save({
       id,
       userId: user.id,
       expirationDate,
       token,
-    })
+    });
     const email = ForgotPasswordEmail.create({
       from: '',
       to: '',
       title: 'forgot password',
       params: {
-        token
-      }
-    })
-    this.emailService.send(email)
+        token,
+      },
+    });
+    this.emailService.send(email);
   }
 
   async validateResetPasswordToken() {

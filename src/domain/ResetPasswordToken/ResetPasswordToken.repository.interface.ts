@@ -11,6 +11,6 @@ export interface IResetPasswordTokenPersistenceDTO {
 }
 
 export interface IResetPasswordTokenRepository {
-  save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean|Error>
-  getAllByUserId(userId: string): Promise<IResetPasswordTokenPersistenceDTO[]|null>
+  save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error>;
+  getAllByUserId(userId: string): Promise<IResetPasswordTokenPersistenceDTO[] | null>;
 }
