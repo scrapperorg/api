@@ -2,7 +2,7 @@ FROM node:19-alpine AS base
 WORKDIR /app
 
 FROM base as dependencies
-COPY package.json yarn.lock tsconfig.json nodemon.json jest.config.js .eslintrc .eslintignore ./
+COPY package.json yarn.lock tsconfig.json nodemon.json jest.config.js .eslintrc .eslintignore .prettierrc ./
 RUN npm install -g nodemon
 RUN yarn install --frozen-lockfile --production && \
     cp yarn.lock prod_yarn.lock && \
