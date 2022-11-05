@@ -1,7 +1,7 @@
+import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 import { EntitySchema } from '@mikro-orm/core';
-import { User } from '../../domain/User'
 
-export const UserSchema = new EntitySchema<User>({
+export const UserSchema = new EntitySchema<IUserPersistenceDTO>({
   name: 'User',
   properties: {
     id: { type: 'string', primary: true },

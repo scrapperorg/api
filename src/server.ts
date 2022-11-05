@@ -1,3 +1,7 @@
+import { EmailService } from './app/services/Email.service';
+import { ResetPasswordService } from './app/services/ResetPassword.service';
+import { ResetPasswordTokenRepository } from './persistence/ResetPasswordToken/ResetPasswordToken.repository';
+import { ResetPasswordTokenMap } from './app/mappers/ResetPasswordToken.map';
 import 'reflect-metadata'
 import express from 'express'
 import * as dotenv from 'dotenv'
@@ -19,7 +23,18 @@ export const init = (async () => {
   const userMapper = new UserMap()
   const userRepository = new UserRepository(orm, userMapper)
   const userService = new UserService(userRepository, userMapper)
-  const userController = new UserController(userService).router
+
+  const resetPasswordTokenMapper = new ResetPasswordTokenMap()
+  const resetPasswordTokenRepository = new ResetPasswordTokenRepository(orm, resetPasswordTokenMapper)
+  const emailService = new EmailService()
+  const resetPasswordService = new ResetPasswordService(
+    userRepository,
+    resetPasswordTokenRepository,
+    userMapper,
+    resetPasswordTokenMapper,
+    emailService
+  )
+  const userController = new UserController(userService, resetPasswordService).router
 
   app.use(express.json());
   app.use(bodyParser.json())
