@@ -24,7 +24,13 @@ export class UserRepository implements IUserRepository {
 
   async getById(id: string): Promise<User|null> {
     const user = await this.userEM.findOne({ id })
-    if (!user) return user
+    if (!user) return null
+    return this.userMap.toDomain(user)
+  }
+
+  async getByEmail(email: string): Promise<IUserPersistenceDTO | null> {
+    const user = await this.userEM.findOne({ email })
+    if (!user) return null
     return this.userMap.toDomain(user)
   }
   

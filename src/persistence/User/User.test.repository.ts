@@ -25,8 +25,7 @@ export class UserTestRepository implements IUserRepository {
   ]
 
   async getAll() {
-    const users = this.dummyUsers
-    return users.map(user => this.userMap.toDomain(user))
+    return this.dummyUsers.map(user => this.userMap.toDomain(user))
   }
   async save(user: IUserPersistenceDTO): Promise<boolean|Error> {
     return Promise.resolve(true)
@@ -34,6 +33,12 @@ export class UserTestRepository implements IUserRepository {
 
   async getById(id: string): Promise<User|null> {
     const user =  this.dummyUsers.find(u => u.id === id)
+    if (!user) return null
+    return this.userMap.toDomain(user)
+  }
+
+  async getByEmail(email: string): Promise<IUserPersistenceDTO | null> {
+    const user =  this.dummyUsers.find(u => u.email === email)
     if (!user) return null
     return this.userMap.toDomain(user)
   }

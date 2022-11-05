@@ -10,7 +10,7 @@ export interface IResetPasswordTokenPersistenceDTO {
   expirationDate: Date;
 }
 
-export interface IResetPasswordTokenReepository {
+export interface IResetPasswordTokenRepository {
   save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean|Error>
   getAllByUserId(userId: string): Promise<IResetPasswordTokenPersistenceDTO[]|null>
 }

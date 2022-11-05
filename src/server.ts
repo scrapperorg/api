@@ -1,3 +1,4 @@
+import { EmailService } from './app/services/Email.service';
 import { ResetPasswordService } from './app/services/ResetPassword.service';
 import { ResetPasswordTokenRepository } from './persistence/ResetPasswordToken/ResetPasswordToken.repository';
 import { ResetPasswordTokenMap } from './app/mappers/ResetPasswordToken.map';
@@ -25,11 +26,13 @@ export const init = (async () => {
 
   const resetPasswordTokenMapper = new ResetPasswordTokenMap()
   const resetPasswordTokenRepository = new ResetPasswordTokenRepository(orm, resetPasswordTokenMapper)
+  const emailService = new EmailService()
   const resetPasswordService = new ResetPasswordService(
     userRepository,
     resetPasswordTokenRepository,
     userMapper,
-    resetPasswordTokenMapper
+    resetPasswordTokenMapper,
+    emailService
   )
   const userController = new UserController(userService, resetPasswordService).router
 

@@ -1,9 +1,9 @@
 import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
 import { ResetPasswordTokenSchema } from './ResetPasswordToken.schema';
 import { EntityRepository, MikroORM } from '@mikro-orm/core';
-import { IResetPasswordTokenReepository, IResetPasswordTokenPersistenceDTO } from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
+import { IResetPasswordTokenRepository, IResetPasswordTokenPersistenceDTO } from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
 
-export class ResetPasswordTokenRepository implements IResetPasswordTokenReepository {
+export class ResetPasswordTokenRepository implements IResetPasswordTokenRepository {
   private rptEM: EntityRepository<IResetPasswordTokenPersistenceDTO>
   constructor(private readonly orm: MikroORM, private readonly resetPasswordTokenMap: ResetPasswordTokenMap) {
     const em = this.orm.em.fork()
