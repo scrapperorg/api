@@ -1,2 +1,2 @@
-export * from './ResetPasswordToken'
-export * from './ResetPasswordToken.repository.interface'
+export * from './ResetPasswordToken';
+export * from './ResetPasswordToken.repository.interface';

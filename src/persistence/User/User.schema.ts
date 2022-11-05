@@ -9,6 +9,6 @@ export const UserSchema = new EntitySchema<IUserPersistenceDTO>({
     surname: { type: 'string' },
     role: { type: 'string' },
     email: { type: 'string' },
-    password: { type: 'string' }
-  }
-})
+    password: { type: 'string' },
+  },
+});

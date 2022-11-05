@@ -1,7 +1,7 @@
 import {
   IResetPasswordTokenPersistenceDTO,
   ResetPasswordToken,
-  IResetPasswordTokenAPIDTO
+  IResetPasswordTokenAPIDTO,
 } from './../../domain/ResetPasswordToken';
 
 export class ResetPasswordTokenMap {
@@ -10,16 +10,16 @@ export class ResetPasswordTokenMap {
       id: resetPasswordToken.id,
       userId: resetPasswordToken.userId,
       token: resetPasswordToken.token,
-      expirationDate: resetPasswordToken.expirationDate
-    }
+      expirationDate: resetPasswordToken.expirationDate,
+    };
   }
   persistenceToDomain(resetPasswordToken: IResetPasswordTokenPersistenceDTO): ResetPasswordToken {
-    return ResetPasswordToken.create(resetPasswordToken)
+    return ResetPasswordToken.create(resetPasswordToken);
   }
-  toDTO(resetPasswordToken: ResetPasswordToken): IResetPasswordTokenAPIDTO{
+  toDTO(resetPasswordToken: ResetPasswordToken): IResetPasswordTokenAPIDTO {
     return {
       userId: resetPasswordToken.userId,
-      token: resetPasswordToken.token
-    }
+      token: resetPasswordToken.token,
+    };
   }
 }

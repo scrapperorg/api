@@ -6,32 +6,32 @@ import { User, IUserRepository } from '../../domain/User';
 import { MikroORM, EntityRepository } from '@mikro-orm/core';
 
 export class UserRepository implements IUserRepository {
-  private userEM: EntityRepository<IUserPersistenceDTO>
+  private userEM: EntityRepository<IUserPersistenceDTO>;
   constructor(private readonly orm: MikroORM, private readonly userMap: UserMap) {
-    const em = this.orm.em.fork()
-    this.userEM = em.getRepository(UserSchema)
+    const em = this.orm.em.fork();
+    this.userEM = em.getRepository(UserSchema);
   }
   async getAll() {
-    const users = await this.userEM.findAll()
-    return users.map(u => this.userMap.toDomain(u))
+    const users = await this.userEM.findAll();
+    return users.map((u) => this.userMap.toDomain(u));
   }
-  async save(userDTO: IUserPersistenceDTO): Promise<boolean|Error> {
-    const user = this.userEM.create(userDTO)
-    return this.userEM.persistAndFlush(user)
-        .then(() => true)
-        .catch(err => new Error(err))
+  async save(userDTO: IUserPersistenceDTO): Promise<boolean | Error> {
+    const user = this.userEM.create(userDTO);
+    return this.userEM
+      .persistAndFlush(user)
+      .then(() => true)
+      .catch((err) => new Error(err));
   }
 
-  async getById(id: string): Promise<User|null> {
-    const user = await this.userEM.findOne({ id })
-    if (!user) return null
-    return this.userMap.toDomain(user)
+  async getById(id: string): Promise<User | null> {
+    const user = await this.userEM.findOne({ id });
+    if (!user) return null;
+    return this.userMap.toDomain(user);
   }
 
   async getByEmail(email: string): Promise<IUserPersistenceDTO | null> {
-    const user = await this.userEM.findOne({ email })
-    if (!user) return null
-    return this.userMap.toDomain(user)
+    const user = await this.userEM.findOne({ email });
+    if (!user) return null;
+    return this.userMap.toDomain(user);
   }
-  
 }
