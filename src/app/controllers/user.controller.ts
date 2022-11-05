@@ -17,14 +17,16 @@ export class UserController {
     })
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
-      const users = await this.userService.create({
+      console.log(name)
+      const result = await this.userService.create({
         name,
         surname,
         role,
         email,
         plainPassword: password
       })
-      res.send(users)
+      if ( result === true ) return res.send(200)
+      return res.status(500).send(result)
     })
     this.router.post('/recover-password', async (req:Request, res: Response) => { 
       const { email } = req.body
