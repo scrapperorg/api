@@ -15,6 +15,7 @@ import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from './../../persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from './../../persistence/ResetPasswordToken/ResetPasswordToken.test.repository';
+import { EncryptionService } from '../../app/services/Encryption.service';
 
 export class DiContainer {
   private diContainer: Container;
@@ -59,6 +60,8 @@ export class DiContainer {
     this.diContainer.bind<UserService>(TYPES.USER_SERVICE).to(UserService).inSingletonScope;
     this.diContainer.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthService).inSingletonScope;
     this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope;
+    this.diContainer.bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE).to(EncryptionService)
+      .inSingletonScope;
 
     this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
       .inSingletonScope;

@@ -18,4 +18,5 @@ export enum TYPES_ENUM {
   USER_SERVICE = 'UserService',
   AUTH_SERVICE = 'AuthService',
   EMAIL_SERVICE = 'EmailService',
+  ENCRYPTION_SERVICE = 'EncryptionService',
 }
