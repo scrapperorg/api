@@ -1,13 +1,17 @@
+import { inject, injectable } from 'inversify';
+import { MikroORM, EntityRepository } from '@mikro-orm/core';
+import { TYPES } from '../../server/types';
 import { UserMap } from './../../app/mappers/User.map';
 import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 import { UserSchema } from './User.schema';
 import { User, IUserRepository } from '../../domain/User';
-
-import { MikroORM, EntityRepository } from '@mikro-orm/core';
-
+@injectable()
 export class UserRepository implements IUserRepository {
   private userEM: EntityRepository<IUserPersistenceDTO>;
-  constructor(private readonly orm: MikroORM, private readonly userMap: UserMap) {
+  constructor(
+    @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
+    @inject(TYPES.USER_MAP) private readonly userMap: UserMap,
+  ) {
     const em = this.orm.em.fork();
     this.userEM = em.getRepository(UserSchema);
   }
