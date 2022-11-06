@@ -41,16 +41,4 @@ describe('User controller test', () => {
     expect(savedUser).not.toBeFalsy()
     expect(savedUser?.name).toBe('vasile')
   })
-
-  test.skip('/user/create should return 400 if mandatory user details are missing from request', async () => {})
-
-  test.skip('/recover-password should save a generated token', async () => {})
-  test.skip('/recover-password should send an email with the generated token', async () => {})
-  test.skip('/recover-password should return 400 if the request does not contain the email', async () => {})
-
-  test.skip('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {})
-  test.skip('/validate-reset-password-token/:token should respond with 404 if the token is expired', async () => {})
-  test.skip('/validate-reset-password-token/:token should respond with 200 token exists and is not expired', async () => {})
-  test.skip('/reset-password should update user with a new hashed password', async () => {})
-  
 })
