@@ -1,9 +1,12 @@
+import { TYPES } from './../../server/types/index';
+import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
 import { IUserPersistenceDTO } from '../../domain/User/User.repository.interface';
 import { User, IUserRepository } from '../../domain/User';
 
-export class UserTestRepository implements IUserRepository {
-  constructor(private readonly userMap: UserMap) {}
+@injectable()
+export class UserMockRepository implements IUserRepository {
+  constructor(@inject(TYPES.USER_MAP) private readonly userMap: UserMap) {}
   public entries: Array<IUserPersistenceDTO> = [
     {
       id: '1',

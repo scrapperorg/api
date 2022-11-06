@@ -1,0 +1,34 @@
+import { UserController } from './../../app/controllers/user.controller';
+import { Container } from 'inversify';
+import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
+import bodyParser from 'body-parser';
+import express, { Express, NextFunction } from 'express';
+import { TYPES } from '../types';
+
+export class App {
+  public app: Express;
+  private container: Container;
+
+  constructor(container: Container) {
+    this.app = express();
+    this.container = container;
+    this.middleware();
+    this.setRoutes();
+  }
+
+  private middleware(): void {
+    this.app.use(express.json());
+    this.app.use(bodyParser.json());
+    this.app.use((_req, _res, next: NextFunction): void => {
+      if (process.env.MOCK === 'true') return next();
+      const connection = this.container.get<MikroORM<IDatabaseDriver<Connection>>>(
+        TYPES.DATABASE_CONNECTION,
+      );
+      RequestContext.create(connection.em, next);
+    });
+  }
+
+  private setRoutes(): void {
+    this.app.use('/user', this.container.get<UserController>(TYPES.USER_CONTROLLER).router);
+  }
+}

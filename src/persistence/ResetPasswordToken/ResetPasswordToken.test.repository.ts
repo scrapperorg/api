@@ -1,11 +1,17 @@
+import { TYPES } from './../../server/types/index';
+import { inject, injectable } from 'inversify';
 import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
 import {
   IResetPasswordTokenPersistenceDTO,
   IResetPasswordTokenRepository,
 } from './../../domain/ResetPasswordToken';
 
+@injectable()
 export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepository {
-  constructor(private readonly resetPasswordTokenMap: ResetPasswordTokenMap) {}
+  constructor(
+    @inject(TYPES.RESET_PASSWORD_TOKEN_MAP)
+    private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
+  ) {}
 
   private dummmytokens: Array<IResetPasswordTokenPersistenceDTO> = [
     {

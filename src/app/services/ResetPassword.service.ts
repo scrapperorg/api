@@ -1,18 +1,23 @@
+import { v4 } from 'uuid';
+import { TYPES } from './../../server/types/index';
 import { EmailService } from './Email.service';
 import { ForgotPasswordEmail } from './../../domain/Email/ForgotPassword.email';
-import { v4 } from 'uuid';
 import { ResetPasswordTokenMap } from './../mappers/ResetPasswordToken.map';
 import { IUserRepository } from './../../domain/User';
 import { IResetPasswordTokenRepository } from './../../domain/ResetPasswordToken';
-import { UserMap } from 'app/mappers/User.map';
+import { UserMap } from '../mappers/User.map';
+import { inject, injectable } from 'inversify';
 
+@injectable()
 export class ResetPasswordService {
   constructor(
-    private readonly userRepository: IUserRepository,
+    @inject(TYPES.USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @inject(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
     private readonly resetPasswordTokenRepository: IResetPasswordTokenRepository,
-    private readonly userMap: UserMap,
+    @inject(TYPES.USER_MAP) private readonly userMap: UserMap,
+    @inject(TYPES.RESET_PASSWORD_TOKEN_MAP)
     private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
-    private readonly emailService: EmailService,
+    @inject(TYPES.EMAIL_SERVICE) private readonly emailService: EmailService,
   ) {}
 
   async generateResetPasswordToken(userEmail: string) {

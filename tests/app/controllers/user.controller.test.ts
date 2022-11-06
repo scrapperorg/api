@@ -1,17 +1,20 @@
+import { Container } from 'inversify';
+import { Application } from 'express';
+import { TYPES } from './../../../src/server/types/index';
+import { configServer } from './../../../src/server/server';
 import request from 'supertest'
 import { IUserRepository } from '../../../src/domain/User'
-import { app } from '../../testServer'
 
 describe('User controller test', () => {
-  test('root path should return welcome message', async () => {
-    const result = await request(app).get('/')
-    const resultJSON = JSON.parse(result.text)
-    expect(resultJSON).toHaveProperty('message')
-    expect(resultJSON.message).toBe('Welcome to anap screening app!!')
+  let server: {
+    app: Application,
+    container: Container
+  }
+  beforeAll(async () => {
+    server = await configServer(true);
   })
-
   test('/user/ should return all users', async () => {
-    const response = await request(app)
+    const response = await request(server.app)
       .get('/user')
       .set('Accept', 'application/json')
 
@@ -28,13 +31,12 @@ describe('User controller test', () => {
       email: 'vasile@yahoo.com',
       plainPassword: '1234'
     }
-    const response = await request(app)
+    const response = await request(server.app)
       .post('/user/create')
       .send(user)
       .set('Accept', 'application/json')
     expect(response.status).toEqual(200)
-    const repositories = app.get('repositories')
-    const userRepo: IUserRepository = repositories['userRepository']
+    const userRepo = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY)
     const savedUser = await userRepo.getByEmail(user.email)
     expect(savedUser).not.toBeFalsy()
     expect(savedUser?.name).toBe('vasile')
