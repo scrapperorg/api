@@ -1,17 +1,13 @@
-import { TYPES } from '../../server/types';
-import { inject, injectable } from 'inversify';
-import { MikroORM, EntityRepository } from '@mikro-orm/core';
 import { UserMap } from './../../app/mappers/User.map';
 import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 import { UserSchema } from './User.schema';
 import { User, IUserRepository } from '../../domain/User';
-@injectable()
+
+import { MikroORM, EntityRepository } from '@mikro-orm/core';
+
 export class UserRepository implements IUserRepository {
   private userEM: EntityRepository<IUserPersistenceDTO>;
-  constructor(
-    @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
-    @inject(TYPES.USER_MAP) private readonly userMap: UserMap,
-  ) {
+  constructor(private readonly orm: MikroORM, private readonly userMap: UserMap) {
     const em = this.orm.em.fork();
     this.userEM = em.getRepository(UserSchema);
   }
@@ -19,12 +15,9 @@ export class UserRepository implements IUserRepository {
     const users = await this.userEM.findAll();
     return users.map((u) => this.userMap.toDomain(u));
   }
-  async save(userDTO: IUserPersistenceDTO): Promise<boolean | Error> {
+  async save(userDTO: IUserPersistenceDTO): Promise<void> {
     const user = this.userEM.create(userDTO);
-    return this.userEM
-      .persistAndFlush(user)
-      .then(() => true)
-      .catch((err) => new Error(err));
+    this.userEM.persistAndFlush(user);
   }
 
   async getById(id: string): Promise<User | null> {

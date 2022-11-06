@@ -1,4 +1,4 @@
-import { UserController } from './../../app/controllers/user.controller';
+import { UserController, AuthContoller } from './../../app/controllers';
 import { Container } from 'inversify';
 import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
 import bodyParser from 'body-parser';
@@ -29,6 +29,7 @@ export class App {
   }
 
   private setRoutes(): void {
+    this.app.use('/', this.container.get<AuthContoller>(TYPES.AUTH_CONTROLLER).router);
     this.app.use('/user', this.container.get<UserController>(TYPES.USER_CONTROLLER).router);
   }
 }

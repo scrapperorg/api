@@ -22,7 +22,7 @@ export interface IUserPersistenceDTO {
 
 export interface IUserRepository {
   getAll(): Promise<User[]>;
-  save(userProps: IUserPersistenceDTO): Promise<boolean | Error>;
+  save(userProps: IUserPersistenceDTO): Promise<void>;
   getById(id: string): Promise<IUserPersistenceDTO | null>;
   getByEmail(email: string): Promise<IUserPersistenceDTO | null>;
 }
