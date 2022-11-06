@@ -5,7 +5,7 @@ import { ForgotPasswordEmail } from './../../domain/Email/ForgotPassword.email';
 import { ResetPasswordTokenMap } from './../mappers/ResetPasswordToken.map';
 import { IUserRepository } from './../../domain/User';
 import { IResetPasswordTokenRepository } from './../../domain/ResetPasswordToken';
-import { UserMap } from 'app/mappers/User.map';
+import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
 
 @injectable()

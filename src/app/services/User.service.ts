@@ -5,7 +5,7 @@ import {
   IUserPersistenceDTO,
   IUserAPIincomingDTO,
 } from './../../domain/User/User.repository.interface';
-import { UserMap } from 'app/mappers/User.map';
+import { UserMap } from '../mappers/User.map';
 import { IUserAPIDTO, IUserRepository } from '../../domain/User';
 
 @injectable()

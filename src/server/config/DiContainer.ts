@@ -15,26 +15,23 @@ import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from './../../persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from './../../persistence/ResetPasswordToken/ResetPasswordToken.test.repository';
 
-interface IDiContainerProps {
-  databaseClient: DatabaseClient;
-}
-
 export class DiContainer {
   private diContainer: Container;
-  private databaseClient: DatabaseClient;
+  private databaseClient?: DatabaseClient;
 
-  constructor(props: IDiContainerProps) {
-    this.databaseClient = props.databaseClient;
+  constructor() {
     this.diContainer = new Container();
   }
 
-  public async init(): Promise<Container> {
-    this.diContainer.loadAsync(this.bindings);
+  public async init(databaseClient: DatabaseClient): Promise<Container> {
+    this.databaseClient = databaseClient;
+    await this.diContainer.loadAsync(this.getBindings());
     return this.diContainer;
   }
 
-  get bindings() {
+  private getBindings() {
     return new AsyncContainerModule(async (bind): Promise<void> => {
+      if (!this.databaseClient) return;
       const connection = await this.databaseClient.connect();
       if (connection) {
         await connection.getMigrator().up();
@@ -47,8 +44,10 @@ export class DiContainer {
   }
 
   public configure() {
-    this.diContainer.bind<UserMap>(TYPES.USER_MAP).toSelf();
-    this.diContainer.bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP).toSelf();
+    this.diContainer.bind<UserMap>(TYPES.USER_MAP).to(UserMap).inSingletonScope();
+    this.diContainer
+      .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
+      .to(ResetPasswordTokenMap).inSingletonScope;
 
     if (process.env.MOCK === 'true') {
       this.configureMockRepositories();
@@ -56,11 +55,16 @@ export class DiContainer {
       this.configureRepositories();
     }
 
-    this.diContainer.bind<UserService>(TYPES.USER_SERVICE).toSelf();
-    this.diContainer.bind<ResetPasswordService>(TYPES.RESET_PASSWORD_SERVICE).toSelf();
-    this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).toSelf();
+    this.diContainer.bind<UserService>(TYPES.USER_SERVICE).to(UserService).inSingletonScope;
+    this.diContainer
+      .bind<ResetPasswordService>(TYPES.RESET_PASSWORD_SERVICE)
+      .to(ResetPasswordService).inSingletonScope;
+    this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope;
 
-    this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).toSelf();
+    this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
+      .inSingletonScope;
+
+    return this.diContainer;
   }
 
   public configureRepositories() {

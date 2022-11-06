@@ -1,22 +1,17 @@
 import { Application } from 'express';
-import 'reflect-metadata';
 import * as dotenv from 'dotenv';
-import { DiContainer } from './config/DiContainer';
-import { DatabaseClient } from './config/DatabaseClient';
-import { Container } from 'inversify';
-import { App } from './config/App';
+import { configServer } from './server';
 
 dotenv.config();
 
-export class Server {
-  public app: Application | null = null;
-  constructor() {
-    const databaseClient = new DatabaseClient();
-    const diContainer = new DiContainer({ databaseClient });
-    diContainer.init().then((container: Container) => {
-      this.app = new App(container).app;
-    });
-  }
+function listenApp(app: Application) {
+  const port = process.env.PORT ?? 3000;
+  app.listen(port, () => {
+    console.log(`anap screening server started at http://localhost:${port}`);
+  });
 }
 
-new Server();
+(async function startServer() {
+  const { app } = await configServer();
+  listenApp(app);
+})();

@@ -14,13 +14,13 @@ export class App {
     this.container = container;
     this.middleware();
     this.setRoutes();
-    this.listen();
   }
 
   private middleware(): void {
     this.app.use(express.json());
     this.app.use(bodyParser.json());
     this.app.use((_req, _res, next: NextFunction): void => {
+      if (process.env.MOCK === 'true') return next();
       const connection = this.container.get<MikroORM<IDatabaseDriver<Connection>>>(
         TYPES.DATABASE_CONNECTION,
       );
@@ -30,12 +30,5 @@ export class App {
 
   private setRoutes(): void {
     this.app.use('/user', this.container.get<UserController>(TYPES.USER_CONTROLLER).router);
-  }
-
-  private listen(): void {
-    const port = process.env.PORT ?? 3000;
-    this.app.listen(port, () => {
-      console.log(`anap screening server started at http://localhost:${port}`);
-    });
   }
 }

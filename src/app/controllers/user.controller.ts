@@ -21,7 +21,6 @@ export class UserController {
     });
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
-      console.log(name);
       const result = await this.userService.create({
         name,
         surname,
