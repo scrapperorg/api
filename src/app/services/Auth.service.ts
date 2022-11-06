@@ -1,15 +1,15 @@
 import { v4 } from 'uuid';
-import { TYPES } from './../../server/types/index';
+import { TYPES } from '../../server/types/index';
 import { EmailService } from './Email.service';
-import { ForgotPasswordEmail } from './../../domain/Email/ForgotPassword.email';
-import { ResetPasswordTokenMap } from './../mappers/ResetPasswordToken.map';
-import { IUserRepository } from './../../domain/User';
-import { IResetPasswordTokenRepository } from './../../domain/ResetPasswordToken';
+import { ForgotPasswordEmail } from '../../domain/Email/ForgotPassword.email';
+import { ResetPasswordTokenMap } from '../mappers/ResetPasswordToken.map';
+import { IUserRepository } from '../../domain/User';
+import { IResetPasswordTokenRepository } from '../../domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class ResetPasswordService {
+export class AuthService {
   constructor(
     @inject(TYPES.USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @inject(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)

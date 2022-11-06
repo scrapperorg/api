@@ -1,16 +1,12 @@
 import { TYPES } from './../../server/types/index';
-import { UserService, ResetPasswordService } from './../services';
+import { UserService } from './../services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
 @injectable()
 export class UserController {
   public router: Router = Router();
-  constructor(
-    @inject(TYPES.USER_SERVICE) private readonly userService: UserService,
-    @inject(TYPES.RESET_PASSWORD_SERVICE)
-    private readonly resetPasswordService: ResetPasswordService,
-  ) {
+  constructor(@inject(TYPES.USER_SERVICE) private readonly userService: UserService) {
     this.router.get('/', async (req: Request, res: Response) => {
       const users = await this.userService.getAll();
       res.send(users);
@@ -21,33 +17,18 @@ export class UserController {
     });
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
-      const result = await this.userService.create({
-        name,
-        surname,
-        role,
-        email,
-        plainPassword: password,
-      });
-      if (result === true) return res.send(200);
-      return res.status(500).send(result);
-    });
-    this.router.post('/recover-password', async (req: Request, res: Response) => {
-      const { email } = req.body;
-      this.resetPasswordService.generateResetPasswordToken(email);
-      res.send('insert response');
-    });
-    this.router.get(
-      '/validate-reset-password-token/:token',
-      async (req: Request, res: Response) => {
-        const token = req.params.token;
-        this.resetPasswordService.validateResetPasswordToken();
-        res.send('insert response');
-      },
-    );
-    this.router.post('/reset-password', async (req: Request, res: Response) => {
-      const { token, password } = req.body; // plain password
-      this.resetPasswordService.resetUserPassword();
-      res.send('insert response');
+      try {
+        await this.userService.create({
+          name,
+          surname,
+          role,
+          email,
+          plainPassword: password,
+        });
+      } catch (err) {
+        return res.status(500).send(err);
+      }
+      return res.send(200);
     });
   }
 }

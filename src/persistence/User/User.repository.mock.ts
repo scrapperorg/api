@@ -29,9 +29,8 @@ export class UserMockRepository implements IUserRepository {
   async getAll() {
     return this.entries.map((user) => this.userMap.toDomain(user));
   }
-  async save(user: IUserPersistenceDTO): Promise<boolean | Error> {
+  async save(user: IUserPersistenceDTO): Promise<void> {
     this.entries.push(user);
-    return Promise.resolve(true);
   }
 
   async getById(id: string): Promise<User | null> {

@@ -44,13 +44,13 @@ describe('User controller test', () => {
 
   test.skip('/user/create should return 400 if mandatory user details are missing from request', async () => {})
 
-  test.skip('/user/recover-password should save a generated token', async () => {})
-  test.skip('/user/recover-password should send an email with the generated token', async () => {})
-  test.skip('/user/recover-password should return 400 if the request does not contain the email', async () => {})
+  test.skip('/recover-password should save a generated token', async () => {})
+  test.skip('/recover-password should send an email with the generated token', async () => {})
+  test.skip('/recover-password should return 400 if the request does not contain the email', async () => {})
 
-  test.skip('/user/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {})
-  test.skip('/user/validate-reset-password-token/:token should respond with 404 if the token is expired', async () => {})
-  test.skip('/user/validate-reset-password-token/:token should respond with 200 token exists and is not expired', async () => {})
-  test.skip('/user/reset-password should update user with a new hashed password', async () => {})
+  test.skip('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {})
+  test.skip('/validate-reset-password-token/:token should respond with 404 if the token is expired', async () => {})
+  test.skip('/validate-reset-password-token/:token should respond with 200 token exists and is not expired', async () => {})
+  test.skip('/reset-password should update user with a new hashed password', async () => {})
   
 })

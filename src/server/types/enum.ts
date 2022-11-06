@@ -8,6 +8,7 @@ export enum TYPES_ENUM {
 
   // CONTROLLERS
   USER_CONTROLLER = 'UserController',
+  AUTH_CONTROLLER = 'AuthController',
 
   // MAPPERS
   USER_MAP = 'UserMap',
@@ -15,6 +16,6 @@ export enum TYPES_ENUM {
 
   // SERVICES
   USER_SERVICE = 'UserService',
-  RESET_PASSWORD_SERVICE = 'ResetPasswordService',
+  AUTH_SERVICE = 'AuthService',
   EMAIL_SERVICE = 'EmailService',
 }
