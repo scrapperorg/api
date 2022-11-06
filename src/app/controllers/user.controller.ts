@@ -17,15 +17,18 @@ export class UserController {
     });
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
-      const result = await this.userService.create({
-        name,
-        surname,
-        role,
-        email,
-        plainPassword: password,
-      });
-      if (result === true) return res.send(200);
-      return res.status(500).send(result);
+      try {
+        await this.userService.create({
+          name,
+          surname,
+          role,
+          email,
+          plainPassword: password,
+        });
+      } catch (err) {
+        return res.status(500).send(err);
+      }
+      return res.send(200);
     });
   }
 }
