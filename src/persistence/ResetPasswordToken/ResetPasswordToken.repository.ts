@@ -7,6 +7,7 @@ import {
   IResetPasswordTokenRepository,
   IResetPasswordTokenPersistenceDTO,
 } from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
+import { ResetPasswordToken } from '../../domain/ResetPasswordToken';
 
 @injectable()
 export class ResetPasswordTokenRepository implements IResetPasswordTokenRepository {
@@ -26,8 +27,13 @@ export class ResetPasswordTokenRepository implements IResetPasswordTokenReposito
       .then(() => true)
       .catch((err) => new Error(err));
   }
-  async getAllByUserId(userId: string): Promise<IResetPasswordTokenPersistenceDTO[] | null> {
+  async getAllByUserId(userId: string): Promise<ResetPasswordToken[] | null> {
     const resetPasswordTokens = await this.rptEM.find({ userId });
     return resetPasswordTokens.map((rpt) => this.resetPasswordTokenMap.persistenceToDomain(rpt));
+  }
+  async getByToken(token: string): Promise<ResetPasswordToken | null> {
+    const resetPasswordToken = await this.rptEM.findOne({ token });
+    if (!resetPasswordToken) return null;
+    return this.resetPasswordTokenMap.persistenceToDomain(resetPasswordToken);
   }
 }

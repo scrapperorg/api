@@ -1,3 +1,4 @@
+import { NoSuchElementException, UnauthorizedException } from './../../lib';
 import { v4 } from 'uuid';
 import { TYPES } from '../../server/types/index';
 import { EmailService } from './Email.service';
@@ -8,20 +9,6 @@ import { IResetPasswordTokenRepository } from '../../domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
 import { EncryptionService } from './Encryption.service';
-
-export class NoSuchElementException extends Error {
-  key = 'NO_SUCH_ELEMENT_EXECEPTION';
-  constructor(message: string | undefined) {
-    super(message);
-  }
-}
-
-export class UnauthorizedException extends Error {
-  key = 'UNAUTHORIZED_EXCEPTION';
-  constructor(message: string | undefined) {
-    super(message);
-  }
-}
 
 @injectable()
 export class AuthService {
@@ -59,10 +46,15 @@ export class AuthService {
 
   async generateResetPasswordToken(userEmail: string) {
     const user = await this.userRepository.getByEmail(userEmail);
-    if (!user) return null;
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
     const id = v4();
     const token = v4();
     const expirationDate = new Date();
+
     expirationDate.setDate(expirationDate.getDate() + 1);
     this.resetPasswordTokenRepository.save({
       id,
@@ -81,16 +73,36 @@ export class AuthService {
     this.emailService.send(email);
   }
 
-  async validateResetPasswordToken() {
-    // get reset password token
-    // check if expiry date pasted
-    // if not exists or expired return 400
-    // else return 200
+  async validateResetPasswordToken(token: string) {
+    const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(token);
+
+    if (!resetPasswordToken) {
+      throw new NoSuchElementException('Reset Password Token not found');
+    }
+
+    if (resetPasswordToken?.isExpired) {
+      throw new NoSuchElementException('Reset Password Token is expired'); // todo: think of a better expception
+    }
+
+    return;
   }
 
-  async resetUserPassword() {
-    // get user by token
-    // hash new password
-    // update user with hashed password
+  async resetUserPassword(token: string, password: string) {
+    const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(token);
+
+    if (!resetPasswordToken) {
+      throw new NoSuchElementException('Reset Password Token not found');
+    }
+
+    const user = await this.userRepository.getById(resetPasswordToken.id);
+
+    if (!user) {
+      throw new NoSuchElementException('User for Reset Password Token not found');
+    }
+
+    const hashedPassword = this.encryptionService.hash(password);
+    user.password = hashedPassword;
+    const userDTO = this.userMap.toPersistence(user);
+    this.userRepository.save(userDTO);
   }
 }

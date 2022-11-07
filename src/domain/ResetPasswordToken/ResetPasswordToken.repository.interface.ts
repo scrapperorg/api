@@ -1,3 +1,4 @@
+import { ResetPasswordToken } from './ResetPasswordToken';
 export interface IResetPasswordTokenAPIDTO {
   userId: string;
   token: string;
@@ -12,5 +13,6 @@ export interface IResetPasswordTokenPersistenceDTO {
 
 export interface IResetPasswordTokenRepository {
   save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error>;
-  getAllByUserId(userId: string): Promise<IResetPasswordTokenPersistenceDTO[] | null>;
+  getAllByUserId(userId: string): Promise<ResetPasswordToken[] | null>;
+  getByToken(token: string): Promise<ResetPasswordToken | null>;
 }

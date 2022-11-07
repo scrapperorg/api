@@ -17,6 +17,10 @@ export class ResetPasswordToken {
     this.expirationDate = props.expirationDate;
   }
 
+  get isExpired(): boolean {
+    return this.expirationDate < new Date();
+  }
+
   public static create(props: IResetPasswordTokenProps) {
     return new ResetPasswordToken(props);
   }
