@@ -4,6 +4,7 @@ import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-or
 import bodyParser from 'body-parser';
 import express, { Express, NextFunction } from 'express';
 import { TYPES } from '../types';
+import cors from 'cors';
 
 export class App {
   public app: Express;
@@ -17,6 +18,7 @@ export class App {
   }
 
   private middleware(): void {
+    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(bodyParser.json());
     this.app.use((_req, _res, next: NextFunction): void => {
