@@ -27,7 +27,7 @@ export class ResetPasswordTokenRepository implements IResetPasswordTokenReposito
       .then(() => true)
       .catch((err) => new Error(err));
   }
-  async getAllByUserId(userId: string): Promise<ResetPasswordToken[] | null> {
+  async getAllByUserId(userId: string): Promise<ResetPasswordToken[]> {
     const resetPasswordTokens = await this.rptEM.find({ userId });
     return resetPasswordTokens.map((rpt) => this.resetPasswordTokenMap.persistenceToDomain(rpt));
   }

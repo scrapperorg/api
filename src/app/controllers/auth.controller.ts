@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from './../../server/types/index';
 import { AuthService } from '../services/Auth.service';
 import { UserService } from './../services/User.service';
+import { recoverPasswordSchema, resetPasswrodSchema } from './validationSchemas/Auth';
 
 @injectable()
 export class AuthContoller {
@@ -21,7 +22,7 @@ export class AuthContoller {
         return res.status(HttpStatus.OK).json({ user, token });
       } catch (error: any) {
         const errorType: Exception = error.constructor;
-        return statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
 
@@ -29,11 +30,18 @@ export class AuthContoller {
       const { email } = req.body;
 
       try {
+        await recoverPasswordSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
         this.authService.generateResetPasswordToken(email);
         return res.status(HttpStatus.OK);
       } catch (error: any) {
         const errorType: Exception = error.constructor;
-        return statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
 
@@ -47,20 +55,27 @@ export class AuthContoller {
           return res.status(HttpStatus.OK);
         } catch (error: any) {
           const errorType: Exception = error.constructor;
-          return statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
         }
       },
     );
 
     this.router.post('/reset-password', async (req: Request, res: Response) => {
-      const { token, password } = req.body; // plain password
+      const { token, password } = req.body;
+
+      try {
+        resetPasswrodSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
 
       try {
         this.authService.resetUserPassword(token, password);
         return res.status(HttpStatus.OK);
       } catch (error: any) {
         const errorType: Exception = error.constructor;
-        return statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
   }

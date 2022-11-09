@@ -14,7 +14,7 @@ export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepo
     private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
   ) {}
 
-  private dummmytokens: Array<IResetPasswordTokenPersistenceDTO> = [
+  private entries: Array<IResetPasswordTokenPersistenceDTO> = [
     {
       id: '1',
       userId: '1',
@@ -24,14 +24,17 @@ export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepo
   ];
 
   async save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error> {
+    this.entries.push(resestPasswordToken);
     return Promise.resolve(true);
   }
 
-  async getAllByUserId(userId: string): Promise<ResetPasswordToken[] | null> {
-    return this.dummmytokens.map((rpt) => this.resetPasswordTokenMap.persistenceToDomain(rpt));
+  async getAllByUserId(userId: string): Promise<ResetPasswordToken[]> {
+    return this.entries
+      .filter((rpt) => rpt.userId === userId)
+      .map((rpt) => this.resetPasswordTokenMap.persistenceToDomain(rpt));
   }
   async getByToken(token: string): Promise<ResetPasswordToken | null> {
-    const rptDTO = this.dummmytokens.find((rpt) => rpt.token === token ?? null);
+    const rptDTO = this.entries.find((rpt) => rpt.token === token ?? null);
     if (!rptDTO) return null;
     const rpt = this.resetPasswordTokenMap.persistenceToDomain(rptDTO);
 

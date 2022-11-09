@@ -1,7 +1,7 @@
 import { Exception } from '.';
 
 export class UnauthorizedException extends Error {
-  key = Exception.UNAUTHORIZED_EXCEPTION;
+  key = Exception.UNAUTHORIZED;
   constructor(message: string | undefined) {
     super(message);
   }

@@ -1,7 +1,8 @@
+import { IUserPersistenceDTO } from './../dtos/User';
+import { IUserAPIDTO } from './../../app/controllers/dtos/User';
 import { TYPES } from './../../server/types/index';
 import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
-import { IUserPersistenceDTO } from '../../domain/User/User.repository.interface';
 import { User, IUserRepository } from '../../domain/User';
 
 @injectable()
@@ -29,8 +30,10 @@ export class UserMockRepository implements IUserRepository {
   async getAll() {
     return this.entries.map((user) => this.userMap.toDomain(user));
   }
-  async save(user: IUserPersistenceDTO): Promise<void> {
+  async save(user: IUserPersistenceDTO): Promise<IUserAPIDTO> {
     this.entries.push(user);
+    const userEntity = User.create(user);
+    return this.userMap.toDTO(userEntity);
   }
 
   async getById(id: string): Promise<User | null> {

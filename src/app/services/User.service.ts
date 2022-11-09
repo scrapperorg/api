@@ -1,18 +1,18 @@
-import { TYPES } from './../../server/types/index';
 import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
-import {
-  IUserPersistenceDTO,
-  IUserAPIincomingDTO,
-} from './../../domain/User/User.repository.interface';
+import { IUserPersistenceDTO } from './../../persistence/dtos/User';
+import { IUserAPIincomingDTO, IUserAPIDTO } from './../controllers/dtos/User';
+import { EncryptionService } from './Encryption.service';
+import { TYPES } from './../../server/types/index';
 import { UserMap } from '../mappers/User.map';
-import { IUserAPIDTO, IUserRepository } from '../../domain/User';
+import { IUserRepository, User } from '../../domain/User';
 
 @injectable()
 export class UserService {
   constructor(
     @inject(TYPES.USER_REPOSITORY) private repository: IUserRepository,
     @inject(TYPES.USER_MAP) private userMap: UserMap,
+    @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
   ) {}
   async getAll(): Promise<IUserAPIDTO[]> {
     const users = await this.repository.getAll();
@@ -25,14 +25,17 @@ export class UserService {
   }
   async create(userDTO: IUserAPIincomingDTO) {
     const id = v4();
-    const userPersistenceDTO: IUserPersistenceDTO = {
+    const userEntity = User.create({
       id,
       name: userDTO.name,
       role: userDTO.role,
       surname: userDTO.surname,
       email: userDTO.email,
-      password: userDTO.plainPassword, // <--- hash
-    };
-    return this.repository.save(userPersistenceDTO);
+      password: this.encryptionService.hash(userDTO.password),
+    });
+
+    const userPersistenceDTO: IUserPersistenceDTO = this.userMap.toPersistence(userEntity);
+    await this.repository.save(userPersistenceDTO);
+    return this.userMap.toDTO(userEntity);
   }
 }

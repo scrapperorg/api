@@ -1,6 +1,7 @@
+import { IUserAPIDTO } from './../controllers/dtos/User';
+import { IUserPersistenceDTO } from './../../persistence/dtos/User';
 import { injectable } from 'inversify';
 import { User } from '../../domain/User';
-import { IUserAPIDTO, IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
 
 @injectable()
 export class UserMap {
@@ -19,6 +20,7 @@ export class UserMap {
   }
   toDTO(user: User): IUserAPIDTO {
     return {
+      id: user.id,
       name: user.name,
       surname: user.surname,
       role: user.role,

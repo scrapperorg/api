@@ -56,7 +56,7 @@ export class AuthService {
     const expirationDate = new Date();
 
     expirationDate.setDate(expirationDate.getDate() + 1);
-    this.resetPasswordTokenRepository.save({
+    await this.resetPasswordTokenRepository.save({
       id,
       userId: user.id,
       expirationDate,

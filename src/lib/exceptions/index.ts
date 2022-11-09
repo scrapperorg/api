@@ -1,7 +1,8 @@
-export * from './NoSuchElementException';
-export * from './UnauthorizedException';
+export * from './NoSuchElemen.exception';
+export * from './Unauthorized.exception';
 
 export enum Exception {
-  NO_SUCH_ELEMENT_EXECEPTION = 'NO_SUCH_ELEMENT_EXECEPTION',
-  UNAUTHORIZED_EXCEPTION = 'UNAUTHORIZED_EXCEPTION',
+  NO_SUCH_ELEMENT = 'NO_SUCH_ELEMENT_EXECEPTION',
+  UNAUTHORIZED = 'UNAUTHORIZED_EXCEPTION',
+  INVALID = 'VALIDATION_ERROR',
 }

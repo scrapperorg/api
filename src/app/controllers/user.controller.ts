@@ -1,3 +1,6 @@
+import { HttpStatus } from './../../lib/HttpStatus';
+import { Exception, statusMap } from './../../lib/';
+import { createSchema } from './validationSchemas/User';
 import { TYPES } from './../../server/types/index';
 import { UserService } from './../services';
 import { Router, Request, Response } from 'express';
@@ -17,18 +20,27 @@ export class UserController {
     });
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
+
       try {
-        await this.userService.create({
+        await createSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        const createdUser = await this.userService.create({
           name,
           surname,
           role,
           email,
-          plainPassword: password,
+          password,
         });
-      } catch (err) {
-        return res.status(500).send(err);
+        return res.status(200).send(createdUser);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
       }
-      return res.send(200);
     });
   }
 }
