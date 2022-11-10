@@ -20,10 +20,10 @@ export class UserRepository implements IUserRepository {
     const users = await this.userEM.findAll();
     return users.map((u) => this.userMap.toDomain(u));
   }
-  async save(userDTO: IUserPersistenceDTO): Promise<IUserAPIDTO> {
+  async save(userDTO: IUserPersistenceDTO): Promise<User> {
     const user = this.userEM.create(userDTO);
     this.userEM.persistAndFlush(user);
-    return this.userMap.toDTO(user);
+    return this.userMap.toDomain(userDTO);
   }
 
   async getById(id: string): Promise<User | null> {

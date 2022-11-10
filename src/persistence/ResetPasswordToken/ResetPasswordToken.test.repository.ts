@@ -23,9 +23,9 @@ export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepo
     },
   ];
 
-  async save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error> {
+  async save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<ResetPasswordToken> {
     this.entries.push(resestPasswordToken);
-    return Promise.resolve(true);
+    return this.resetPasswordTokenMap.persistenceToDomain(resestPasswordToken);
   }
 
   async getAllByUserId(userId: string): Promise<ResetPasswordToken[]> {
@@ -36,8 +36,6 @@ export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepo
   async getByToken(token: string): Promise<ResetPasswordToken | null> {
     const rptDTO = this.entries.find((rpt) => rpt.token === token ?? null);
     if (!rptDTO) return null;
-    const rpt = this.resetPasswordTokenMap.persistenceToDomain(rptDTO);
-
-    return Promise.resolve(rpt);
+    return this.resetPasswordTokenMap.persistenceToDomain(rptDTO);
   }
 }

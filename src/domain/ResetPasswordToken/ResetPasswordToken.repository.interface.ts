@@ -12,7 +12,7 @@ export interface IResetPasswordTokenPersistenceDTO {
 }
 
 export interface IResetPasswordTokenRepository {
-  save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error>;
+  save(resestPasswordToken: IResetPasswordTokenPersistenceDTO): Promise<ResetPasswordToken>;
   getAllByUserId(userId: string): Promise<ResetPasswordToken[]>;
   getByToken(token: string): Promise<ResetPasswordToken | null>;
 }

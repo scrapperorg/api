@@ -5,7 +5,7 @@ import { IUserAPIincomingDTO, IUserAPIDTO } from './../controllers/dtos/User';
 import { EncryptionService } from './Encryption.service';
 import { TYPES } from './../../server/types/index';
 import { UserMap } from '../mappers/User.map';
-import { IUserRepository, User } from '../../domain/User';
+import { IUserRepository } from '../../domain/User';
 
 @injectable()
 export class UserService {
@@ -25,17 +25,16 @@ export class UserService {
   }
   async create(userDTO: IUserAPIincomingDTO) {
     const id = v4();
-    const userEntity = User.create({
+    const userToSave: IUserPersistenceDTO = {
       id,
       name: userDTO.name,
       role: userDTO.role,
       surname: userDTO.surname,
       email: userDTO.email,
       password: this.encryptionService.hash(userDTO.password),
-    });
+    };
 
-    const userPersistenceDTO: IUserPersistenceDTO = this.userMap.toPersistence(userEntity);
-    await this.repository.save(userPersistenceDTO);
-    return this.userMap.toDTO(userEntity);
+    const savedUser = await this.repository.save(userToSave);
+    return this.userMap.toDTO(savedUser);
   }
 }

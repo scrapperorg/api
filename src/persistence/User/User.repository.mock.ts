@@ -1,9 +1,9 @@
+import { User } from './../../domain/User/User';
 import { IUserPersistenceDTO } from './../dtos/User';
-import { IUserAPIDTO } from './../../app/controllers/dtos/User';
 import { TYPES } from './../../server/types/index';
 import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
-import { User, IUserRepository } from '../../domain/User';
+import { IUserRepository } from '../../domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {
@@ -30,10 +30,9 @@ export class UserMockRepository implements IUserRepository {
   async getAll() {
     return this.entries.map((user) => this.userMap.toDomain(user));
   }
-  async save(user: IUserPersistenceDTO): Promise<IUserAPIDTO> {
+  async save(user: IUserPersistenceDTO): Promise<User> {
     this.entries.push(user);
-    const userEntity = User.create(user);
-    return this.userMap.toDTO(userEntity);
+    return this.userMap.toDomain(user);
   }
 
   async getById(id: string): Promise<User | null> {
@@ -42,7 +41,7 @@ export class UserMockRepository implements IUserRepository {
     return this.userMap.toDomain(user);
   }
 
-  async getByEmail(email: string): Promise<IUserPersistenceDTO | null> {
+  async getByEmail(email: string): Promise<User | null> {
     const user = this.entries.find((u) => u.email === email);
     if (!user) return null;
     return this.userMap.toDomain(user);

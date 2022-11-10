@@ -37,8 +37,8 @@ export class AuthContoller {
       }
 
       try {
-        this.authService.generateResetPasswordToken(email);
-        return res.status(HttpStatus.OK);
+        await this.authService.generateResetPasswordToken(email);
+        return res.sendStatus(HttpStatus.OK);
       } catch (error: any) {
         const errorType: Exception = error.constructor;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

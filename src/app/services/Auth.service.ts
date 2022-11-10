@@ -62,6 +62,7 @@ export class AuthService {
       expirationDate,
       token,
     });
+
     const email = ForgotPasswordEmail.create({
       from: '',
       to: '',
@@ -70,6 +71,7 @@ export class AuthService {
         token,
       },
     });
+    
     this.emailService.send(email);
   }
 

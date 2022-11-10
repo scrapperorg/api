@@ -20,12 +20,12 @@ export class ResetPasswordTokenRepository implements IResetPasswordTokenReposito
     const em = this.orm.em.fork();
     this.rptEM = em.getRepository(ResetPasswordTokenSchema);
   }
-  async save(resestPasswordTokenDTO: IResetPasswordTokenPersistenceDTO): Promise<boolean | Error> {
-    const resetPasswordToken = this.rptEM.create(resestPasswordTokenDTO);
-    return this.rptEM
-      .persistAndFlush(resetPasswordToken)
-      .then(() => true)
-      .catch((err) => new Error(err));
+  async save(
+    resestPasswordTokenDTO: IResetPasswordTokenPersistenceDTO,
+  ): Promise<ResetPasswordToken> {
+    this.rptEM.create(resestPasswordTokenDTO);
+    await this.rptEM.persistAndFlush(resestPasswordTokenDTO);
+    return this.resetPasswordTokenMap.persistenceToDomain(resestPasswordTokenDTO);
   }
   async getAllByUserId(userId: string): Promise<ResetPasswordToken[]> {
     const resetPasswordTokens = await this.rptEM.find({ userId });
