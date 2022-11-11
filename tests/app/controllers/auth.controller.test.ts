@@ -66,7 +66,7 @@ describe('User controller test', () => {
   
   
   test('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {
-    const response = await request(server.app).get('/recover-password/123423131');
+    const response = await request(server.app).post('/validate-reset-password-token').send({ token: '123423131' });
 
     expect(response.status).toBe(404);
   });
@@ -105,13 +105,13 @@ describe('User controller test', () => {
 
     const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
 
-    const response = await request(server.app).get(`/reset-password:${resetPasswordToken.token}`);
+    const response = await request(server.app).post(`/validate-reset-password-token`).send({ token: resetPasswordToken });
 
     expect(response.status).toBe(404)
   });
   
   test('/reset-password should return 400 if the token or password are missing from the request', async () => {
-    const response = await request(server.app).post('/recover-password').send({ token: '123431' });
+    const response = await request(server.app).post('/reset-password').send({ token: '123431' });
 
     expect(response.status).toBe(400);
   });
