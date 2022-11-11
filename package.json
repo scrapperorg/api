@@ -35,6 +35,7 @@
     "express": "^4.18.2",
     "express-promise-router": "^4.1.1",
     "inversify": "^6.0.1",
+    "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
     "typescript": "^4.8.4",
     "uuid": "^9.0.0"
