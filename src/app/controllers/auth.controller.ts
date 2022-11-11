@@ -21,7 +21,7 @@ export class AuthContoller {
         const { user, token } = await this.authService.login(email, password);
         return res.status(HttpStatus.OK).json({ user, token });
       } catch (error: any) {
-        const errorType: Exception = error.constructor;
+        const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
@@ -37,10 +37,10 @@ export class AuthContoller {
       }
 
       try {
-        await this.authService.generateResetPasswordToken(email);
-        return res.sendStatus(HttpStatus.OK);
+        const token = await this.authService.generateResetPasswordToken(email);
+        return res.status(HttpStatus.OK).send(token);
       } catch (error: any) {
-        const errorType: Exception = error.constructor;
+        const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
@@ -51,10 +51,10 @@ export class AuthContoller {
         const token = req.params.token;
 
         try {
-          this.authService.validateResetPasswordToken(token);
+          await this.authService.validateResetPasswordToken(token);
           return res.status(HttpStatus.OK);
         } catch (error: any) {
-          const errorType: Exception = error.constructor;
+          const errorType: Exception = error.constructor.name;
           return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
         }
       },
@@ -71,10 +71,10 @@ export class AuthContoller {
       }
 
       try {
-        this.authService.resetUserPassword(token, password);
-        return res.status(HttpStatus.OK);
+        await this.authService.resetUserPassword(token, password);
+        return res.sendStatus(HttpStatus.OK);
       } catch (error: any) {
-        const errorType: Exception = error.constructor;
+        const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });

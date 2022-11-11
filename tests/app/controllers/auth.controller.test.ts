@@ -1,21 +1,20 @@
+import { IUserPersistenceDTO } from './../../../src/persistence/dtos/User';
+import { IUserAPIDTO } from './../../../src/app/controllers/dtos/User';
 import request from 'supertest';
 import { Container } from 'inversify';
 import { Application } from 'express';
 import * as http from 'http';
-import { IResetPasswordTokenRepository } from './../../../src/domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
+import { IResetPasswordTokenRepository, IResetPasswordTokenAPIDTO, IResetPasswordTokenPersistenceDTO } from './../../../src/domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
 import { configServer } from './../../../src/server/server';
 import { TYPES } from '../../../src/server/types';
-import { EmailService } from '../../../src/app/services';
+import { EncryptionService } from '../../../src/app/services/Encryption.service';
+import { IUserRepository, User } from '../../../src/domain/User';
 
 describe('User controller test', () => {
   let server: {
     app: Application;
     container: Container;
   };
-
-  const userEmail = 'vasile@yahoo.com';
-  const userId = 'userid';
-
 
   beforeAll(async () => {
     server = await configServer(true);
@@ -26,8 +25,8 @@ describe('User controller test', () => {
       TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
     );
 
-    const emailService = server.container.get<EmailService>(TYPES.EMAIL_SERVICE);
-    
+    const userEmail = 'vasile1@yahoo.com';
+
     const user = {
       name: 'vasile',
       surname: 'vasilache',
@@ -64,14 +63,146 @@ describe('User controller test', () => {
 
     expect(response.status).toBe(400);
   });
+  
+  
+  test('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {
+    const response = await request(server.app).get('/recover-password/123423131');
 
-  // test.skip('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {});
-  // test.skip('/validate-reset-password-token/:token should respond with 404 if the token is expired', async () => {});
-  // test.skip('/validate-reset-password-token/:token should respond with 200 token exists and is not expired', async () => {});
-  // test.skip('/reset-password should update user with a new hashed password', async () => {});
-  // test('/reset-password should return 400 if the token or password are missing from the request', async () => {
-  //   const response = await request(server.app).post('/recover-password').send({ token: '123431' });
+    expect(response.status).toBe(404);
+  });
+  
+  test('/validate-reset-password-token should return 404 if the token is expired', async () => {
+    const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
-  //   expect(response.status).toBe(400);
-  // });
+    const userId = 'vasielsIdealid1';
+    const resetPasswordTokenId = 'randomTokenIdwhatever1';
+    const resetPasswordTokenValue = 'some-random-token1';
+    const currentPassword = 'currentPassword';
+    const userEmail = 'vasile2@yahoo.com';
+
+    const user: IUserPersistenceDTO = {
+      id: userId,
+      name: 'vasile',
+      surname: 'vasilache',
+      role: 'LSE',
+      email: userEmail,
+      password: encryptionService.hash(currentPassword),
+    };
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() - 1);
+
+    const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
+      id: resetPasswordTokenId,
+      userId,
+      token: resetPasswordTokenValue,
+      expirationDate
+    }
+
+    const createdUser: User = await userRepository.save(user);
+
+    const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
+
+    const response = await request(server.app).get(`/reset-password:${resetPasswordToken.token}`);
+
+    expect(response.status).toBe(404)
+  });
+  
+  test('/reset-password should return 400 if the token or password are missing from the request', async () => {
+    const response = await request(server.app).post('/recover-password').send({ token: '123431' });
+
+    expect(response.status).toBe(400);
+  });
+
+  test('/reset-password should return 404 if the token is expired', async () => {
+    const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
+
+    const userId = 'vasielsIdealid2';
+    const resetPasswordTokenId = 'randomTokenIdwhatever2';
+    const resetPasswordTokenValue = 'some-random-token2';
+    const currentPassword = 'currentPassword';
+    const newPassword = 'newPassword';
+    const userEmail = 'vasile3@yahoo.com';
+
+    const user: IUserPersistenceDTO = {
+      id: userId,
+      name: 'vasile',
+      surname: 'vasilache',
+      role: 'LSE',
+      email: userEmail,
+      password: encryptionService.hash(currentPassword),
+    };
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() - 1);
+
+    const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
+      id: resetPasswordTokenId,
+      userId,
+      token: resetPasswordTokenValue,
+      expirationDate
+    }
+
+    const createdUser: User = await userRepository.save(user);
+
+    const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
+
+    const response = await request(server.app).post('/reset-password').send({ token: resetPasswordTokenValue, password: newPassword });
+
+    expect(response.status).toBe(404)
+
+  });
+
+  test('/reset-password should update the users password', async () => {
+
+    const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
+
+    const userId = 'vasielsid3';
+    const resetPasswordTokenValue = 'some-random-token3';
+    const resetPasswordTokenId = 'randomTokenIdwhateve3';
+    const currentPassword = 'currentPassword';
+    const newPassword = 'newPassword';
+    const userEmail = 'vasile4@yahoo.com';
+
+    const user: IUserPersistenceDTO = {
+      id: userId,
+      name: 'vasile',
+      surname: 'vasilache',
+      role: 'LSE',
+      email: userEmail,
+      password: encryptionService.hash(currentPassword),
+    };
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 1);
+
+    const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
+      id: resetPasswordTokenId,
+      userId,
+      token: resetPasswordTokenValue,
+      expirationDate
+    }
+
+    const createdUser: User = await userRepository.save(user);
+
+    expect(encryptionService.compare(currentPassword, createdUser.password)).toBe(true);
+
+    const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
+
+    const response = await request(server.app).post('/reset-password').send({ token: resetPasswordTokenValue, password: newPassword });
+
+    expect(response.status).toBe(200)
+
+    const updatedUser = await userRepository.getById(createdUser.id)
+
+    const updatedUserHashedPassword = updatedUser?.password || 'ALWAYS_WRONG';
+
+    expect(encryptionService.compare(newPassword, updatedUserHashedPassword)).toBe(true)
+  })
 });

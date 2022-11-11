@@ -5,6 +5,6 @@ export const recoverPasswordSchema = Joi.object({
 });
 
 export const resetPasswrodSchema = Joi.object({
-  token: Joi.string().token().required(),
+  token: Joi.string().required(),
   password: Joi.string().required(),
 });

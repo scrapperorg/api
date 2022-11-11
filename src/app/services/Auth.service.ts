@@ -54,9 +54,9 @@ export class AuthService {
     const id = v4();
     const token = v4();
     const expirationDate = new Date();
-
     expirationDate.setDate(expirationDate.getDate() + 1);
-    await this.resetPasswordTokenRepository.save({
+
+    const resetPasswordToken = await this.resetPasswordTokenRepository.save({
       id,
       userId: user.id,
       expirationDate,
@@ -71,8 +71,10 @@ export class AuthService {
         token,
       },
     });
-    
+
     this.emailService.send(email);
+
+    return this.resetPasswordTokenMap.toDTO(resetPasswordToken);
   }
 
   async validateResetPasswordToken(token: string) {
@@ -96,7 +98,11 @@ export class AuthService {
       throw new NoSuchElementException('Reset Password Token not found');
     }
 
-    const user = await this.userRepository.getById(resetPasswordToken.id);
+    if (resetPasswordToken?.isExpired) {
+      throw new NoSuchElementException('Reset Password Token is expired');
+    }
+
+    const user = await this.userRepository.getById(resetPasswordToken.userId);
 
     if (!user) {
       throw new NoSuchElementException('User for Reset Password Token not found');
@@ -105,6 +111,6 @@ export class AuthService {
     const hashedPassword = this.encryptionService.hash(password);
     user.password = hashedPassword;
     const userDTO = this.userMap.toPersistence(user);
-    this.userRepository.save(userDTO);
+    await this.userRepository.save(userDTO);
   }
 }

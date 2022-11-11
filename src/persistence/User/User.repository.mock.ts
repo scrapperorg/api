@@ -31,7 +31,12 @@ export class UserMockRepository implements IUserRepository {
     return this.entries.map((user) => this.userMap.toDomain(user));
   }
   async save(user: IUserPersistenceDTO): Promise<User> {
-    this.entries.push(user);
+    const indexOfExistingEntry = this.entries.findIndex((entry) => entry.id === user.id);
+    if (indexOfExistingEntry === -1) {
+      this.entries.push(user);
+    } else {
+      this.entries[indexOfExistingEntry] = user;
+    }
     return this.userMap.toDomain(user);
   }
 

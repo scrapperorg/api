@@ -6,6 +6,7 @@ import { EncryptionService } from './Encryption.service';
 import { TYPES } from './../../server/types/index';
 import { UserMap } from '../mappers/User.map';
 import { IUserRepository } from '../../domain/User';
+import { NoSuchElementException } from './../../lib';
 
 @injectable()
 export class UserService {
@@ -20,7 +21,9 @@ export class UserService {
   }
   async getById(id: string): Promise<IUserAPIDTO | null> {
     const user = await this.repository.getById(id);
-    if (!user) return user;
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
     return this.userMap.toDTO(user);
   }
   async create(userDTO: IUserAPIincomingDTO) {

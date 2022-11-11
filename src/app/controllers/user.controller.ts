@@ -15,8 +15,13 @@ export class UserController {
       res.send(users);
     });
     this.router.get('/:id', async (req: Request, res: Response) => {
-      const user = await this.userService.getById(req.params.id);
-      res.send(user);
+      try {
+        const user = await this.userService.getById(req.params.id);
+        return res.status(HttpStatus.OK).json(user);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
     });
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;

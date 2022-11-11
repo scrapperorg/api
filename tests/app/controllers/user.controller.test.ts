@@ -5,7 +5,7 @@ import request from 'supertest';
 import { configServer } from './../../../src/server/server';
 import { IUserRepository } from '../../../src/domain/User';
 
-describe.skip('User controller test', () => {
+describe('User controller test', () => {
   let server: {
     app: Application;
     container: Container;
@@ -19,7 +19,11 @@ describe.skip('User controller test', () => {
     expect(response.body.length).toBeGreaterThan(1);
   });
 
-  test.skip('/user/:id should return 404 if user not found', async () => {});
+  test('/user/:id should return 404 if user not found', async () => {
+    const response = await request(server.app).get('/user/randomId').set('Accept', 'application/json');
+
+    expect(response.status).toBe(404);
+  });
 
   test('/user/create should create an user', async () => {
     const user = {
