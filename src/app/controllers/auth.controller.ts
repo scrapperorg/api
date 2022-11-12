@@ -45,26 +45,23 @@ export class AuthContoller {
       }
     });
 
-    this.router.get(
-      '/validate-reset-password-token/:token',
-      async (req: Request, res: Response) => {
-        const token = req.params.token;
+    this.router.post('/validate-reset-password-token', async (req: Request, res: Response) => {
+      const { token } = req.body;
 
-        try {
-          await this.authService.validateResetPasswordToken(token);
-          return res.status(HttpStatus.OK);
-        } catch (error: any) {
-          const errorType: Exception = error.constructor.name;
-          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
-        }
-      },
-    );
+      try {
+        await this.authService.validateResetPasswordToken(token);
+        return res.status(HttpStatus.OK);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
 
     this.router.post('/reset-password', async (req: Request, res: Response) => {
       const { token, password } = req.body;
 
       try {
-        resetPasswrodSchema.validateAsync(req.body);
+        await resetPasswrodSchema.validateAsync(req.body);
       } catch (err: any) {
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
