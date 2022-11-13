@@ -112,10 +112,10 @@ export class AuthService {
 
     await this.userRepository.update(this.userMap.toPersistence(user));
 
-    await this.expireRestToken(token);
+    await this.expireResetPasswordToken(token);
   }
 
-  async expireRestToken(tokenValue: string) {
+  async expireResetPasswordToken(tokenValue: string) {
     const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(tokenValue);
 
     if (!resetPasswordToken) {
