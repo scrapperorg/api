@@ -10,7 +10,7 @@ export class ResetPasswordTokenMap {
   toPersistence(resetPasswordToken: ResetPasswordToken): IResetPasswordTokenPersistenceDTO {
     return {
       id: resetPasswordToken.id,
-      userId: resetPasswordToken.userId,
+      user: resetPasswordToken.user,
       token: resetPasswordToken.token,
       expirationDate: resetPasswordToken.expirationDate,
     };
@@ -20,7 +20,7 @@ export class ResetPasswordTokenMap {
   }
   toDTO(resetPasswordToken: ResetPasswordToken): IResetPasswordTokenAPIDTO {
     return {
-      userId: resetPasswordToken.userId,
+      userId: resetPasswordToken.user,
       token: resetPasswordToken.token,
     };
   }

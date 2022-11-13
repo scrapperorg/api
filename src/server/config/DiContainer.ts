@@ -14,7 +14,7 @@ import { IUserRepository } from './../../domain/User/User.repository.interface';
 import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from './../../persistence/ResetPasswordToken';
-import { ResetPasswordTokenTestRepository } from './../../persistence/ResetPasswordToken/ResetPasswordToken.test.repository';
+import { ResetPasswordTokenTestRepository } from '../../persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
 import { EncryptionService } from '../../app/services/Encryption.service';
 
 export class DiContainer {

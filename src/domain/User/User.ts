@@ -30,6 +30,10 @@ export class User {
     this.password = props.password;
   }
 
+  public updatePassword(newPassword: string): void {
+    this.password = newPassword;
+  }
+
   public static create(props: IUserProps) {
     //validate if necessary
     return new User(props);

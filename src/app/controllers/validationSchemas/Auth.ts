@@ -1,10 +1,12 @@
 import Joi from 'joi';
 
 export const recoverPasswordSchema = Joi.object({
-  email: Joi.string().email().required(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required(),
 });
 
-export const resetPasswrodSchema = Joi.object({
+export const resetPasswordSchema = Joi.object({
   token: Joi.string().required(),
   password: Joi.string().required(),
 });
