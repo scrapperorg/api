@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { Application } from 'express';
 import * as dotenv from 'dotenv';
 import { configServer } from './server';

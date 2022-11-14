@@ -37,11 +37,21 @@
     "inversify": "^6.0.1",
     "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "typescript": "^4.8.4",
     "uuid": "^9.0.0"
   },
   "mikro-orm": {
     "useTsNode": true
+  },
+  "_moduleAliases": {
+    "@controllers": "dist/app/controllers",
+    "@services": "dist/app/services",
+    "@domain": "dist/domain/",
+    "@repos": "dist/domain/repos",
+    "@server": "dist/server",
+    "@lib": "dist/lib",
+    "@persistence": "dist/persistence"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",
