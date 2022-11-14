@@ -1,5 +1,5 @@
-import { TYPES } from './../../server/types/index';
-import { UserService } from './../services';
+import { TYPES } from '@server/types';
+import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
@@ -11,10 +11,12 @@ export class UserController {
       const users = await this.userService.getAll();
       res.send(users);
     });
+
     this.router.get('/:id', async (req: Request, res: Response) => {
       const user = await this.userService.getById(req.params.id);
       res.send(user);
     });
+
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
       try {

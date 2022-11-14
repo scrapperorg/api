@@ -1,8 +1,8 @@
 import { TYPES } from './../../server/types/index';
 import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
-import { IUserPersistenceDTO } from '../../domain/User/User.repository.interface';
-import { User, IUserRepository } from '../../domain/User';
+import { IUserPersistenceDTO } from '@domain/User';
+import { User, IUserRepository } from '@domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {

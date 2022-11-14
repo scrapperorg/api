@@ -20,8 +20,9 @@
       "@domain/*": ["domain/*"],
       "@repos": ["domain/repos"],
       "@repos/*": ["domain/repos/*"],
+      "@server/*": ["server/*"]
     }
   },
   "include": ["./src"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { User } from '../../domain/User';
-import { IUserAPIDTO, IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
+import { User } from '@domain/User';
+import { IUserAPIDTO, IUserPersistenceDTO } from '@domain/User';
 
 @injectable()
 export class UserMap {

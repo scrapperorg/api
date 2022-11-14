@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { MikroORM, EntityRepository } from '@mikro-orm/core';
-import { TYPES } from '../../server/types';
-import { UserMap } from './../../app/mappers/User.map';
-import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
+import { TYPES } from '@server/types';
+import { UserMap } from '../../app/mappers/User.map';
+import { IUserPersistenceDTO } from '@domain/User';
 import { UserSchema } from './User.schema';
-import { User, IUserRepository } from '../../domain/User';
+import { User, IUserRepository } from '@domain/User';
 @injectable()
 export class UserRepository implements IUserRepository {
   private userEM: EntityRepository<IUserPersistenceDTO>;

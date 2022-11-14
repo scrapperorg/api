@@ -1,12 +1,9 @@
-import { TYPES } from './../../server/types/index';
+import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
-import {
-  IUserPersistenceDTO,
-  IUserAPIincomingDTO,
-} from './../../domain/User/User.repository.interface';
+import { IUserPersistenceDTO, IUserAPIincomingDTO } from '@domain/User';
 import { UserMap } from '../mappers/User.map';
-import { IUserAPIDTO, IUserRepository } from '../../domain/User';
+import { IUserAPIDTO, IUserRepository } from '@domain/User';
 
 @injectable()
 export class UserService {

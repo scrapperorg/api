@@ -1,12 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { TYPES } from './../../server/types/index';
-import {
-  AuthService,
-  NoSuchElementException,
-  UnauthorizedException,
-} from '../services/Auth.service';
-import { UserService } from './../services/User.service';
+import { TYPES } from '@server/types';
+import { AuthService, NoSuchElementException, UnauthorizedException } from '@services';
+import { UserService } from '@services';
 
 export enum HttpStatus {
   'OK' = 200,
@@ -46,7 +42,7 @@ export class AuthContoller {
 
     this.router.post('/recover-password', async (req: Request, res: Response) => {
       const { email } = req.body;
-      this.authService.generateResetPasswordToken(email);
+      await this.authService.generateResetPasswordToken(email);
       res.send('insert response');
     });
 
@@ -54,14 +50,14 @@ export class AuthContoller {
       '/validate-reset-password-token/:token',
       async (req: Request, res: Response) => {
         const token = req.params.token;
-        this.authService.validateResetPasswordToken();
+        await this.authService.validateResetPasswordToken();
         res.send('insert response');
       },
     );
 
     this.router.post('/reset-password', async (req: Request, res: Response) => {
       const { token, password } = req.body; // plain password
-      this.authService.resetUserPassword();
+      await this.authService.resetUserPassword();
       res.send('insert response');
     });
   }

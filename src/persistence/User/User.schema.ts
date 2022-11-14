@@ -1,4 +1,4 @@
-import { IUserPersistenceDTO } from './../../domain/User/User.repository.interface';
+import { IUserPersistenceDTO } from '@domain/User';
 import { EntitySchema } from '@mikro-orm/core';
 
 export const UserSchema = new EntitySchema<IUserPersistenceDTO>({

@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
-import { TYPES } from '../../server/types/index';
+import { TYPES } from '@server/types';
 import { EmailService } from './Email.service';
-import { ForgotPasswordEmail } from '../../domain/Email/ForgotPassword.email';
+import { ForgotPasswordEmail } from '@domain/Email';
 import { ResetPasswordTokenMap } from '../mappers/ResetPasswordToken.map';
-import { IUserRepository, User } from '../../domain/User';
-import { IResetPasswordTokenRepository } from '../../domain/ResetPasswordToken';
+import { IUserRepository, User } from '@domain/User';
+import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
 import { EncryptionService } from './Encryption.service';

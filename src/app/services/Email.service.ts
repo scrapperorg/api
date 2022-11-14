@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { Email } from '../../domain/Email';
+import { Email } from '@domain/Email';
 
 @injectable()
 export class EmailService {

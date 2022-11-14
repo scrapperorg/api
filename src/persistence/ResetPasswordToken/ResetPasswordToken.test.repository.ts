@@ -1,10 +1,10 @@
-import { TYPES } from './../../server/types/index';
+import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
-import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
+import { ResetPasswordTokenMap } from '../../app/mappers/ResetPasswordToken.map';
 import {
   IResetPasswordTokenPersistenceDTO,
   IResetPasswordTokenRepository,
-} from './../../domain/ResetPasswordToken';
+} from '@domain/ResetPasswordToken';
 
 @injectable()
 export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepository {
