@@ -4,6 +4,7 @@ import { User } from './User';
 export interface IUserRepository {
   getAll(): Promise<User[]>;
   save(userProps: IUserPersistenceDTO): Promise<User>;
+  update(userProps: IUserPersistenceDTO): Promise<User>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
 }

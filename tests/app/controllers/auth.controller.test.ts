@@ -96,7 +96,7 @@ describe('User controller test', () => {
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      userId,
+      user: userId,
       token: resetPasswordTokenValue,
       expirationDate
     }
@@ -142,7 +142,7 @@ describe('User controller test', () => {
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      userId,
+      user: userId,
       token: resetPasswordTokenValue,
       expirationDate
     }
@@ -184,7 +184,7 @@ describe('User controller test', () => {
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      userId,
+      user: userId,
       token: resetPasswordTokenValue,
       expirationDate
     }

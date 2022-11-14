@@ -3,3 +3,4 @@ prod_node_modules
 dist
 jest.config.js
 tests/testServer.ts
+/src/persistence/migrations

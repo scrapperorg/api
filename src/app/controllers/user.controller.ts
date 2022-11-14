@@ -42,9 +42,9 @@ export class UserController {
           password,
         });
         return res.status(200).send(createdUser);
-      } catch (err: any) {
-        const error: Error = err;
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
   }

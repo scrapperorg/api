@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from './../../server/types/index';
 import { AuthService } from '../services/Auth.service';
 import { UserService } from './../services/User.service';
-import { recoverPasswordSchema, resetPasswrodSchema } from './validationSchemas/Auth';
+import { recoverPasswordSchema, resetPasswordSchema } from './validationSchemas/Auth';
 
 @injectable()
 export class AuthContoller {
@@ -32,6 +32,7 @@ export class AuthContoller {
       try {
         await recoverPasswordSchema.validateAsync(req.body);
       } catch (err: any) {
+        console.log(err);
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }
@@ -50,7 +51,7 @@ export class AuthContoller {
 
       try {
         await this.authService.validateResetPasswordToken(token);
-        return res.status(HttpStatus.OK);
+        return res.sendStatus(HttpStatus.OK);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
@@ -61,7 +62,7 @@ export class AuthContoller {
       const { token, password } = req.body;
 
       try {
-        await resetPasswrodSchema.validateAsync(req.body);
+        await resetPasswordSchema.validateAsync(req.body);
       } catch (err: any) {
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);

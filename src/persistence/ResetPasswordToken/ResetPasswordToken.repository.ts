@@ -1,5 +1,6 @@
+import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { inject, injectable } from 'inversify';
-import { EntityRepository, MikroORM } from '@mikro-orm/core';
+import { EntityRepository, MikroORM, wrap } from '@mikro-orm/core';
 import { TYPES } from './../../server/types/index';
 import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
 import { ResetPasswordTokenSchema } from './ResetPasswordToken.schema';
@@ -20,17 +21,36 @@ export class ResetPasswordTokenRepository implements IResetPasswordTokenReposito
     const em = this.orm.em.fork();
     this.rptEM = em.getRepository(ResetPasswordTokenSchema);
   }
+
   async save(
     resestPasswordTokenDTO: IResetPasswordTokenPersistenceDTO,
   ): Promise<ResetPasswordToken> {
-    this.rptEM.create(resestPasswordTokenDTO);
-    await this.rptEM.persistAndFlush(resestPasswordTokenDTO);
+    const rpt = this.rptEM.create(resestPasswordTokenDTO);
+    await this.rptEM.persistAndFlush(rpt);
     return this.resetPasswordTokenMap.persistenceToDomain(resestPasswordTokenDTO);
   }
+
+  async update(
+    resestPasswordTokenDTO: IResetPasswordTokenPersistenceDTO,
+  ): Promise<ResetPasswordToken> {
+    const resetPasswordToken = await this.rptEM.findOne({ id: resestPasswordTokenDTO.id });
+
+    if (!resetPasswordToken) {
+      throw new NoSuchElementException('Reset Password Token not found');
+    }
+
+    const updatedResetPasswordToken = wrap(resetPasswordToken).assign(resestPasswordTokenDTO, {
+      mergeObjects: true,
+    });
+    await this.rptEM.flush();
+    return this.resetPasswordTokenMap.persistenceToDomain(updatedResetPasswordToken);
+  }
+
   async getAllByUserId(userId: string): Promise<ResetPasswordToken[]> {
-    const resetPasswordTokens = await this.rptEM.find({ userId });
+    const resetPasswordTokens = await this.rptEM.find({ user: userId });
     return resetPasswordTokens.map((rpt) => this.resetPasswordTokenMap.persistenceToDomain(rpt));
   }
+
   async getByToken(token: string): Promise<ResetPasswordToken | null> {
     const resetPasswordToken = await this.rptEM.findOne({ token });
     if (!resetPasswordToken) return null;

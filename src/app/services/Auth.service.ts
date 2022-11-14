@@ -58,7 +58,7 @@ export class AuthService {
 
     const resetPasswordToken = await this.resetPasswordTokenRepository.save({
       id,
-      userId: user.id,
+      user: user.id,
       expirationDate,
       token,
     });
@@ -80,7 +80,7 @@ export class AuthService {
   async validateResetPasswordToken(token: string) {
     const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(token);
 
-    if (!resetPasswordToken) {
+    if (resetPasswordToken === null) {
       throw new NoSuchElementException('Reset Password Token not found');
     }
 
@@ -88,12 +88,11 @@ export class AuthService {
       throw new NoSuchElementException('Reset Password Token is expired'); // todo: think of a better expception
     }
 
-    return;
+    return true;
   }
 
   async resetUserPassword(token: string, password: string) {
     const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(token);
-
     if (!resetPasswordToken) {
       throw new NoSuchElementException('Reset Password Token not found');
     }
@@ -102,15 +101,29 @@ export class AuthService {
       throw new NoSuchElementException('Reset Password Token is expired');
     }
 
-    const user = await this.userRepository.getById(resetPasswordToken.userId);
+    const user = await this.userRepository.getById(resetPasswordToken.user);
 
     if (!user) {
       throw new NoSuchElementException('User for Reset Password Token not found');
     }
 
     const hashedPassword = this.encryptionService.hash(password);
-    user.password = hashedPassword;
-    const userDTO = this.userMap.toPersistence(user);
-    await this.userRepository.save(userDTO);
+    user.updatePassword(hashedPassword);
+
+    await this.userRepository.update(this.userMap.toPersistence(user));
+
+    await this.expireResetPasswordToken(token);
+  }
+
+  async expireResetPasswordToken(tokenValue: string) {
+    const resetPasswordToken = await this.resetPasswordTokenRepository.getByToken(tokenValue);
+
+    if (!resetPasswordToken) {
+      throw new NoSuchElementException('Reset Password Token not found');
+    }
+
+    resetPasswordToken.expire();
+
+    await this.resetPasswordTokenRepository.update(resetPasswordToken);
   }
 }
