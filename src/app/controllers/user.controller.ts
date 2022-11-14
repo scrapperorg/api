@@ -1,5 +1,8 @@
-import { TYPES } from '@server/types';
-import { UserService } from '@services';
+import { HttpStatus } from './../../lib/HttpStatus';
+import { Exception, statusMap } from './../../lib/';
+import { createSchema } from './validationSchemas/User';
+import { TYPES } from './../../server/types/index';
+import { UserService } from './../services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
@@ -11,26 +14,38 @@ export class UserController {
       const users = await this.userService.getAll();
       res.send(users);
     });
-
     this.router.get('/:id', async (req: Request, res: Response) => {
-      const user = await this.userService.getById(req.params.id);
-      res.send(user);
+      try {
+        const user = await this.userService.getById(req.params.id);
+        return res.status(HttpStatus.OK).json(user);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
     });
-
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
+
       try {
-        await this.userService.create({
+        await createSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        const createdUser = await this.userService.create({
           name,
           surname,
           role,
           email,
-          plainPassword: password,
+          password,
         });
-      } catch (err) {
-        return res.status(500).send(err);
+        return res.status(200).send(createdUser);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
-      return res.send(200);
     });
   }
 }

@@ -1,8 +1,10 @@
+import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
+import { User } from './../../domain/User/User';
+import { IUserPersistenceDTO } from './../dtos/User';
 import { TYPES } from './../../server/types/index';
 import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
-import { IUserPersistenceDTO } from '@domain/User';
-import { User, IUserRepository } from '@domain/User';
+import { IUserRepository } from '../../domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {
@@ -29,8 +31,25 @@ export class UserMockRepository implements IUserRepository {
   async getAll() {
     return this.entries.map((user) => this.userMap.toDomain(user));
   }
-  async save(user: IUserPersistenceDTO): Promise<void> {
-    this.entries.push(user);
+
+  async save(user: IUserPersistenceDTO): Promise<User> {
+    const indexOfExistingEntry = this.entries.findIndex((entry) => entry.id === user.id);
+    if (indexOfExistingEntry === -1) {
+      this.entries.push(user);
+    } else {
+      this.entries[indexOfExistingEntry] = user;
+    }
+    return this.userMap.toDomain(user);
+  }
+
+  async update(user: IUserPersistenceDTO): Promise<User> {
+    const indexOfExistingEntry = this.entries.findIndex((entry) => entry.id === user.id);
+    if (indexOfExistingEntry === -1) {
+      throw new NoSuchElementException('User not found');
+    } else {
+      this.entries[indexOfExistingEntry] = user;
+    }
+    return this.userMap.toDomain(user);
   }
 
   async getById(id: string): Promise<User | null> {
@@ -39,7 +58,7 @@ export class UserMockRepository implements IUserRepository {
     return this.userMap.toDomain(user);
   }
 
-  async getByEmail(email: string): Promise<IUserPersistenceDTO | null> {
+  async getByEmail(email: string): Promise<User | null> {
     const user = this.entries.find((u) => u.email === email);
     if (!user) return null;
     return this.userMap.toDomain(user);

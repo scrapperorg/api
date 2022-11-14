@@ -1,15 +1,10 @@
+import { Exception, statusMap, HttpStatus } from './../../lib';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '@server/types';
-import { AuthService, NoSuchElementException, UnauthorizedException } from '@services';
-import { UserService } from '@services';
-
-export enum HttpStatus {
-  'OK' = 200,
-  'UNAUTHORIZED' = 401,
-  'NOT_FOUND' = 404,
-  'INTERNAL_SERVER_ERROR' = 500,
-}
+import { TYPES } from './../../server/types/index';
+import { AuthService } from '../services/Auth.service';
+import { UserService } from './../services/User.service';
+import { recoverPasswordSchema, resetPasswordSchema } from './validationSchemas/Auth';
 
 @injectable()
 export class AuthContoller {
@@ -26,39 +21,60 @@ export class AuthContoller {
         const { user, token } = await this.authService.login(email, password);
         return res.status(HttpStatus.OK).json({ user, token });
       } catch (error: any) {
-        switch (error.constructor) {
-          case NoSuchElementException: {
-            return res.status(HttpStatus.NOT_FOUND).json({});
-          }
-          case UnauthorizedException: {
-            return res.status(HttpStatus.UNAUTHORIZED).json({});
-          }
-          default: {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({});
-          }
-        }
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
 
     this.router.post('/recover-password', async (req: Request, res: Response) => {
       const { email } = req.body;
-      await this.authService.generateResetPasswordToken(email);
-      res.send('insert response');
+
+      try {
+        await recoverPasswordSchema.validateAsync(req.body);
+      } catch (err: any) {
+        console.log(err);
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        const token = await this.authService.generateResetPasswordToken(email);
+        return res.status(HttpStatus.OK).send(token);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
     });
 
-    this.router.get(
-      '/validate-reset-password-token/:token',
-      async (req: Request, res: Response) => {
-        const token = req.params.token;
-        await this.authService.validateResetPasswordToken();
-        res.send('insert response');
-      },
-    );
+    this.router.post('/validate-reset-password-token', async (req: Request, res: Response) => {
+      const { token } = req.body;
+
+      try {
+        await this.authService.validateResetPasswordToken(token);
+        return res.sendStatus(HttpStatus.OK);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
 
     this.router.post('/reset-password', async (req: Request, res: Response) => {
-      const { token, password } = req.body; // plain password
-      await this.authService.resetUserPassword();
-      res.send('insert response');
+      const { token, password } = req.body;
+
+      try {
+        await resetPasswordSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        await this.authService.resetUserPassword(token, password);
+        return res.sendStatus(HttpStatus.OK);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
     });
   }
 }

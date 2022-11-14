@@ -1,21 +1,21 @@
-import { AuthContoller } from '@controllers';
+import { AuthContoller } from './../../app/controllers/auth.controller';
 import { AsyncContainerModule, Container } from 'inversify';
 import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
-import { EmailService } from '@services/Email.service';
-import { UserController } from '@controllers';
-import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
-import { ResetPasswordTokenMap } from '../../app/mappers/ResetPasswordToken.map';
-import { UserMap } from '../../app/mappers/User.map';
-import { AuthService } from '@services';
-import { UserService } from '@services';
-import { UserMockRepository } from '../../persistence/User/User.repository.mock';
-import { UserRepository } from '../../persistence/User';
-import { IUserRepository } from '@domain/User';
+import { EmailService } from './../../app/services/Email.service';
+import { UserController } from './../../app/controllers/user.controller';
+import { IResetPasswordTokenRepository } from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
+import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
+import { UserMap } from './../../app/mappers/User.map';
+import { AuthService } from '../../app/services/Auth.service';
+import { UserService } from './../../app/services/User.service';
+import { UserMockRepository } from './../../persistence/User/User.repository.mock';
+import { UserRepository } from './../../persistence/User/User.repository';
+import { IUserRepository } from './../../domain/User/User.repository.interface';
 import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
-import { ResetPasswordTokenRepository } from '../../persistence/ResetPasswordToken';
-import { ResetPasswordTokenTestRepository } from '../../persistence/ResetPasswordToken/ResetPasswordToken.test.repository';
-import { EncryptionService } from '@services/Encryption.service';
+import { ResetPasswordTokenRepository } from './../../persistence/ResetPasswordToken';
+import { ResetPasswordTokenTestRepository } from '../../persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
+import { EncryptionService } from '../../app/services/Encryption.service';
 
 export class DiContainer {
   private diContainer: Container;
