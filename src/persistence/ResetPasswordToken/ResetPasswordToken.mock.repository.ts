@@ -1,12 +1,12 @@
-import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
-import { TYPES } from '../../server/types/index';
+import { NoSuchElementException } from '@lib';
+import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ResetPasswordTokenMap } from '../../app/mappers/ResetPasswordToken.map';
 import {
   IResetPasswordTokenPersistenceDTO,
   IResetPasswordTokenRepository,
   ResetPasswordToken,
-} from '../../domain/ResetPasswordToken';
+} from '@domain/ResetPasswordToken';
 
 @injectable()
 export class ResetPasswordTokenTestRepository implements IResetPasswordTokenRepository {

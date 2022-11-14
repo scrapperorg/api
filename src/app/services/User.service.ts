@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
-import { IUserPersistenceDTO } from './../../persistence/dtos/User';
-import { IUserAPIincomingDTO, IUserAPIDTO } from './../controllers/dtos/User';
+import { IUserPersistenceDTO } from '@persistence/dtos/User';
+import { IUserAPIincomingDTO, IUserAPIDTO } from '@controllers/dtos/User';
 import { EncryptionService } from './Encryption.service';
-import { TYPES } from './../../server/types/index';
+import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
-import { IUserRepository } from '../../domain/User';
-import { NoSuchElementException } from './../../lib';
+import { IUserRepository } from '@domain/User';
+import { NoSuchElementException } from '@lib';
 
 @injectable()
 export class UserService {

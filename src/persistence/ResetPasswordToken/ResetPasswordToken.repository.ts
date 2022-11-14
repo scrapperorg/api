@@ -1,14 +1,14 @@
-import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
+import { NoSuchElementException } from '@lib';
 import { inject, injectable } from 'inversify';
 import { EntityRepository, MikroORM, wrap } from '@mikro-orm/core';
-import { TYPES } from './../../server/types/index';
-import { ResetPasswordTokenMap } from './../../app/mappers/ResetPasswordToken.map';
+import { TYPES } from '@server/types';
+import { ResetPasswordTokenMap } from '../../app/mappers/ResetPasswordToken.map';
 import { ResetPasswordTokenSchema } from './ResetPasswordToken.schema';
 import {
   IResetPasswordTokenRepository,
   IResetPasswordTokenPersistenceDTO,
-} from './../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
-import { ResetPasswordToken } from '../../domain/ResetPasswordToken';
+} from '@domain/ResetPasswordToken';
+import { ResetPasswordToken } from '@domain/ResetPasswordToken';
 
 @injectable()
 export class ResetPasswordTokenRepository implements IResetPasswordTokenRepository {

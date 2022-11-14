@@ -1,9 +1,9 @@
-import { Exception, statusMap, HttpStatus } from './../../lib';
+import { Exception, statusMap, HttpStatus } from '../../lib';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { TYPES } from './../../server/types/index';
-import { AuthService } from '../services/Auth.service';
-import { UserService } from './../services/User.service';
+import { TYPES } from '@server/types';
+import { AuthService } from '@services';
+import { UserService } from '@services';
 import { recoverPasswordSchema, resetPasswordSchema } from './validationSchemas/Auth';
 
 @injectable()

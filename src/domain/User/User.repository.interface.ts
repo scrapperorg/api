@@ -1,4 +1,4 @@
-import { IUserPersistenceDTO } from './../../persistence/dtos/User';
+import { IUserPersistenceDTO } from '@persistence/dtos/User';
 import { User } from './User';
 
 export interface IUserRepository {

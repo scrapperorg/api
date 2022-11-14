@@ -1,4 +1,4 @@
-import { NoSuchElementException, UnauthorizedException } from './../../lib';
+import { NoSuchElementException, UnauthorizedException } from '@lib';
 import { v4 } from 'uuid';
 import { TYPES } from '@server/types';
 import { EmailService } from './Email.service';

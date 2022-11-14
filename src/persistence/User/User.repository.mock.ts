@@ -1,10 +1,10 @@
-import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
-import { User } from './../../domain/User/User';
+import { NoSuchElementException } from '@lib';
+import { User } from '@domain/User';
 import { IUserPersistenceDTO } from './../dtos/User';
-import { TYPES } from './../../server/types/index';
+import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { UserMap } from '../../app/mappers/User.map';
-import { IUserRepository } from '../../domain/User';
+import { IUserRepository } from '@domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {
