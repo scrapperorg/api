@@ -1,8 +1,8 @@
-import { HttpStatus } from './../../lib/HttpStatus';
-import { Exception, statusMap } from './../../lib/';
+import { HttpStatus } from '../../lib';
+import { Exception, statusMap } from '../../lib';
 import { createSchema } from './validationSchemas/User';
-import { TYPES } from './../../server/types/index';
-import { UserService } from './../services';
+import { TYPES } from '@server/types';
+import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 

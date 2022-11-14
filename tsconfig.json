@@ -20,8 +20,14 @@
       "@domain/*": ["domain/*"],
       "@repos": ["domain/repos"],
       "@repos/*": ["domain/repos/*"],
+      "@server": ["server"],
+      "@server/*": ["server/*"],
+      "@lib": ["lib"],
+      "@lib/*": ["lib/*"],
+      "@persistence": ["persistence"],
+      "@persistence/*": ["persistence/*"]
     }
   },
   "include": ["./src"],
-  "exclude": ["node_modules", "./src/persistence/migrations"],
+  "exclude": ["node_modules", "./src/persistence/migrations"]
 }

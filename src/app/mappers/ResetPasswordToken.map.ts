@@ -3,7 +3,7 @@ import {
   IResetPasswordTokenPersistenceDTO,
   ResetPasswordToken,
   IResetPasswordTokenAPIDTO,
-} from './../../domain/ResetPasswordToken';
+} from '@domain/ResetPasswordToken';
 
 @injectable()
 export class ResetPasswordTokenMap {

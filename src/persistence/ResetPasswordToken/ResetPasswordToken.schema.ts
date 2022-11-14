@@ -1,5 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { IResetPasswordTokenPersistenceDTO } from '../../domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
+import { IResetPasswordTokenPersistenceDTO } from '@domain/ResetPasswordToken';
 
 export const ResetPasswordTokenSchema = new EntitySchema<IResetPasswordTokenPersistenceDTO>({
   name: 'ResetPasswordToken',

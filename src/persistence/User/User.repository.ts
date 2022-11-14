@@ -1,12 +1,12 @@
-import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
-import { UniqueConstraintViolationException } from './../../lib/exceptions/UniqueConstraintValidation.exception';
+import { NoSuchElementException } from '@lib';
+import { UniqueConstraintViolationException } from '@lib/exceptions/UniqueConstraintValidation.exception';
 import { IUserPersistenceDTO } from './../dtos/User';
 import { inject, injectable } from 'inversify';
 import { MikroORM, EntityRepository, wrap } from '@mikro-orm/core';
-import { TYPES } from '../../server/types';
-import { UserMap } from './../../app/mappers/User.map';
+import { TYPES } from '@server/types';
+import { UserMap } from '../../app/mappers/User.map';
 import { UserSchema } from './User.schema';
-import { User, IUserRepository } from '../../domain/User';
+import { User, IUserRepository } from '@domain/User';
 @injectable()
 export class UserRepository implements IUserRepository {
   private userEM: EntityRepository<IUserPersistenceDTO>;

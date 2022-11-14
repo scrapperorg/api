@@ -1,7 +1,7 @@
-import { IUserAPIDTO } from './../controllers/dtos/User';
-import { IUserPersistenceDTO } from './../../persistence/dtos/User';
+import { IUserAPIDTO } from '@controllers/dtos/User';
+import { IUserPersistenceDTO } from '@persistence/dtos/User';
 import { injectable } from 'inversify';
-import { User } from '../../domain/User';
+import { User } from '@domain/User';
 
 @injectable()
 export class UserMap {
