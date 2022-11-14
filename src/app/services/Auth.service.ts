@@ -8,7 +8,7 @@ import { IUserRepository, User } from '@domain/User';
 import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
-import { EncryptionService } from './Encryption.service';
+import { EncryptionService, UserTokenClaims } from './Encryption.service';
 
 @injectable()
 export class AuthService {
@@ -23,6 +23,26 @@ export class AuthService {
     @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
   ) {}
 
+  async refreshToken(token: string): Promise<{ user: User; token: string }> {
+    const claims = this.encryptionService.verify<UserTokenClaims>(token);
+    const user = await this.userRepository.getById(claims.id);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    const newtoken = this.encryptionService.sign<UserTokenClaims>({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    return {
+      user,
+      token: newtoken,
+    };
+  }
+
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
     const user = await this.userRepository.getByEmail(email);
 
@@ -36,7 +56,7 @@ export class AuthService {
       throw new UnauthorizedException('password does not match');
     }
 
-    const token = this.encryptionService.sign({
+    const token = this.encryptionService.sign<UserTokenClaims>({
       id: user.id,
       email: user.email,
       role: user.role,

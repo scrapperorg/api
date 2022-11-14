@@ -14,6 +14,22 @@ export class AuthContoller {
     @inject(TYPES.AUTH_SERVICE)
     private readonly authService: AuthService,
   ) {
+    this.router.post('/refresh-token', async (req: Request, res: Response) => {
+      const tokenFromHeader = req.headers['authorization'];
+
+      if (!tokenFromHeader) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({});
+      }
+
+      try {
+        const { user, token } = await this.authService.refreshToken(tokenFromHeader);
+        return res.status(HttpStatus.OK).json({ user, token });
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
     this.router.post('/login', async (req: Request, res: Response) => {
       const { email, password } = req.body;
 
