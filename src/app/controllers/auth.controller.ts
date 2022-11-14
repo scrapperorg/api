@@ -15,9 +15,9 @@ export class AuthContoller {
     private readonly authService: AuthService,
   ) {
     this.router.post('/refresh-token', async (req: Request, res: Response) => {
-      const tokenFromHeader = req.headers['authorization'];
+      const tokenFromHeader: string = req.headers['authorization'] ?? '';
 
-      if (!tokenFromHeader) {
+      if (tokenFromHeader.length === 0) {
         return res.status(HttpStatus.UNAUTHORIZED).json({});
       }
 
