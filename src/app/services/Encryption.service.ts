@@ -20,7 +20,7 @@ export class EncryptionService {
   }
 
   public verify<TClaims extends Record<string, string>>(token: string): TClaims {
-    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN as string, { complete: false });
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string, { complete: false });
     return decodedToken as TClaims;
   }
 }
