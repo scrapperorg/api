@@ -11,6 +11,9 @@ export const ROLES_PRIORITY = {
 export function hasRoleAtLeast(allowedRole: Role) {
   return (request: Request, response: Response, next: () => void) => {
     try {
+      if (!request.user) {
+        return response.status(403).json({ error: `User has not enough permissions.` });
+      }
       if (ROLES_PRIORITY[request.user.role as Role] < ROLES_PRIORITY[allowedRole]) {
         return response.status(403).json({ error: `User has not enough permissions.` });
       }
@@ -25,6 +28,9 @@ export function hasRoleAtLeast(allowedRole: Role) {
 export function hasExactRole(allowedRole: Role) {
   return (request: Request, response: Response, next: () => void) => {
     try {
+      if (!request.user) {
+        return response.status(403).json({ error: `User has not enough permissions.` });
+      }
       if (request.user.role !== allowedRole) {
         return response.status(403).json({ error: `User has not enough permissions.` });
       }

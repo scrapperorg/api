@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { EncryptionService } from '@services/Encryption.service';
+import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 
 export async function isAuthenticated(request: Request, response: Response, next: () => void) {
   const token = request.headers['authorization'];
@@ -11,7 +11,7 @@ export async function isAuthenticated(request: Request, response: Response, next
 
   try {
     const encryptionService = new EncryptionService();
-    request.user = encryptionService.verify(token);
+    request.user = encryptionService.verify<UserTokenClaims>(token);
     next();
   } catch (e) {
     console.log(e);
