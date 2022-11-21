@@ -1,7 +1,13 @@
 import { AuthContoller, UserController } from '@controllers';
 import { AsyncContainerModule, Container } from 'inversify';
 import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
-import { EmailService, AuthService, UserService } from '@services';
+import {
+  EmailService,
+  AuthService,
+  UserService,
+  DocumentService,
+  EncryptionService,
+} from '@services';
 import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
 import { ResetPasswordTokenMap, DocumentMap, UserMap } from '@mappers';
 import { UserMockRepository } from '@persistence/User/User.repository.mock';
@@ -11,9 +17,9 @@ import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from '@persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from '@persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
-import { EncryptionService } from '@services/Encryption.service';
 import { IDocumentRepository } from '@domain/Document';
 import { DocumentRepository } from '@persistence/Document/Document.repository';
+import { DocumentController } from '@controllers/document.controllers';
 
 export class DiContainer {
   private diContainer: Container;
@@ -64,12 +70,14 @@ export class DiContainer {
     this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope;
     this.diContainer.bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE).to(EncryptionService)
       .inSingletonScope;
+    this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
 
     // controllers
     this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
       .inSingletonScope;
-
     this.diContainer.bind<AuthContoller>(TYPES.AUTH_CONTROLLER).to(AuthContoller).inSingletonScope;
+    this.diContainer.bind<DocumentController>(TYPES.DOCUMENT_CONTROLLER).to(DocumentController)
+      .inSingletonScope;
 
     return this.diContainer;
   }
