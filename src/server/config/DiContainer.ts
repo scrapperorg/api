@@ -92,6 +92,11 @@ export class DiContainer {
       .bind<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
       .to(ResetPasswordTokenRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
+      .to(DocumentRepository)
+      .inSingletonScope();
   }
   public configureMockRepositories() {
     this.diContainer
@@ -102,11 +107,6 @@ export class DiContainer {
     this.diContainer
       .bind<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
       .to(ResetPasswordTokenTestRepository)
-      .inSingletonScope();
-
-    this.diContainer
-      .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
-      .to(DocumentRepository)
       .inSingletonScope();
   }
 }
