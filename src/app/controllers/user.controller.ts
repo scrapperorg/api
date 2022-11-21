@@ -7,6 +7,8 @@ import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService } from '@services/Encryption.service';
+import { hasRoleAtLeast } from '../middlewares/hasRole.middleware';
+import { Role } from '@domain/User';
 
 @injectable()
 export class UserController {
@@ -15,10 +17,15 @@ export class UserController {
     @inject(TYPES.USER_SERVICE) private readonly userService: UserService,
     @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
   ) {
-    this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
-      const users = await this.userService.getAll();
-      res.send(users);
-    });
+    this.router.get(
+      '/',
+      isAuthenticated,
+      hasRoleAtLeast(Role.ITA),
+      async (req: Request, res: Response) => {
+        const users = await this.userService.getAll();
+        res.send(users);
+      },
+    );
     this.router.get('/:id', async (req: Request, res: Response) => {
       try {
         const user = await this.userService.getById(req.params.id);
