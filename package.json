@@ -47,6 +47,7 @@
   "_moduleAliases": {
     "@controllers": "dist/app/controllers",
     "@services": "dist/app/services",
+    "@mappers": "dist/app/mappers",
     "@domain": "dist/domain/",
     "@repos": "dist/domain/repos",
     "@server": "dist/server",

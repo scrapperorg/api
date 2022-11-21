@@ -34,13 +34,13 @@ export class Document {
   publicationDate: Date;
   source: string;
   status: Status;
-  assignedUser: string | null;
-  deadline: Date | null;
-  originalFormat: string | null;
-  numberOfPages: number | null;
-  textInterpretationPrecision: number | null;
-  numberOfIdentifiedArticles: number | null;
-  numberOfIdentifiedTerms: number | null;
+  assignedUser: string | undefined;
+  deadline: Date | undefined;
+  originalFormat: string | undefined;
+  numberOfPages: number | undefined;
+  textInterpretationPrecision: number | undefined;
+  numberOfIdentifiedArticles: number | undefined;
+  numberOfIdentifiedTerms: number | undefined;
   attachments: string[];
 
   private constructor(props: IDocumentProps) {
@@ -53,13 +53,18 @@ export class Document {
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
-    this.assignedUser = props.assignedUser;
-    this.deadline = props.deadline;
-    this.originalFormat = props.originalFormat;
-    this.numberOfPages = props.numberOfPages;
-    this.textInterpretationPrecision = props.textInterpretationPrecision;
-    this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
-    this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
+    if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
+    if (props.deadline !== null) this.deadline = props.deadline;
+    if (props.originalFormat !== null) this.originalFormat = props.originalFormat;
+    if (props.numberOfPages !== null) this.numberOfPages = props.numberOfPages;
+    if (props.textInterpretationPrecision !== null)
+      this.textInterpretationPrecision = props.textInterpretationPrecision;
+    if (props.numberOfIdentifiedArticles !== null)
+      this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
+    if (props.numberOfIdentifiedTerms !== null)
+      this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
+    if (props.numberOfIdentifiedArticles !== null)
+      this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
     this.attachments = props.attachments;
   }
 
