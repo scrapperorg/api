@@ -18,7 +18,7 @@ import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from '@persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from '@persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
 import { IDocumentRepository } from '@domain/Document';
-import { DocumentRepository } from '@persistence/Document/Document.repository';
+import { DocumentRepository, DocumentMockRepository } from '@persistence/Document';
 import { DocumentController } from '@controllers/document.controllers';
 
 export class DiContainer {
@@ -107,6 +107,11 @@ export class DiContainer {
     this.diContainer
       .bind<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
       .to(ResetPasswordTokenTestRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
+      .to(DocumentMockRepository)
       .inSingletonScope();
   }
 }
