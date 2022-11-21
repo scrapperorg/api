@@ -11,7 +11,11 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "baseUrl": "./src",
-    "typeRoots": ["./src/server/types/request.ts"],
+    "types": [
+      "reflect-metadata",
+      "jest",
+      "./src/server/types/request.ts"
+    ],
     "paths": {
       "@controllers": ["app/controllers"],
       "@controllers/*": ["app/controllers/*"],

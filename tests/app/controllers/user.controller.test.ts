@@ -1,9 +1,13 @@
 import { Container } from 'inversify';
 import { Application } from 'express';
-import { TYPES } from './../../../src/server/types/index';
+import { TYPES } from '../../../src/server/types';
 import request from 'supertest';
-import { configServer } from './../../../src/server/server';
+import { configServer } from '../../../src/server/server';
 import { IUserRepository } from '../../../src/domain/User';
+
+jest.mock('../../../src/app/middlewares/isAuthenticated.middleware.ts', () => ({
+  isAuthenticated: (_: any, __: any, next: () => any) => next(),
+}));
 
 describe('User controller test', () => {
   let server: {
@@ -20,7 +24,9 @@ describe('User controller test', () => {
   });
 
   test('/user/:id should return 404 if user not found', async () => {
-    const response = await request(server.app).get('/user/randomId').set('Accept', 'application/json');
+    const response = await request(server.app)
+      .get('/user/randomId')
+      .set('Accept', 'application/json');
 
     expect(response.status).toBe(404);
   });
@@ -38,7 +44,7 @@ describe('User controller test', () => {
       .post('/user/create')
       .send(user)
       .set('Accept', 'application/json');
-    
+
     expect(response.status).toEqual(200);
     const userRepo = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
     const savedUser = await userRepo.getByEmail(user.email);
@@ -58,6 +64,6 @@ describe('User controller test', () => {
       .post('/user/create')
       .send(incompleteUser)
       .set('Accept', 'application/json');
-      expect(response.status).toBe(400);
+    expect(response.status).toBe(400);
   });
 });
