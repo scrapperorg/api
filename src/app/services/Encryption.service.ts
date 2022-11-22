@@ -20,8 +20,6 @@ export class EncryptionService {
 
   public sign<TClaims extends object>(claims: TClaims): string {
     // todo config service for reading env vars
-
-    console.log('exp time ', process.env.JWT_EXPIRATION_TIME);
     return jwt.sign(claims, process.env.JWT_SECRET as string, {
       expiresIn: process.env.JWT_EXPIRATION_TIME,
     });

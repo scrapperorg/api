@@ -1,11 +1,12 @@
-import { IUserPersistenceDTO } from './../../../src/persistence/dtos/User';
-import { IUserAPIDTO } from './../../../src/app/controllers/dtos/User';
+import { IUserPersistenceDTO } from '../../../src/persistence/dtos/User';
 import request from 'supertest';
 import { Container } from 'inversify';
 import { Application } from 'express';
-import * as http from 'http';
-import { IResetPasswordTokenRepository, IResetPasswordTokenAPIDTO, IResetPasswordTokenPersistenceDTO } from './../../../src/domain/ResetPasswordToken/ResetPasswordToken.repository.interface';
-import { configServer } from './../../../src/server/server';
+import {
+  IResetPasswordTokenRepository,
+  IResetPasswordTokenPersistenceDTO,
+} from '../../../src/domain/ResetPasswordToken';
+import { configServer } from '../../../src/server/server';
 import { TYPES } from '../../../src/server/types';
 import { EncryptionService } from '../../../src/app/services/Encryption.service';
 import { IUserRepository, User } from '../../../src/domain/User';
@@ -39,7 +40,7 @@ describe('User controller test', () => {
       .post('/user/create')
       .send(user)
       .set('Accept', 'application/json');
-    
+
     const savedUser = response.body;
 
     const recoverPasswordResponse = await request(server.app)
@@ -52,7 +53,6 @@ describe('User controller test', () => {
     const savedTokens = await resetPasswordTokenRepo.getAllByUserId(savedUser.id);
 
     expect(savedTokens.length).toBeGreaterThanOrEqual(1);
-
   });
 
   test('/recover-password should return 400 if the request does not contain the email', async () => {
@@ -63,17 +63,20 @@ describe('User controller test', () => {
 
     expect(response.status).toBe(400);
   });
-  
-  
+
   test('/validate-reset-password-token/:token should respond with 404 if token does not exist', async () => {
-    const response = await request(server.app).post('/validate-reset-password-token').send({ token: '123423131' });
+    const response = await request(server.app)
+      .post('/validate-reset-password-token')
+      .send({ token: '123423131' });
 
     expect(response.status).toBe(404);
   });
-  
+
   test('/validate-reset-password-token should return 404 if the token is expired', async () => {
     const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
-    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(
+      TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
+    );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
     const userId = 'vasielsIdealid1';
@@ -98,18 +101,20 @@ describe('User controller test', () => {
       id: resetPasswordTokenId,
       user: userId,
       token: resetPasswordTokenValue,
-      expirationDate
-    }
+      expirationDate,
+    };
 
     const createdUser: User = await userRepository.save(user);
 
     const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
 
-    const response = await request(server.app).post(`/validate-reset-password-token`).send({ token: resetPasswordToken });
+    const response = await request(server.app)
+      .post(`/validate-reset-password-token`)
+      .send({ token: resetPasswordToken });
 
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(404);
   });
-  
+
   test('/reset-password should return 400 if the token or password are missing from the request', async () => {
     const response = await request(server.app).post('/reset-password').send({ token: '123431' });
 
@@ -118,7 +123,9 @@ describe('User controller test', () => {
 
   test('/reset-password should return 404 if the token is expired', async () => {
     const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
-    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(
+      TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
+    );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
     const userId = 'vasielsIdealid2';
@@ -144,23 +151,25 @@ describe('User controller test', () => {
       id: resetPasswordTokenId,
       user: userId,
       token: resetPasswordTokenValue,
-      expirationDate
-    }
+      expirationDate,
+    };
 
     const createdUser: User = await userRepository.save(user);
 
     const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
 
-    const response = await request(server.app).post('/reset-password').send({ token: resetPasswordTokenValue, password: newPassword });
+    const response = await request(server.app)
+      .post('/reset-password')
+      .send({ token: resetPasswordTokenValue, password: newPassword });
 
-    expect(response.status).toBe(404)
-
+    expect(response.status).toBe(404);
   });
 
   test('/reset-password should update the users password', async () => {
-
     const encryptionService = server.container.get<EncryptionService>(TYPES.ENCRYPTION_SERVICE);
-    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
+    const resetPasswordTokenRepository = server.container.get<IResetPasswordTokenRepository>(
+      TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
+    );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
     const userId = 'vasielsid3';
@@ -186,8 +195,8 @@ describe('User controller test', () => {
       id: resetPasswordTokenId,
       user: userId,
       token: resetPasswordTokenValue,
-      expirationDate
-    }
+      expirationDate,
+    };
 
     const createdUser: User = await userRepository.save(user);
 
@@ -195,14 +204,16 @@ describe('User controller test', () => {
 
     const createdResetPasswordToken = await resetPasswordTokenRepository.save(resetPasswordToken);
 
-    const response = await request(server.app).post('/reset-password').send({ token: resetPasswordTokenValue, password: newPassword });
+    const response = await request(server.app)
+      .post('/reset-password')
+      .send({ token: resetPasswordTokenValue, password: newPassword });
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(200);
 
-    const updatedUser = await userRepository.getById(createdUser.id)
+    const updatedUser = await userRepository.getById(createdUser.id);
 
     const updatedUserHashedPassword = updatedUser?.password || 'ALWAYS_WRONG';
 
-    expect(encryptionService.compare(newPassword, updatedUserHashedPassword)).toBe(true)
-  })
+    expect(encryptionService.compare(newPassword, updatedUserHashedPassword)).toBe(true);
+  });
 });

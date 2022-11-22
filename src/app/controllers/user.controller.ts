@@ -1,16 +1,21 @@
-import { HttpStatus } from '../../lib';
-import { Exception, statusMap } from '../../lib';
+import { HttpStatus } from '@lib';
+import { Exception, statusMap } from '@lib';
 import { createSchema } from './validationSchemas/User';
 import { TYPES } from '@server/types';
 import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
+import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
+import { EncryptionService } from '@services/Encryption.service';
 
 @injectable()
 export class UserController {
   public router: Router = Router();
-  constructor(@inject(TYPES.USER_SERVICE) private readonly userService: UserService) {
-    this.router.get('/', async (req: Request, res: Response) => {
+  constructor(
+    @inject(TYPES.USER_SERVICE) private readonly userService: UserService,
+    @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
+  ) {
+    this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
       const users = await this.userService.getAll();
       res.send(users);
     });

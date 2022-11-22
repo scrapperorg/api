@@ -1,7 +1,7 @@
 export enum Role {
+  ITA = 'ITA', // IT Administrator
   LSE = 'LSE', // Legislation Screening Expert
   LSS = 'LSS', // Legislation Screening Supervisor
-  ITA = 'ITA', // IT Administrator
   GU = 'GU', // Generic User
 }
 
