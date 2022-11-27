@@ -48,7 +48,6 @@ export class AuthContoller {
       try {
         await recoverPasswordSchema.validateAsync(req.body);
       } catch (err: any) {
-        console.log(err);
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }

@@ -16,6 +16,8 @@
       "@controllers/*": ["app/controllers/*"],
       "@services": ["app/services"],
       "@services/*": ["app/services/*"],
+      "@mappers": ["app/mappers"],
+      "@mappers/*": ["app/mappers/*"],
       "@domain": ["domain/"],
       "@domain/*": ["domain/*"],
       "@repos": ["domain/repos"],

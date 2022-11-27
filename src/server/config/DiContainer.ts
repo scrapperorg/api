@@ -1,10 +1,15 @@
 import { AuthContoller, UserController } from '@controllers';
 import { AsyncContainerModule, Container } from 'inversify';
 import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
-import { EmailService, AuthService, UserService } from '@services';
+import {
+  EmailService,
+  AuthService,
+  UserService,
+  DocumentService,
+  EncryptionService,
+} from '@services';
 import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
-import { ResetPasswordTokenMap } from '../../app/mappers/ResetPasswordToken.map';
-import { UserMap } from '../../app/mappers/User.map';
+import { ResetPasswordTokenMap, DocumentMap, UserMap } from '@mappers';
 import { UserMockRepository } from '@persistence/User/User.repository.mock';
 import { UserRepository } from '@persistence/User';
 import { IUserRepository } from '@domain/User';
@@ -12,7 +17,9 @@ import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from '@persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from '@persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
-import { EncryptionService } from '@services/Encryption.service';
+import { IDocumentRepository } from '@domain/Document';
+import { DocumentRepository, DocumentMockRepository } from '@persistence/Document';
+import { DocumentController } from '@controllers/document.controllers';
 
 export class DiContainer {
   private diContainer: Container;
@@ -43,27 +50,34 @@ export class DiContainer {
   }
 
   public configure() {
+    // mappers
     this.diContainer.bind<UserMap>(TYPES.USER_MAP).to(UserMap).inSingletonScope();
     this.diContainer
       .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
       .to(ResetPasswordTokenMap).inSingletonScope;
+    this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope;
 
+    // repositories
     if (process.env.MOCK === 'true') {
       this.configureMockRepositories();
     } else {
       this.configureRepositories();
     }
 
+    // services
     this.diContainer.bind<UserService>(TYPES.USER_SERVICE).to(UserService).inSingletonScope;
     this.diContainer.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthService).inSingletonScope;
     this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope;
     this.diContainer.bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE).to(EncryptionService)
       .inSingletonScope;
+    this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
 
+    // controllers
     this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
       .inSingletonScope;
-
     this.diContainer.bind<AuthContoller>(TYPES.AUTH_CONTROLLER).to(AuthContoller).inSingletonScope;
+    this.diContainer.bind<DocumentController>(TYPES.DOCUMENT_CONTROLLER).to(DocumentController)
+      .inSingletonScope;
 
     return this.diContainer;
   }
@@ -78,6 +92,11 @@ export class DiContainer {
       .bind<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
       .to(ResetPasswordTokenRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
+      .to(DocumentRepository)
+      .inSingletonScope();
   }
   public configureMockRepositories() {
     this.diContainer
@@ -88,6 +107,11 @@ export class DiContainer {
     this.diContainer
       .bind<IResetPasswordTokenRepository>(TYPES.RESET_PASSWORD_TOKEN_REPOSITORY)
       .to(ResetPasswordTokenTestRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
+      .to(DocumentMockRepository)
       .inSingletonScope();
   }
 }
