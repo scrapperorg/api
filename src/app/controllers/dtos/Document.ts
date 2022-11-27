@@ -22,3 +22,8 @@ export interface IDocumentOutgoingDTO extends IDocumentIncomingDTO {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IAllDocumentsOutgoingDTO {
+  totalNumberOfResults: number;
+  results: IDocumentOutgoingDTO[];
+}

@@ -18,9 +18,12 @@ export class DocumentRepository implements IDocumentRepository {
     this.entityRepository = entityManager.getRepository(DocumentSchema);
   }
 
-  async getAll(): Promise<Document[]> {
-    const entries = await this.entityRepository.findAll();
-    return entries.map((entry) => this.mapper.toDomain(entry));
+  async getAll(offset = 0, limit = 0) {
+    const [entries, count] = await this.entityRepository.findAndCount({}, { limit, offset });
+    return {
+      entries: entries.map((entry) => this.mapper.toDomain(entry)),
+      count,
+    };
   }
 
   async save(dto: IDocumentPersistenceDTO): Promise<Document> {

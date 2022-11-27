@@ -40,8 +40,11 @@ export class DocumentMockRepository implements IDocumentRepository {
     return this.mapper.toDomain(dto);
   }
 
-  async getAll(): Promise<Document[]> {
-    return this.entries.map((entry) => this.mapper.toDomain(entry));
+  async getAll() {
+    return {
+      entries: this.entries.map((entry) => this.mapper.toDomain(entry)),
+      count: this.entries.length,
+    };
   }
 
   async getById(id: string): Promise<Document | null> {
