@@ -1,4 +1,5 @@
-import { IAllDocumentsOutgoingDTO } from '@controllers/dtos';
+import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
+import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import { IDocumentRepository } from '@domain/Document';
 import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
@@ -12,7 +13,7 @@ export class DocumentService {
   ) {}
 
   async getAll(page = 0, pageSize = 10): Promise<IAllDocumentsOutgoingDTO> {
-    const offset = Math.max(0, page - 1) * pageSize;
+    const offset = page * pageSize;
 
     const { entries, count } = await this.repository.getAll(offset, pageSize);
     const dtoDocuments = entries.map((entry) => this.mapper.toDTO(entry));
@@ -20,5 +21,13 @@ export class DocumentService {
       totalNumberOfResults: count,
       results: dtoDocuments,
     };
+  }
+
+  async getById(id: string): Promise<IDocumentOutgoingDTO | null> {
+    const entry = await this.repository.getById(id);
+    if (!entry) {
+      throw new NoSuchElementException('document not found');
+    }
+    return this.mapper.toDTO(entry);
   }
 }
