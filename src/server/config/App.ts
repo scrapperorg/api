@@ -5,12 +5,15 @@ import bodyParser from 'body-parser';
 import express, { Express, NextFunction } from 'express';
 import { TYPES } from '../types';
 import cors from 'cors';
+import { ConfigService } from './ConfigService';
 
 export class App {
   public app: Express;
-  private container: Container;
 
-  constructor(container: Container) {
+  constructor(
+    private readonly container: Container,
+    private readonly configService: ConfigService,
+  ) {
     this.app = express();
     this.container = container;
     this.middleware();
@@ -22,7 +25,7 @@ export class App {
     this.app.use(express.json());
     this.app.use(bodyParser.json());
     this.app.use((_req, _res, next: NextFunction): void => {
-      if (process.env.MOCK === 'true') return next();
+      if (this.configService.getVar('MOCK')) return next();
       const connection = this.container.get<MikroORM<IDatabaseDriver<Connection>>>(
         TYPES.DATABASE_CONNECTION,
       );

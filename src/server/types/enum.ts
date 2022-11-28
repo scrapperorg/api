@@ -1,4 +1,7 @@
 export enum TYPES_ENUM {
+  // Env Vars
+  CONFIG_SERVICE = 'CONFIG_SERVICE',
+
   // Connections
   DATABASE_CONNECTION = 'DATABASE_CONNECTION',
 

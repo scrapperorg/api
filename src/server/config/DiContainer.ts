@@ -13,13 +13,15 @@ import { TYPES } from '../types';
 import { ResetPasswordTokenRepository } from '@persistence/ResetPasswordToken';
 import { ResetPasswordTokenTestRepository } from '@persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
 import { EncryptionService } from '@services/Encryption.service';
+import { ConfigService } from './ConfigService';
 
 export class DiContainer {
   private diContainer: Container;
   private databaseClient?: DatabaseClient;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     this.diContainer = new Container();
+    this.diContainer.bind<ConfigService>(TYPES.CONFIG_SERVICE).toConstantValue(configService);
   }
 
   public async init(databaseClient: DatabaseClient): Promise<Container> {
@@ -48,7 +50,7 @@ export class DiContainer {
       .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
       .to(ResetPasswordTokenMap).inSingletonScope;
 
-    if (process.env.MOCK === 'true') {
+    if (this.configService.getVar('MOCK')) {
       this.configureMockRepositories();
     } else {
       this.configureRepositories();

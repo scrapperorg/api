@@ -1,5 +1,7 @@
+import { inject, injectable } from 'inversify';
+import { ConfigService } from '@server/config/ConfigService';
+import { TYPES } from '@server/types';
 import * as bcrypt from 'bcrypt';
-import { injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
 
 export interface UserTokenClaims {
@@ -10,6 +12,8 @@ export interface UserTokenClaims {
 
 @injectable()
 export class EncryptionService {
+  constructor(@inject(TYPES.CONFIG_SERVICE) private readonly configService: ConfigService) {}
+
   public hash(data: string | Buffer, saltRounds = 10): string {
     return bcrypt.hashSync(data, saltRounds);
   }
@@ -19,14 +23,15 @@ export class EncryptionService {
   }
 
   public sign<TClaims extends object>(claims: TClaims): string {
-    // todo config service for reading env vars
     return jwt.sign(claims, process.env.JWT_SECRET as string, {
-      expiresIn: process.env.JWT_EXPIRATION_TIME,
+      expiresIn: this.configService.getVar('JWT_EXPIRATION_TIME'),
     });
   }
 
   public verify<TClaims extends object>(token: string): TClaims {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string, { complete: false });
+    const decodedToken = jwt.verify(token, this.configService.getVar('JWT_SECRET'), {
+      complete: false,
+    });
     return decodedToken as TClaims;
   }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
+import { ConfigService } from '@server/config/ConfigService';
 
 export async function isAuthenticated(request: Request, response: Response, next: () => void) {
   const token = request.headers['authorization'];
@@ -10,7 +11,9 @@ export async function isAuthenticated(request: Request, response: Response, next
   }
 
   try {
-    const encryptionService = new EncryptionService();
+    const cs = new ConfigService();
+    cs.loadVars();
+    const encryptionService = new EncryptionService(cs);
     request.user = encryptionService.verify<UserTokenClaims>(token);
     next();
   } catch (e) {
