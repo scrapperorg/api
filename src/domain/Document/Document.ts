@@ -4,6 +4,12 @@ export enum Status {
   REVIZUIT = 'revizuit',
 }
 
+export enum Source {
+  CAMERA_DEPUTATILOR = 'CAMERA_DEPUTATILOR',
+  SENAT = 'SENAT',
+  GUVERN = 'GUVERN',
+}
+
 export interface IDocumentProps {
   id: string;
   createdAt: Date;

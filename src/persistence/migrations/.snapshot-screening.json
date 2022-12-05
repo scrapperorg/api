@@ -125,6 +125,21 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "sources_of_interest": {
+          "name": "sources_of_interest",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'{}'",
+          "enumItems": [
+            "CAMERA_DEPUTATILOR",
+            "SENAT",
+            "GUVERN"
+          ],
+          "mappedType": "array"
         }
       },
       "name": "user",
