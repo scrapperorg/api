@@ -4,6 +4,7 @@ export interface IUserAPIDTO {
   surname: string;
   role: string;
   email: string;
+  sourcesOfInterest?: string[];
 }
 
 export interface IUserAPIincomingDTO extends Omit<IUserAPIDTO, 'id'> {

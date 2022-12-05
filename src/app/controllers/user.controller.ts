@@ -1,6 +1,6 @@
 import { HttpStatus } from '@lib';
 import { Exception, statusMap } from '@lib';
-import { createSchema } from './validationSchemas/User';
+import { createSchema, updatedSourcesSchema } from './validationSchemas/User';
 import { TYPES } from '@server/types';
 import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
@@ -28,6 +28,7 @@ export class UserController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
 
@@ -50,6 +51,30 @@ export class UserController {
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('update-sources', async (req: Request, res: Response) => {
+      const token: string = req.headers['authorization'] ?? '';
+
+      if (token.length === 0) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({});
+      }
+
+      try {
+        await updatedSourcesSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      const { sourcesOfInterest }: { sourcesOfInterest: string[] } = req.body;
+
+      try {
+        await this.userService.updateSourcesOfInterest(token, sourcesOfInterest);
+      } catch (err: any) {
+        const errorType: Exception = err.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
   }

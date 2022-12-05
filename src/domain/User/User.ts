@@ -12,6 +12,7 @@ export interface IUserProps {
   role: string;
   password: string;
   email: string;
+  sourcesOfInterest?: string[];
 }
 
 export class User {
@@ -21,6 +22,7 @@ export class User {
   role: string;
   email: string;
   password: string;
+  sourcesOfInterest: string[];
   private constructor(props: IUserProps) {
     this.name = props.name;
     this.id = props.id ?? 'random generated string';
@@ -28,10 +30,15 @@ export class User {
     this.role = props.role;
     this.email = props.email;
     this.password = props.password;
+    this.sourcesOfInterest = props.sourcesOfInterest ?? [];
   }
 
   public updatePassword(newPassword: string): void {
     this.password = newPassword;
+  }
+
+  public updateSources(newSources: string[]): void {
+    this.sourcesOfInterest = newSources;
   }
 
   public static create(props: IUserProps) {
