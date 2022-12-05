@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService } from '@services/Encryption.service';
+import { Source } from '@domain/Document';
 
 @injectable()
 export class UserController {
@@ -68,7 +69,7 @@ export class UserController {
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }
 
-      const { sourcesOfInterest }: { sourcesOfInterest: string[] } = req.body;
+      const { sourcesOfInterest }: { sourcesOfInterest: Source[] } = req.body;
 
       try {
         await this.userService.updateSourcesOfInterest(token, sourcesOfInterest);

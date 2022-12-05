@@ -18,7 +18,7 @@ export interface IDocumentProps {
   project: string;
   identifier: string;
   publicationDate: Date;
-  source: string;
+  source: Source;
   status: Status;
   isRulesBreaker?: boolean;
   assignedUser: string | null;
@@ -39,7 +39,7 @@ export class Document {
   project: string;
   identifier: string;
   publicationDate: Date;
-  source: string;
+  source: Source;
   status: Status;
   isRulesBreaker: boolean;
   assignedUser: string | undefined;

@@ -7,6 +7,7 @@ import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
 import { IUserRepository } from '@domain/User';
 import { NoSuchElementException } from '@lib';
+import { Source } from '@domain/Document';
 
 @injectable()
 export class UserService {
@@ -41,7 +42,7 @@ export class UserService {
     return this.userMap.toDTO(savedUser);
   }
 
-  async updateSourcesOfInterest(token: string, sourcesOfInterest: string[]) {
+  async updateSourcesOfInterest(token: string, sourcesOfInterest: Source[]) {
     const claims = this.encryptionService.verify<UserTokenClaims>(token);
     const user = await this.repository.getById(claims.id);
 
