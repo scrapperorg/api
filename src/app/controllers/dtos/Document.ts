@@ -3,7 +3,7 @@ import { Status } from '@domain/Document';
 export interface IDocumentIncomingDTO {
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status: Status;

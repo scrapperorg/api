@@ -10,7 +10,7 @@ export interface IDocumentProps {
   updatedAt: Date;
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status: Status;
@@ -30,7 +30,7 @@ export class Document {
   updatedAt: Date;
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status: Status;
@@ -49,7 +49,7 @@ export class Document {
     this.updatedAt = props.updatedAt;
     this.title = props.title;
     this.project = props.project;
-    this.identificator = props.identificator;
+    this.identifier = props.identifier;
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;

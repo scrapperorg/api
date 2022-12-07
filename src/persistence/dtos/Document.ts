@@ -2,7 +2,7 @@ import { Status } from '@domain/Document';
 export interface IDocumentPersistenceIncomingDTO {
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status?: Status;
@@ -22,7 +22,7 @@ export interface IDocumentPersistenceDTO {
   updatedAt: Date;
   title: string;
   project: string; // todo: replace with project_id
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string; // maybe replace with source entity?
   status: Status;

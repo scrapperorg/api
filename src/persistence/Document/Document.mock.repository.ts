@@ -15,7 +15,7 @@ export class DocumentMockRepository implements IDocumentRepository {
       updatedAt: new Date(),
       title: 'primul doc',
       project: 'un proiect',
-      identificator: '1',
+      identifier: '1',
       publicationDate: new Date(),
       source: 'senat',
       status: Status.NOU,

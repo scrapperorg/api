@@ -204,8 +204,8 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "identificator": {
-          "name": "identificator",
+        "identifier": {
+          "name": "identifier",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

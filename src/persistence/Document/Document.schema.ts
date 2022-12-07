@@ -17,11 +17,11 @@ export const DocumentSchema = new EntitySchema<IDocumentPersistenceDTO>({
     // general
     title: { type: 'string', nullable: false },
     project: { type: 'string', nullable: false }, // to be replaced to m:1 reference to Project when created
-    identificator: { type: 'string', nullable: false },
+    identifier: { type: 'string', nullable: false },
     publicationDate: { type: 'Date', nullable: false },
     source: { type: 'string', nullable: false }, // if Source will ever become entity, replace with relation
     // activity
-    status: { enum: true, array: true, default: [Status.NOU], items: () => Status },
+    status: { enum: true, default: Status.NOU, items: () => Status },
     assignedUser: { reference: 'm:1', entity: 'User', nullable: true },
     deadline: { type: 'Date', nullable: true },
     // AI
