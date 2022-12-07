@@ -5,7 +5,7 @@ import { Project } from '@domain/Project';
 @injectable()
 export class ProjectMap {
   toPersistence(project: Project): IProjectPersistenceDTO {
-    const persitenceObject = {
+    const persistenceObject = {
       id: project.id,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
@@ -13,7 +13,7 @@ export class ProjectMap {
       presentsInterest: project.presentsInterest,
     };
 
-    return persitenceObject;
+    return persistenceObject;
   }
 
   toDomain(persistenceProject: IProjectPersistenceDTO): Project {
