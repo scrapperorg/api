@@ -16,13 +16,13 @@ export const DocumentSchema = new EntitySchema<IDocumentPersistenceDTO>({
     },
     // general
     title: { type: 'string', nullable: false },
-    project: { type: 'string', nullable: false }, // to be replaced to m:1 reference to Project when created
     identifier: { type: 'string', nullable: false },
     publicationDate: { type: 'Date', nullable: false },
     source: { type: 'string', nullable: false }, // if Source will ever become entity, replace with relation
     // activity
     status: { enum: true, default: Status.NOU, items: () => Status },
     assignedUser: { reference: 'm:1', entity: 'User', nullable: true },
+    project: { reference: 'm:1', entity: 'Project' },
     deadline: { type: 'Date', nullable: true },
     // AI
     originalFormat: { type: 'string', nullable: true },

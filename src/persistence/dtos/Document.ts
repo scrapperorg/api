@@ -21,7 +21,7 @@ export interface IDocumentPersistenceDTO {
   createdAt: Date;
   updatedAt: Date;
   title: string;
-  project: string; // todo: replace with project_id
+  project: string;
   identifier: string;
   publicationDate: Date;
   source: string; // maybe replace with source entity?
