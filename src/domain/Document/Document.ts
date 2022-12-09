@@ -5,9 +5,9 @@ export enum Status {
 }
 
 export enum Source {
-  CAMERA_DEPUTATILOR = 'CAMERA_DEPUTATILOR',
-  SENAT = 'SENAT',
-  GUVERN = 'GUVERN',
+  CAMERA_DEPUTATILOR = 'camera_deputatilor',
+  SENAT = 'senat',
+  GUVERN = 'guvern',
 }
 
 export interface IDocumentProps {
