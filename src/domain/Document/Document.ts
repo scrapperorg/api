@@ -55,7 +55,7 @@ export class Document {
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
-    this.isRulesBreaker = props.isRulesBreaker || false;
+    this.isRulesBreaker = props.isRulesBreaker === true || false;
     if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
     if (props.deadline !== null) this.deadline = props.deadline;
     if (props.originalFormat !== null) this.originalFormat = props.originalFormat;
