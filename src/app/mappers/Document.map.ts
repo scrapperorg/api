@@ -18,8 +18,9 @@ export class DocumentMap {
     const persitenceObject = {
       title: document.title,
       project: document.project,
-      identificator: document.identificator,
+      identifier: document.identifier,
       publicationDate: document.publicationDate,
+      isRulesBreaker: document.isRulesBreaker,
       source: document.source,
       status: document.status,
       assignedUser: document.assignedUser,
@@ -41,10 +42,11 @@ export class DocumentMap {
       updatedAt: document.updatedAt,
       title: document.title,
       project: document.project,
-      identificator: document.identificator,
+      identifier: document.identifier,
       publicationDate: document.publicationDate,
       source: document.source,
       status: document.status,
+      isRulesBreaker: document.isRulesBreaker,
       attachments: document.attachments,
     };
 

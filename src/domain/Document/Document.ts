@@ -10,10 +10,11 @@ export interface IDocumentProps {
   updatedAt: Date;
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status: Status;
+  isRulesBreaker?: boolean;
   assignedUser: string | null;
   deadline: Date | null;
   originalFormat: string | null;
@@ -30,10 +31,11 @@ export class Document {
   updatedAt: Date;
   title: string;
   project: string;
-  identificator: string;
+  identifier: string;
   publicationDate: Date;
   source: string;
   status: Status;
+  isRulesBreaker: boolean;
   assignedUser: string | undefined;
   deadline: Date | undefined;
   originalFormat: string | undefined;
@@ -49,10 +51,11 @@ export class Document {
     this.updatedAt = props.updatedAt;
     this.title = props.title;
     this.project = props.project;
-    this.identificator = props.identificator;
+    this.identifier = props.identifier;
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
+    this.isRulesBreaker = props.isRulesBreaker === true || false;
     if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
     if (props.deadline !== null) this.deadline = props.deadline;
     if (props.originalFormat !== null) this.originalFormat = props.originalFormat;
