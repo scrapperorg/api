@@ -18,11 +18,16 @@ export class DocumentRepository implements IDocumentRepository {
     this.entityRepository = entityManager.getRepository(DocumentSchema);
   }
 
-  async getAll(offset = 0, limit = 0) {
-    const [entries, count] = await this.entityRepository.findAndCount(
-      {},
-      { limit, offset, populate: ['project'] },
-    );
+  async getAll(sourcesOfInterest: string[], offset = 0, limit = 0) {
+    const sourceCondition =
+      sourcesOfInterest.length === 0 ? {} : { source: { $in: sourcesOfInterest } };
+
+    const [entries, count] = await this.entityRepository.findAndCount(sourceCondition, {
+      limit,
+      offset,
+      populate: ['project'],
+    });
+
     return {
       entries: entries.map((entry) => this.mapper.toDomain(entry)),
       count,

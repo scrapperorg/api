@@ -1,4 +1,4 @@
-import { Document, IDocumentRepository, Status } from '@domain/Document';
+import { Document, IDocumentRepository, Source, Status } from '@domain/Document';
 import { DocumentMap } from '@mappers';
 import { IDocumentPersistenceDTO } from '@persistence/dtos';
 import { TYPES } from '@server/types';
@@ -18,7 +18,7 @@ export class DocumentMockRepository implements IDocumentRepository {
       identifier: '1',
       isRulesBreaker: false,
       publicationDate: new Date(),
-      source: 'senat',
+      source: Source.SENAT,
       status: Status.NOU,
       assignedUser: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
       deadline: null,

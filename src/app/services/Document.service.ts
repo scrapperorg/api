@@ -12,10 +12,14 @@ export class DocumentService {
     @inject(TYPES.DOCUMENT_MAP) private mapper: DocumentMap,
   ) {}
 
-  async getAll(page = 0, pageSize = 10): Promise<IAllDocumentsOutgoingDTO> {
+  async getAll(
+    sourcesOfInterest: string[],
+    page: number,
+    pageSize: number,
+  ): Promise<IAllDocumentsOutgoingDTO> {
     const offset = page * pageSize;
 
-    const { entries, count } = await this.repository.getAll(offset, pageSize);
+    const { entries, count } = await this.repository.getAll(sourcesOfInterest, offset, pageSize);
     const dtoDocuments = entries.map((entry) => this.mapper.toDTO(entry));
     return {
       totalNumberOfResults: count,

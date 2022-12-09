@@ -9,15 +9,38 @@ export class DocumentController {
   public router: Router = Router();
   constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
     this.router.get('/', async (req: Request, res: Response) => {
+      const token: string = req.headers['authorization'] ?? '';
+
+      if (token.length === 0) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({});
+      }
+
       const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
+
       const pageSize: number =
         typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize) : 10;
 
-      const documents = await this.documentService.getAll(page, pageSize);
+      let sourcesOfInterest: string[];
+
+      if (Array.isArray(req.query.sourcesOfInterest)) {
+        sourcesOfInterest = <string[]>req.query.sourcesOfInterest;
+      } else if (typeof req.query.sourcesOfInterest === 'string') {
+        sourcesOfInterest = [req.query.sourcesOfInterest];
+      } else {
+        sourcesOfInterest = req.query.sourcesOfInterest = [];
+      }
+
+      const documents = await this.documentService.getAll(sourcesOfInterest, page, pageSize);
       res.status(200).send(documents);
     });
 
     this.router.get('/:id', async (req: Request, res: Response) => {
+      const token: string = req.headers['authorization'] ?? '';
+
+      if (token.length === 0) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({});
+      }
+
       try {
         const user = await this.documentService.getById(req.params.id);
         return res.status(HttpStatus.OK).json(user);
