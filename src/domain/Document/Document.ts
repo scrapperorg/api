@@ -14,6 +14,7 @@ export interface IDocumentProps {
   publicationDate: Date;
   source: string;
   status: Status;
+  isRulesBreaker?: boolean;
   assignedUser: string | null;
   deadline: Date | null;
   originalFormat: string | null;
@@ -34,6 +35,7 @@ export class Document {
   publicationDate: Date;
   source: string;
   status: Status;
+  isRulesBreaker: boolean;
   assignedUser: string | undefined;
   deadline: Date | undefined;
   originalFormat: string | undefined;
@@ -53,6 +55,7 @@ export class Document {
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
+    this.isRulesBreaker = props.isRulesBreaker || false;
     if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
     if (props.deadline !== null) this.deadline = props.deadline;
     if (props.originalFormat !== null) this.originalFormat = props.originalFormat;

@@ -25,6 +25,7 @@ export const DocumentSchema = new EntitySchema<IDocumentPersistenceDTO>({
     project: { reference: 'm:1', entity: 'Project' },
     deadline: { type: 'Date', nullable: true },
     // AI
+    isRulesBreaker: { type: 'boolean', default: false },
     originalFormat: { type: 'string', nullable: true },
     numberOfPages: { type: 'number', nullable: true },
     textInterpretationPrecision: { type: 'number', nullable: true },

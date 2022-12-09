@@ -26,6 +26,7 @@ export interface IDocumentPersistenceDTO {
   publicationDate: Date;
   source: string; // maybe replace with source entity?
   status: Status;
+  isRulesBreaker: boolean;
   assignedUser: string | null;
   deadline: Date | null;
   originalFormat: string | null;

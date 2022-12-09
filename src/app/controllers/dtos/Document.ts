@@ -7,6 +7,7 @@ export interface IDocumentIncomingDTO {
   publicationDate: Date;
   source: string;
   status: Status;
+  isRulesBreaker: boolean;
   assignedUser?: string;
   deadline?: Date;
   originalFormat?: string;
