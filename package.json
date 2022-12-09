@@ -17,7 +17,7 @@
     "migration:down": "npx mikro-orm migration:down",
     "migration:list": "npx mikro-orm migration:list",
     "migration:pending": "npx mikro-orm migration:pending",
-    "migration:fresh": "npx mikro-orm migration:fresh --run",
+    "migration:fresh": "npx mikro-orm migration:fresh",
     "container:build:prod": "docker build --target production -t anap-screening/server:prod .",
     "container:start:prod": "docker run --env-file ./env --expose 3000:3000 anap-screening/server:prod",
     "container:prod": "yarn container:build:prod && yarn container:start:prod"
