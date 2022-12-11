@@ -15,16 +15,21 @@ export class DocumentController {
       isAuthenticated,
       parseDocumentsFilters,
       async (req: Request, res: Response) => {
-        const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
+        try {
+          const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
 
-        const pageSize: number =
-          typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize) : 10;
+          const pageSize: number =
+            typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize) : 10;
 
-        const filters = req.documentsFilters ?? {};
+          const filters = req.documentsFilters ?? {};
 
-        const documents = await this.documentService.getAll(filters, page, pageSize);
+          const documents = await this.documentService.getAll(filters, page, pageSize);
 
-        res.status(200).send(documents);
+          res.status(200).send(documents);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
       },
     );
 

@@ -70,6 +70,8 @@ export class UserController {
           <UserTokenClaims>req.user,
           sourcesOfInterest,
         );
+
+        return res.sendStatus(200);
       } catch (err: any) {
         const errorType: Exception = err.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
