@@ -55,7 +55,7 @@ export class UserController {
       }
     });
 
-    this.router.post('update-sources', isAuthenticated, async (req: Request, res: Response) => {
+    this.router.post('/update-sources', isAuthenticated, async (req: Request, res: Response) => {
       try {
         await updatedSourcesSchema.validateAsync(req.body);
       } catch (err: any) {

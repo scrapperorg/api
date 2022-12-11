@@ -51,6 +51,11 @@ export class UserService {
 
     user.updateSources(sourcesOfInterest);
 
-    await this.repository.update(this.userMap.toPersistence(user));
+    try {
+      await this.repository.update(this.userMap.toPersistence(user));
+    } catch (e: any) {
+      console.log(e);
+      throw new Error(e);
+    }
   }
 }

@@ -14,7 +14,7 @@ export interface IUserProps {
   role: string;
   password: string;
   email: string;
-  sourcesOfInterest?: Source[];
+  sources_of_interest?: Source[];
 }
 
 export class User {
@@ -32,7 +32,7 @@ export class User {
     this.role = props.role;
     this.email = props.email;
     this.password = props.password;
-    this.sourcesOfInterest = props.sourcesOfInterest ?? [];
+    this.sourcesOfInterest = props.sources_of_interest ?? [];
   }
 
   public updatePassword(newPassword: string): void {

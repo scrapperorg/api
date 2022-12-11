@@ -7,5 +7,5 @@ export interface IUserPersistenceDTO {
   role: string;
   password: string;
   email: string;
-  sourcesOfInterest?: Source[];
+  sources_of_interest?: Source[];
 }
