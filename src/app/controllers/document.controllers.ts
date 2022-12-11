@@ -4,29 +4,27 @@ import { DocumentService } from '@services';
 import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
+import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 
 @injectable()
 export class DocumentController {
   public router: Router = Router();
   constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
-    this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
-      const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
+    this.router.get(
+      '/',
+      isAuthenticated,
+      parseDocumentsFilters,
+      async (req: Request, res: Response) => {
+        const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
 
-      const pageSize: number =
-        typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize) : 10;
+        const pageSize: number =
+          typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize) : 10;
 
-      let sourcesOfInterest: string[];
+        const filters = req.documentsFilters ?? {};
 
-      if (Array.isArray(req.query.sourcesOfInterest)) {
-        sourcesOfInterest = <string[]>req.query.sourcesOfInterest;
-      } else if (typeof req.query.sourcesOfInterest === 'string') {
-        sourcesOfInterest = [req.query.sourcesOfInterest];
-      } else {
-        sourcesOfInterest = req.query.sourcesOfInterest = [];
-      }
+        const documents = await this.documentService.getAll(filters, page, pageSize);
 
-      const documents = await this.documentService.getAll(sourcesOfInterest, page, pageSize);
-      res.status(200).send(documents);
+        res.status(200).send(documents);
     });
 
     this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
