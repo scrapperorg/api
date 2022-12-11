@@ -18,6 +18,8 @@
       "@services/*": ["app/services/*"],
       "@mappers": ["app/mappers"],
       "@mappers/*": ["app/mappers/*"],
+      "@middlewares": ["app/middlewares"],
+      "@middlewares/*": ["app/middlewares/*"],
       "@domain": ["domain/"],
       "@domain/*": ["domain/*"],
       "@repos": ["domain/repos"],

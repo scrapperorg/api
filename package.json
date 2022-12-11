@@ -48,6 +48,7 @@
     "@controllers": "dist/app/controllers",
     "@services": "dist/app/services",
     "@mappers": "dist/app/mappers",
+    "@middlewares": "dist/app/middlewares",
     "@domain": "dist/domain/",
     "@repos": "dist/domain/repos",
     "@server": "dist/server",

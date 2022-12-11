@@ -42,8 +42,7 @@ export class UserService {
     return this.userMap.toDTO(savedUser);
   }
 
-  async updateSourcesOfInterest(token: string, sourcesOfInterest: Source[]) {
-    const claims = this.encryptionService.verify<UserTokenClaims>(token);
+  async updateSourcesOfInterest(claims: UserTokenClaims, sourcesOfInterest: Source[]) {
     const user = await this.repository.getById(claims.id);
 
     if (!user) {

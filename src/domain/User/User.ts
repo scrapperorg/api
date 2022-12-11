@@ -36,10 +36,12 @@ export class User {
   }
 
   public updatePassword(newPassword: string): void {
+    // extra logic and/or validation
     this.password = newPassword;
   }
 
   public updateSources(newSources: Source[]): void {
+    // extra logic and/or validation
     this.sourcesOfInterest = newSources;
   }
 

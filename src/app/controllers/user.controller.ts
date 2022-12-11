@@ -6,7 +6,7 @@ import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
-import { EncryptionService } from '@services/Encryption.service';
+import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 import { Source } from '@domain/Document';
 
 @injectable()
@@ -55,13 +55,7 @@ export class UserController {
       }
     });
 
-    this.router.post('update-sources', async (req: Request, res: Response) => {
-      const token: string = req.headers['authorization'] ?? '';
-
-      if (token.length === 0) {
-        return res.status(HttpStatus.UNAUTHORIZED).json({});
-      }
-
+    this.router.post('update-sources', isAuthenticated, async (req: Request, res: Response) => {
       try {
         await updatedSourcesSchema.validateAsync(req.body);
       } catch (err: any) {
@@ -72,7 +66,10 @@ export class UserController {
       const { sourcesOfInterest }: { sourcesOfInterest: Source[] } = req.body;
 
       try {
-        await this.userService.updateSourcesOfInterest(token, sourcesOfInterest);
+        await this.userService.updateSourcesOfInterest(
+          <UserTokenClaims>req.user,
+          sourcesOfInterest,
+        );
       } catch (err: any) {
         const errorType: Exception = err.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);

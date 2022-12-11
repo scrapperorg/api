@@ -6,6 +6,7 @@ export interface UserTokenClaims {
   id: string;
   email: string;
   role: string;
+  sourcesOfInterest: string[];
 }
 
 @injectable()

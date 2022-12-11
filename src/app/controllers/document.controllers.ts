@@ -1,6 +1,7 @@
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
 import { DocumentService } from '@services';
+import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 
@@ -8,13 +9,7 @@ import { inject, injectable } from 'inversify';
 export class DocumentController {
   public router: Router = Router();
   constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
-    this.router.get('/', async (req: Request, res: Response) => {
-      const token: string = req.headers['authorization'] ?? '';
-
-      if (token.length === 0) {
-        return res.status(HttpStatus.UNAUTHORIZED).json({});
-      }
-
+    this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
       const page: number = typeof req.query.page === 'string' ? parseInt(req.query.page) : 0;
 
       const pageSize: number =
@@ -34,13 +29,7 @@ export class DocumentController {
       res.status(200).send(documents);
     });
 
-    this.router.get('/:id', async (req: Request, res: Response) => {
-      const token: string = req.headers['authorization'] ?? '';
-
-      if (token.length === 0) {
-        return res.status(HttpStatus.UNAUTHORIZED).json({});
-      }
-
+    this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
       try {
         const user = await this.documentService.getById(req.params.id);
         return res.status(HttpStatus.OK).json(user);
