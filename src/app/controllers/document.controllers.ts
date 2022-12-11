@@ -25,7 +25,8 @@ export class DocumentController {
         const documents = await this.documentService.getAll(filters, page, pageSize);
 
         res.status(200).send(documents);
-    });
+      },
+    );
 
     this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
       try {
