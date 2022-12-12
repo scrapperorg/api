@@ -16,6 +16,7 @@ export class UserMap {
       role: user.role,
       password: user.password,
       email: user.email,
+      sources_of_interest: user.sourcesOfInterest,
     };
   }
   toDTO(user: User): IUserAPIDTO {
@@ -25,6 +26,7 @@ export class UserMap {
       surname: user.surname,
       role: user.role,
       email: user.email,
+      sourcesOfInterest: user.sourcesOfInterest,
     };
   }
 }

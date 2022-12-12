@@ -1,3 +1,5 @@
+import { Source } from '@domain/Document';
+
 export enum Role {
   ITA = 'ITA', // IT Administrator
   LSE = 'LSE', // Legislation Screening Expert
@@ -12,6 +14,7 @@ export interface IUserProps {
   role: string;
   password: string;
   email: string;
+  sources_of_interest?: Source[];
 }
 
 export class User {
@@ -21,6 +24,7 @@ export class User {
   role: string;
   email: string;
   password: string;
+  sourcesOfInterest: Source[];
   private constructor(props: IUserProps) {
     this.name = props.name;
     this.id = props.id ?? 'random generated string';
@@ -28,10 +32,17 @@ export class User {
     this.role = props.role;
     this.email = props.email;
     this.password = props.password;
+    this.sourcesOfInterest = props.sources_of_interest ?? [];
   }
 
   public updatePassword(newPassword: string): void {
+    // extra logic and/or validation
     this.password = newPassword;
+  }
+
+  public updateSources(newSources: Source[]): void {
+    // extra logic and/or validation
+    this.sourcesOfInterest = newSources;
   }
 
   public static create(props: IUserProps) {

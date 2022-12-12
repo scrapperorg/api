@@ -1,3 +1,5 @@
+import { Source } from '@domain/Document';
+
 export interface IUserPersistenceDTO {
   id: string;
   name: string;
@@ -5,4 +7,5 @@ export interface IUserPersistenceDTO {
   role: string;
   password: string;
   email: string;
+  sources_of_interest?: Source[];
 }

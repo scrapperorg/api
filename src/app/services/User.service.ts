@@ -2,11 +2,12 @@ import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
 import { IUserPersistenceDTO } from '@persistence/dtos/User';
 import { IUserAPIincomingDTO, IUserAPIDTO } from '@controllers/dtos/User';
-import { EncryptionService } from './Encryption.service';
+import { EncryptionService, UserTokenClaims } from './Encryption.service';
 import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
 import { IUserRepository } from '@domain/User';
 import { NoSuchElementException } from '@lib';
+import { Source } from '@domain/Document';
 
 @injectable()
 export class UserService {
@@ -39,5 +40,22 @@ export class UserService {
 
     const savedUser = await this.repository.save(userToSave);
     return this.userMap.toDTO(savedUser);
+  }
+
+  async updateSourcesOfInterest(claims: UserTokenClaims, sourcesOfInterest: Source[]) {
+    const user = await this.repository.getById(claims.id);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    user.updateSources(sourcesOfInterest);
+
+    try {
+      await this.repository.update(this.userMap.toPersistence(user));
+    } catch (e: any) {
+      console.log(e);
+      throw new Error(e);
+    }
   }
 }

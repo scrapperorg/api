@@ -1,4 +1,4 @@
-import { Status } from '@domain/Document';
+import { Source, Status } from '@domain/Document';
 export interface IDocumentPersistenceIncomingDTO {
   title: string;
   project: string;
@@ -24,7 +24,7 @@ export interface IDocumentPersistenceDTO {
   project: string;
   identifier: string;
   publicationDate: Date;
-  source: string; // maybe replace with source entity?
+  source: Source;
   status: Status;
   isRulesBreaker: boolean;
   assignedUser: string | null;

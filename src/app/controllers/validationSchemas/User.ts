@@ -8,3 +8,7 @@ export const createSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
+
+export const updatedSourcesSchema = Joi.object({
+  sourcesOfInterest: Joi.array().items(Joi.string()).required(),
+});

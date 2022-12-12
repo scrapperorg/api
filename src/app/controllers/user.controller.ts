@@ -1,12 +1,13 @@
 import { HttpStatus } from '@lib';
 import { Exception, statusMap } from '@lib';
-import { createSchema } from './validationSchemas/User';
+import { createSchema, updatedSourcesSchema } from './validationSchemas/User';
 import { TYPES } from '@server/types';
 import { UserService } from '@services';
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
-import { EncryptionService } from '@services/Encryption.service';
+import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
+import { Source } from '@domain/Document';
 
 @injectable()
 export class UserController {
@@ -28,6 +29,7 @@ export class UserController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
 
@@ -50,6 +52,29 @@ export class UserController {
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('/update-sources', isAuthenticated, async (req: Request, res: Response) => {
+      try {
+        await updatedSourcesSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      const { sourcesOfInterest }: { sourcesOfInterest: Source[] } = req.body;
+
+      try {
+        await this.userService.updateSourcesOfInterest(
+          <UserTokenClaims>req.user,
+          sourcesOfInterest,
+        );
+
+        return res.sendStatus(200);
+      } catch (err: any) {
+        const errorType: Exception = err.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
   }
