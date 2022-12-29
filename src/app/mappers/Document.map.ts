@@ -2,15 +2,7 @@ import { IDocumentOutgoingDTO } from '@controllers/dtos';
 import { IDocumentPersistenceDTO, IDocumentPersistenceIncomingDTO } from '@persistence/dtos';
 import { Document } from '@domain/Document';
 import { injectable } from 'inversify';
-
-function assignPropertyIfItHasValue<O extends Record<string, unknown>, E>(
-  object: O,
-  document: E,
-  property: keyof E,
-) {
-  if (document[property] === null) return;
-  Object.assign(object, { [property]: document[property] });
-}
+import { assignPropertyIfItHasValue } from './helpers/assignPropertyIfItHasValue';
 
 @injectable()
 export class DocumentMap {

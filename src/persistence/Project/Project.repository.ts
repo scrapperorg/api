@@ -17,19 +17,21 @@ export class ProjectRepository implements IProjectRepository {
     const entityManager = this.orm.em.fork();
     this.entityRepository = entityManager.getRepository(ProjectSchema);
   }
-  getAll(
+  async getAll(
     offset?: number | undefined,
     limit?: number | undefined,
   ): Promise<{ entries: Project[]; count: number }> {
     throw new Error('Method not implemented.');
   }
-  save(dto: IProjectPersistenceDTO): Promise<Project> {
+  async save(dto: IProjectPersistenceDTO): Promise<Project> {
     throw new Error('Method not implemented.');
   }
-  update(dto: IProjectPersistenceDTO): Promise<Project> {
+  async update(dto: IProjectPersistenceDTO): Promise<Project> {
     throw new Error('Method not implemented.');
   }
-  getById(id: string): Promise<Project | null> {
-    throw new Error('Method not implemented.');
+  async getById(id: string): Promise<Project | null> {
+    const entry = await this.entityRepository.findOne({ id });
+    if (!entry) return null;
+    return this.mapper.toDomain(entry);
   }
 }
