@@ -35,8 +35,8 @@ export class DocumentController {
 
     this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
       try {
-        const user = await this.documentService.getById(req.params.id);
-        return res.status(HttpStatus.OK).json(user);
+        const document = await this.documentService.getById(req.params.id);
+        return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

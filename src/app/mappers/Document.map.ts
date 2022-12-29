@@ -48,6 +48,7 @@ export class DocumentMap {
       status: document.status,
       isRulesBreaker: document.isRulesBreaker,
       attachments: document.attachments,
+      assignedUser: document.assignedUser,
     };
 
     const optionalProperties: Array<keyof Document> = [

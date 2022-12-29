@@ -53,7 +53,10 @@ export class DocumentRepository implements IDocumentRepository {
   }
 
   async getById(id: string): Promise<Document | null> {
-    const entry = await this.entityRepository.findOne({ id });
+    const entry = await this.entityRepository.findOne(
+      { id },
+      { populate: ['project', 'assignedUser'] },
+    );
     if (!entry) return null;
     return this.mapper.toDomain(entry);
   }
