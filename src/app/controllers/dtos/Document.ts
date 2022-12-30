@@ -22,6 +22,7 @@ export interface IDocumentOutgoingDTO extends IDocumentIncomingDTO {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+  assignedUser: string | undefined;
 }
 
 export interface IAllDocumentsOutgoingDTO {
