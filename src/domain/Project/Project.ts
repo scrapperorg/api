@@ -12,7 +12,7 @@ export interface IProjectProps {
   termenAdoptare: string | null;
   tipInitiativa: string | null;
   caracter: string | null;
-  esteProceduraDeUrgenta: boolean | null;
+  esteProceduraDeUrgenta: boolean;
   stadiu: string | null;
   initiator: string | null;
   consultati: string | null;
@@ -34,7 +34,7 @@ export class Project {
   termenAdoptare: string | undefined;
   tipInitiativa: string | undefined;
   caracter: string | undefined;
-  esteProceduraDeUrgenta: boolean | undefined;
+  esteProceduraDeUrgenta: boolean;
   stadiu: string | undefined;
   initiator: string | undefined;
   consultati: string | undefined;
@@ -64,8 +64,7 @@ export class Project {
 
     if (props.caracter !== null) this.caracter = props.caracter;
 
-    if (props.esteProceduraDeUrgenta !== null)
-      this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
+    this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
 
     if (props.stadiu !== null) this.stadiu = props.stadiu;
 

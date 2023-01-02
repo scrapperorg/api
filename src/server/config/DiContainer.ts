@@ -33,7 +33,7 @@ import {
 
 import { AuthContoller, UserController, DocumentController, ProjectController } from '@controllers';
 
-import { ResetPasswordTokenMap, DocumentMap, UserMap } from '@mappers';
+import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
 
 export class DiContainer {
   private diContainer: Container;
@@ -70,6 +70,7 @@ export class DiContainer {
       .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
       .to(ResetPasswordTokenMap).inSingletonScope;
     this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope;
+    this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope;
 
     // repositories
     if (process.env.MOCK === 'true') {

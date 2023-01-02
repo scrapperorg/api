@@ -2,7 +2,7 @@ import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exc
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { IProjectRepository } from '@domain/Project';
-import { ProjectMap } from '@mappers/Project.map';
+import { ProjectMap } from '@mappers';
 import { IProjectOutgoingDTO } from '@controllers/dtos';
 
 @injectable()

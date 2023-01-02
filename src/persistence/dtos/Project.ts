@@ -12,7 +12,7 @@ export interface IProjectPersistenceDTO {
   termenAdoptare: string | null;
   tipInitiativa: string | null;
   caracter: string | null;
-  esteProceduraDeUrgenta: boolean | null;
+  esteProceduraDeUrgenta: boolean;
   stadiu: string | null;
   initiator: string | null;
   consultati: string | null;

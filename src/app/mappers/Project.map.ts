@@ -44,6 +44,7 @@ export class ProjectMap {
       title: project.title,
       presentsInterest: project.presentsInterest,
       attachments: project.attachments,
+      esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
 
     const optionalProperties: Array<keyof Project> = [
@@ -54,7 +55,6 @@ export class ProjectMap {
       'termenAdoptare',
       'tipInitiativa',
       'caracter',
-      'esteProceduraDeUrgenta',
       'stadiu',
       'initiator',
       'consultati',

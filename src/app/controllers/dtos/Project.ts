@@ -16,7 +16,7 @@ export interface IProjectOutgoingDTO {
   termenAdoptare?: string;
   tipInitiativa?: string;
   caracter?: string;
-  esteProceduraDeUrgenta?: boolean;
+  esteProceduraDeUrgenta: boolean;
   stadiu?: string;
   initiator?: string;
   consultati?: string;

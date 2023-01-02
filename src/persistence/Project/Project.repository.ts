@@ -12,7 +12,7 @@ export class ProjectRepository implements IProjectRepository {
 
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
-    @inject(TYPES.DOCUMENT_MAP) private readonly mapper: ProjectMap,
+    @inject(TYPES.PROJECT_MAP) private readonly mapper: ProjectMap,
   ) {
     const entityManager = this.orm.em.fork();
     this.entityRepository = entityManager.getRepository(ProjectSchema);

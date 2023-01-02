@@ -1,5 +1,5 @@
 import { IProjectRepository } from '@domain/Project';
-import { ProjectMap } from '@mappers/Project.map';
+import { ProjectMap } from '@mappers';
 import { IProjectPersistenceDTO } from '@persistence/dtos/Project';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
@@ -24,7 +24,7 @@ export class ProjectMockRepository implements IProjectRepository {
       termenAdoptare: null,
       tipInitiativa: null,
       caracter: null,
-      esteProceduraDeUrgenta: null,
+      esteProceduraDeUrgenta: false,
       stadiu: null,
       initiator: null,
       consultati: null,

@@ -1,4 +1,4 @@
-import { UserController, AuthContoller, DocumentController } from '@controllers';
+import { UserController, AuthContoller, DocumentController, ProjectController } from '@controllers';
 import { Container } from 'inversify';
 import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
 import bodyParser from 'body-parser';
@@ -36,6 +36,10 @@ export class App {
     this.app.use(
       '/document',
       this.container.get<DocumentController>(TYPES.DOCUMENT_CONTROLLER).router,
+    );
+    this.app.use(
+      '/project',
+      this.container.get<ProjectController>(TYPES.PROJECT_CONTROLLER).router,
     );
   }
 }
