@@ -52,6 +52,116 @@
           "primary": false,
           "nullable": false,
           "mappedType": "boolean"
+        },
+        "numar_inregistrare_senat": {
+          "name": "numar_inregistrare_senat",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "numar_inregistrare_guvern": {
+          "name": "numar_inregistrare_guvern",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "procedura_legislativa": {
+          "name": "procedura_legislativa",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "camera_decizionala": {
+          "name": "camera_decizionala",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "termen_adoptare": {
+          "name": "termen_adoptare",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "tip_initiativa": {
+          "name": "tip_initiativa",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "caracter": {
+          "name": "caracter",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "este_procedura_de_urgenta": {
+          "name": "este_procedura_de_urgenta",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "stadiu": {
+          "name": "stadiu",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "initiator": {
+          "name": "initiator",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "consultati": {
+          "name": "consultati",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "attachments": {
+          "name": "attachments",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'{}'",
+          "mappedType": "array"
         }
       },
       "name": "project",
@@ -135,9 +245,9 @@
           "nullable": false,
           "default": "'{}'",
           "enumItems": [
-            "CAMERA_DEPUTATILOR",
-            "SENAT",
-            "GUVERN"
+            "camera_deputatilor",
+            "senat",
+            "guvern"
           ],
           "mappedType": "array"
         }

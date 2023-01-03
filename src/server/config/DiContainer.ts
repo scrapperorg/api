@@ -1,25 +1,39 @@
-import { AuthContoller, UserController } from '@controllers';
 import { AsyncContainerModule, Container } from 'inversify';
 import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
+
+import { DatabaseClient } from './DatabaseClient';
+import { TYPES } from '../types';
+
 import {
   EmailService,
   AuthService,
   UserService,
   DocumentService,
   EncryptionService,
+  ProjectService,
 } from '@services';
-import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
-import { ResetPasswordTokenMap, DocumentMap, UserMap } from '@mappers';
-import { UserMockRepository } from '@persistence/User/User.repository.mock';
-import { UserRepository } from '@persistence/User';
-import { IUserRepository } from '@domain/User';
-import { DatabaseClient } from './DatabaseClient';
-import { TYPES } from '../types';
-import { ResetPasswordTokenRepository } from '@persistence/ResetPasswordToken';
-import { ResetPasswordTokenTestRepository } from '@persistence/ResetPasswordToken/ResetPasswordToken.mock.repository';
-import { IDocumentRepository } from '@domain/Document';
-import { DocumentRepository, DocumentMockRepository } from '@persistence/Document';
-import { DocumentController } from '@controllers/document.controllers';
+
+import {
+  IResetPasswordTokenRepository,
+  IUserRepository,
+  IDocumentRepository,
+  IProjectRepository,
+} from '@domain';
+
+import {
+  UserRepository,
+  UserMockRepository,
+  ResetPasswordTokenRepository,
+  ResetPasswordTokenTestRepository,
+  DocumentRepository,
+  DocumentMockRepository,
+  ProjectRepository,
+  ProjectMockRepository,
+} from '@persistence';
+
+import { AuthContoller, UserController, DocumentController, ProjectController } from '@controllers';
+
+import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
 
 export class DiContainer {
   private diContainer: Container;
@@ -56,6 +70,7 @@ export class DiContainer {
       .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
       .to(ResetPasswordTokenMap).inSingletonScope;
     this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope;
+    this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope;
 
     // repositories
     if (process.env.MOCK === 'true') {
@@ -71,12 +86,15 @@ export class DiContainer {
     this.diContainer.bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE).to(EncryptionService)
       .inSingletonScope;
     this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
+    this.diContainer.bind<ProjectService>(TYPES.PROJECT_SERVICE).to(ProjectService);
 
     // controllers
     this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
       .inSingletonScope;
     this.diContainer.bind<AuthContoller>(TYPES.AUTH_CONTROLLER).to(AuthContoller).inSingletonScope;
     this.diContainer.bind<DocumentController>(TYPES.DOCUMENT_CONTROLLER).to(DocumentController)
+      .inSingletonScope;
+    this.diContainer.bind<ProjectController>(TYPES.PROJECT_CONTROLLER).to(ProjectController)
       .inSingletonScope;
 
     return this.diContainer;
@@ -97,7 +115,13 @@ export class DiContainer {
       .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
       .to(DocumentRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IProjectRepository>(TYPES.PROJECT_REPOSITORY)
+      .to(ProjectRepository)
+      .inSingletonScope();
   }
+
   public configureMockRepositories() {
     this.diContainer
       .bind<IUserRepository>(TYPES.USER_REPOSITORY)
@@ -112,6 +136,11 @@ export class DiContainer {
     this.diContainer
       .bind<IDocumentRepository>(TYPES.DOCUMENT_REPOSITORY)
       .to(DocumentMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IProjectRepository>(TYPES.PROJECT_REPOSITORY)
+      .to(ProjectMockRepository)
       .inSingletonScope();
   }
 }

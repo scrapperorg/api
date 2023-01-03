@@ -12,24 +12,31 @@ export class ProjectRepository implements IProjectRepository {
 
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
-    @inject(TYPES.DOCUMENT_MAP) private readonly mapper: ProjectMap,
+    @inject(TYPES.PROJECT_MAP) private readonly mapper: ProjectMap,
   ) {
     const entityManager = this.orm.em.fork();
     this.entityRepository = entityManager.getRepository(ProjectSchema);
   }
-  getAll(
+  async getAll(
     offset?: number | undefined,
     limit?: number | undefined,
   ): Promise<{ entries: Project[]; count: number }> {
     throw new Error('Method not implemented.');
   }
-  save(dto: IProjectPersistenceDTO): Promise<Project> {
+  async save(dto: IProjectPersistenceDTO): Promise<Project> {
     throw new Error('Method not implemented.');
   }
-  update(dto: IProjectPersistenceDTO): Promise<Project> {
+  async update(dto: IProjectPersistenceDTO): Promise<Project> {
     throw new Error('Method not implemented.');
   }
-  getById(id: string): Promise<Project | null> {
-    throw new Error('Method not implemented.');
+  async getById(id: string): Promise<Project | null> {
+    const entry = await this.entityRepository.findOne(
+      { id },
+      {
+        populate: ['documents'],
+      },
+    );
+    if (!entry) return null;
+    return this.mapper.toDomain(entry);
   }
 }
