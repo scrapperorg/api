@@ -15,6 +15,8 @@ export class ProjectMockRepository implements IProjectRepository {
       updatedAt: new Date(),
       title: 'primul doc',
 
+      documents: new Map(),
+
       presentsInterest: false,
 
       numarInregistrareSenat: null,

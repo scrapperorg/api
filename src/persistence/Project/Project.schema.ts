@@ -1,4 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
+import { IDocumentPersistenceDTO } from '@persistence/dtos';
 import { IProjectPersistenceDTO } from '@persistence/dtos/Project';
 import { v4 } from 'uuid';
 
@@ -28,5 +29,10 @@ export const ProjectSchema = new EntitySchema<IProjectPersistenceDTO>({
     consultati: { type: 'string', nullable: true },
     // end project technical details
     attachments: { type: 'string[]', default: [] }, // todo: create Attachement : { reference: '1:m', entity: 'Attachement' },
+    documents: {
+      reference: '1:m',
+      entity: () => 'Document',
+      mappedBy: (document: IDocumentPersistenceDTO) => document.project,
+    },
   },
 });

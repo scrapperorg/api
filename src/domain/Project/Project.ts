@@ -1,8 +1,13 @@
+import { Document } from '../';
+
 export interface IProjectProps {
   id: string;
   createdAt: Date;
   updatedAt: Date;
   title: string;
+
+  documents: Document[];
+
   presentsInterest: boolean;
 
   numarInregistrareSenat: string | null;
@@ -25,6 +30,9 @@ export class Project {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+
+  documents: Document[];
+
   presentsInterest: boolean;
 
   numarInregistrareSenat: string | undefined;
@@ -46,6 +54,9 @@ export class Project {
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.title = props.title;
+
+    this.documents = props.documents;
+
     this.presentsInterest = props.presentsInterest;
 
     if (props.numarInregistrareSenat !== null)

@@ -1,9 +1,13 @@
+import { Collection } from 'typescript';
+import { IDocumentPersistenceDTO } from './Document';
+
 export interface IProjectPersistenceDTO {
   id: string;
   createdAt: Date;
   updatedAt: Date;
   title: string;
   presentsInterest: boolean;
+  documents: Collection<IDocumentPersistenceDTO>;
 
   numarInregistrareSenat: string | null;
   numarInregistrareGuvern: string | null;

@@ -27,13 +27,13 @@ export class DocumentMap {
 
     return persitenceObject;
   }
-  toDTO(document: Document): IDocumentOutgoingDTO {
+
+  toDTO(document: Document, excludeProject = false): IDocumentOutgoingDTO {
     const dtoObject = {
       id: document.id,
       createdAt: document.createdAt,
       updatedAt: document.updatedAt,
       title: document.title,
-      project: document.project,
       identifier: document.identifier,
       publicationDate: document.publicationDate,
       source: document.source,
@@ -41,6 +41,12 @@ export class DocumentMap {
       isRulesBreaker: document.isRulesBreaker,
       attachments: document.attachments,
     };
+
+    if (!excludeProject) {
+      Object.assign(dtoObject, {
+        project: document.project,
+      });
+    }
 
     const optionalProperties: Array<keyof Document> = [
       'deadline',

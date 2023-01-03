@@ -1,3 +1,4 @@
+import { IDocumentOutgoingDTO } from './Document';
 export interface IProjectIncomingDTO {
   title: string;
 }
@@ -7,6 +8,9 @@ export interface IProjectOutgoingDTO {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+
+  documents: IDocumentOutgoingDTO[];
+
   presentsInterest: boolean;
 
   numarInregistrareSenat?: string;

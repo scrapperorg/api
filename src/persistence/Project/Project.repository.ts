@@ -30,7 +30,12 @@ export class ProjectRepository implements IProjectRepository {
     throw new Error('Method not implemented.');
   }
   async getById(id: string): Promise<Project | null> {
-    const entry = await this.entityRepository.findOne({ id });
+    const entry = await this.entityRepository.findOne(
+      { id },
+      {
+        populate: ['documents'],
+      },
+    );
     if (!entry) return null;
     return this.mapper.toDomain(entry);
   }

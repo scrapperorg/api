@@ -3,6 +3,7 @@ import { IProjectPersistenceDTO, IProjectPersistenceIncomingDTO } from '@persist
 import { Project } from '@domain/Project';
 import { IProjectOutgoingDTO } from '@controllers/dtos';
 import { assignPropertyIfItHasValue } from './helpers/assignPropertyIfItHasValue';
+import { Document } from '@domain/Document';
 
 @injectable()
 export class ProjectMap {
@@ -33,7 +34,12 @@ export class ProjectMap {
   }
 
   toDomain(persistenceProject: IProjectPersistenceDTO): Project {
-    return Project.create(persistenceProject);
+    const persistedDocuments = Array.prototype.slice.call(persistenceProject.documents, 0);
+    const documents = persistedDocuments.map((doc) => {
+      return Document.create(doc);
+    });
+    const projectWithMappedDocuments = Object.assign(persistenceProject, { documents });
+    return Project.create(projectWithMappedDocuments);
   }
 
   toDTO(project: Project): IProjectOutgoingDTO {
@@ -42,6 +48,7 @@ export class ProjectMap {
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
       title: project.title,
+      documents: project.documents,
       presentsInterest: project.presentsInterest,
       attachments: project.attachments,
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
