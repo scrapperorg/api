@@ -1,1 +1,1 @@
-export * from './BaseEntity.schema'
+export * from './BaseEntity.schema';

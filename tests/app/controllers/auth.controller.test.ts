@@ -1,4 +1,3 @@
-import { IUserPersistenceDTO } from '../../../src/persistence/dtos/User';
 import request from 'supertest';
 import { Container } from 'inversify';
 import { Application } from 'express';
@@ -79,27 +78,25 @@ describe('User controller test', () => {
     );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
-    const userId = 'vasielsIdealid1';
     const resetPasswordTokenId = 'randomTokenIdwhatever1';
     const resetPasswordTokenValue = 'some-random-token1';
     const currentPassword = 'currentPassword';
     const userEmail = 'vasile2@yahoo.com';
 
-    const user: IUserPersistenceDTO = {
-      id: userId,
+    const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
       role: 'LSE',
       email: userEmail,
       password: encryptionService.hash(currentPassword),
-    };
+    });
 
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() - 1);
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      user: userId,
+      user: user.id,
       token: resetPasswordTokenValue,
       expirationDate,
     };
@@ -128,28 +125,26 @@ describe('User controller test', () => {
     );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
-    const userId = 'vasielsIdealid2';
     const resetPasswordTokenId = 'randomTokenIdwhatever2';
     const resetPasswordTokenValue = 'some-random-token2';
     const currentPassword = 'currentPassword';
     const newPassword = 'newPassword';
     const userEmail = 'vasile3@yahoo.com';
 
-    const user: IUserPersistenceDTO = {
-      id: userId,
+    const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
       role: 'LSE',
       email: userEmail,
       password: encryptionService.hash(currentPassword),
-    };
+    });
 
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() - 1);
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      user: userId,
+      user: user.id,
       token: resetPasswordTokenValue,
       expirationDate,
     };
@@ -172,28 +167,26 @@ describe('User controller test', () => {
     );
     const userRepository = server.container.get<IUserRepository>(TYPES.USER_REPOSITORY);
 
-    const userId = 'vasielsid3';
     const resetPasswordTokenValue = 'some-random-token3';
     const resetPasswordTokenId = 'randomTokenIdwhateve3';
     const currentPassword = 'currentPassword';
     const newPassword = 'newPassword';
     const userEmail = 'vasile4@yahoo.com';
 
-    const user: IUserPersistenceDTO = {
-      id: userId,
+    const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
       role: 'LSE',
       email: userEmail,
       password: encryptionService.hash(currentPassword),
-    };
+    });
 
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 1);
 
     const resetPasswordToken: IResetPasswordTokenPersistenceDTO = {
       id: resetPasswordTokenId,
-      user: userId,
+      user: user.id,
       token: resetPasswordTokenValue,
       expirationDate,
     };

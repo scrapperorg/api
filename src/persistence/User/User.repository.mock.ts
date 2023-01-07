@@ -1,35 +1,32 @@
 import { NoSuchElementException } from '@lib';
-import { IUserProps, User } from '@domain/User';
+import { User } from '@domain/User';
 import { injectable } from 'inversify';
 import { IUserRepository } from '@domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {
   public entries: Array<User> = [
-    {
-      id: '1',
+    new User({
       name: 'ion',
       surname: 'popescu',
       role: 'LSE',
       email: 'ion@fundatiax.ro',
       password: 'hashedpassowrd',
-    },
-    {
-      id: '1',
+    }),
+    new User({
       name: 'gheorghe',
       surname: 'ionescu',
       role: 'LSS',
       email: 'gheorghe@fundatiax.ro',
       password: 'hashedpassowrd',
-    },
+    }),
   ];
 
   async getAll() {
     return this.entries;
   }
 
-  async save(userProps: IUserProps): Promise<User> {
-    const user = new User(userProps);
+  async save(user: User): Promise<User> {
     this.entries.push(user);
     return user;
   }
