@@ -1,59 +1,40 @@
-import { IProjectRepository } from '@domain/Project';
-import { ProjectMap } from '@mappers';
-import { IProjectPersistenceDTO } from '@persistence/dtos/Project';
-import { TYPES } from '@server/types';
-import { inject, injectable } from 'inversify';
+import { IProjectProps, IProjectRepository, Project } from '@domain/Project';
+import { Collection } from '@mikro-orm/core';
+import { injectable } from 'inversify';
 
 @injectable()
 export class ProjectMockRepository implements IProjectRepository {
-  constructor(@inject(TYPES.PROJECT_MAP) private readonly mapper: ProjectMap) {}
-
-  private entries: Array<IProjectPersistenceDTO> = [
+  private entries: Array<Project> = [
     {
       id: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
       createdAt: new Date(),
       updatedAt: new Date(),
       title: 'primul doc',
-
-      documents: new Map(),
-
+      documents: new Collection({}),
       presentsInterest: false,
-
-      numarInregistrareSenat: null,
-      numarInregistrareGuvern: null,
-      proceduraLegislativa: null,
-      cameraDecizionala: null,
-      termenAdoptare: null,
-      tipInitiativa: null,
-      caracter: null,
-      esteProceduraDeUrgenta: false,
-      stadiu: null,
-      initiator: null,
-      consultati: null,
-
       attachments: [],
     },
   ];
 
-  async save(dto: IProjectPersistenceDTO) {
+  async save(dto: IProjectProps) {
     // to implement
-    return this.mapper.toDomain(dto);
+    return this.entries[0];
   }
 
-  async update(dto: IProjectPersistenceDTO) {
+  async update(dto: Project) {
     // to implement
-    return this.mapper.toDomain(dto);
+    return dto;
   }
 
   async getAll() {
     return {
-      entries: this.entries.map((entry) => this.mapper.toDomain(entry)),
+      entries: this.entries,
       count: this.entries.length,
     };
   }
 
   async getById(id: string) {
     // to implement
-    return this.mapper.toDomain(this.entries[0]);
+    return this.entries[0];
   }
 }

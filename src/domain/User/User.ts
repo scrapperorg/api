@@ -1,3 +1,4 @@
+import { BaseEntity } from './../BaseEntity/BaseEntity';
 import { Source } from '@domain/Document';
 
 export enum Role {
@@ -8,7 +9,6 @@ export enum Role {
 }
 
 export interface IUserProps {
-  id?: string;
   name: string;
   surname: string;
   role: string;
@@ -17,36 +17,20 @@ export interface IUserProps {
   sources_of_interest?: Source[];
 }
 
-export class User {
+export class User extends BaseEntity {
   name: string;
-  id: string;
   surname: string;
   role: string;
   email: string;
   password: string;
-  sourcesOfInterest: Source[];
-  private constructor(props: IUserProps) {
+  sourcesOfInterest?: Source[];
+  constructor(props: IUserProps) {
+    super();
     this.name = props.name;
-    this.id = props.id ?? 'random generated string';
     this.surname = props.surname;
     this.role = props.role;
     this.email = props.email;
     this.password = props.password;
     this.sourcesOfInterest = props.sources_of_interest ?? [];
-  }
-
-  public updatePassword(newPassword: string): void {
-    // extra logic and/or validation
-    this.password = newPassword;
-  }
-
-  public updateSources(newSources: Source[]): void {
-    // extra logic and/or validation
-    this.sourcesOfInterest = newSources;
-  }
-
-  public static create(props: IUserProps) {
-    //validate if necessary
-    return new User(props);
   }
 }

@@ -1,11 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { v4 } from 'uuid';
-import { IUserPersistenceDTO } from '@persistence/dtos/User';
 import { IUserAPIincomingDTO, IUserAPIDTO } from '@controllers/dtos/User';
 import { EncryptionService, UserTokenClaims } from './Encryption.service';
 import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
-import { IUserRepository } from '@domain/User';
+import { IUserRepository, User } from '@domain/User';
 import { NoSuchElementException } from '@lib';
 import { Source } from '@domain/Document';
 
@@ -28,15 +26,13 @@ export class UserService {
     return this.userMap.toDTO(user);
   }
   async create(userDTO: IUserAPIincomingDTO) {
-    const id = v4();
-    const userToSave: IUserPersistenceDTO = {
-      id,
+    const userToSave: User = new User({
       name: userDTO.name,
       role: userDTO.role,
       surname: userDTO.surname,
       email: userDTO.email,
       password: this.encryptionService.hash(userDTO.password),
-    };
+    });
 
     const savedUser = await this.repository.save(userToSave);
     return this.userMap.toDTO(savedUser);
@@ -49,10 +45,10 @@ export class UserService {
       throw new NoSuchElementException('user not found');
     }
 
-    user.updateSources(sourcesOfInterest);
+    user.sourcesOfInterest = sourcesOfInterest;
 
     try {
-      await this.repository.update(this.userMap.toPersistence(user));
+      await this.repository.update(user);
     } catch (e: any) {
       console.log(e);
       throw new Error(e);

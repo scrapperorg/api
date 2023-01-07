@@ -1,14 +1,13 @@
-import { IProjectRepository, Project } from '@domain/Project';
+import { IProjectProps, IProjectRepository, Project } from '@domain/Project';
 import { ProjectMap } from '@mappers/Project.map';
 import { EntityRepository, MikroORM } from '@mikro-orm/core';
-import { IProjectPersistenceDTO } from '@persistence/dtos/Project';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ProjectSchema } from './Project.schema';
 
 @injectable()
 export class ProjectRepository implements IProjectRepository {
-  private entityRepository: EntityRepository<IProjectPersistenceDTO>;
+  private entityRepository: EntityRepository<Project>;
 
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
@@ -23,10 +22,10 @@ export class ProjectRepository implements IProjectRepository {
   ): Promise<{ entries: Project[]; count: number }> {
     throw new Error('Method not implemented.');
   }
-  async save(dto: IProjectPersistenceDTO): Promise<Project> {
+  async save(dto: IProjectProps): Promise<Project> {
     throw new Error('Method not implemented.');
   }
-  async update(dto: IProjectPersistenceDTO): Promise<Project> {
+  async update(dto: Project): Promise<Project> {
     throw new Error('Method not implemented.');
   }
   async getById(id: string): Promise<Project | null> {
@@ -37,6 +36,6 @@ export class ProjectRepository implements IProjectRepository {
       },
     );
     if (!entry) return null;
-    return this.mapper.toDomain(entry);
+    return entry;
   }
 }

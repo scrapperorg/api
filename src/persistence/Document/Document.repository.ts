@@ -1,6 +1,5 @@
 import { EntityRepository, MikroORM, wrap } from '@mikro-orm/core';
-import { Document, IDocumentRepository } from '@domain/Document';
-import { IDocumentPersistenceDTO } from '@persistence/dtos/Document';
+import { Document, IDocumentProps, IDocumentRepository } from '@domain/Document';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@server/types';
 import { DocumentMap } from '@mappers';
@@ -9,7 +8,7 @@ import { NoSuchElementException } from '@lib';
 
 @injectable()
 export class DocumentRepository implements IDocumentRepository {
-  private entityRepository: EntityRepository<IDocumentPersistenceDTO>;
+  private entityRepository: EntityRepository<Document>;
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
     @inject(TYPES.DOCUMENT_MAP) private readonly mapper: DocumentMap,
@@ -29,18 +28,18 @@ export class DocumentRepository implements IDocumentRepository {
     });
 
     return {
-      entries: entries.map((entry) => this.mapper.toDomain(entry)),
+      entries,
       count,
     };
   }
 
-  async save(dto: IDocumentPersistenceDTO): Promise<Document> {
+  async save(dto: IDocumentProps): Promise<Document> {
     const document = this.entityRepository.create(dto);
     await this.entityRepository.persistAndFlush(document);
-    return this.mapper.toDomain(document);
+    return document;
   }
 
-  async update(dto: IDocumentPersistenceDTO): Promise<Document> {
+  async update(dto: Document): Promise<Document> {
     const entry = await this.entityRepository.findOne({ id: dto.id });
 
     if (!entry) {
@@ -49,7 +48,7 @@ export class DocumentRepository implements IDocumentRepository {
 
     const updated = wrap(entry).assign(dto, { mergeObjects: true });
     await this.entityRepository.flush();
-    return this.mapper.toDomain(updated);
+    return updated;
   }
 
   async getById(id: string): Promise<Document | null> {
@@ -58,6 +57,6 @@ export class DocumentRepository implements IDocumentRepository {
       { populate: ['project', 'assignedUser'] },
     );
     if (!entry) return null;
-    return this.mapper.toDomain(entry);
+    return entry;
   }
 }

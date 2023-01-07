@@ -1,15 +1,11 @@
 import { NoSuchElementException } from '@lib';
-import { User } from '@domain/User';
-import { IUserPersistenceDTO } from './../dtos/User';
-import { TYPES } from '@server/types';
-import { inject, injectable } from 'inversify';
-import { UserMap } from '../../app/mappers/User.map';
+import { IUserProps, User } from '@domain/User';
+import { injectable } from 'inversify';
 import { IUserRepository } from '@domain/User';
 
 @injectable()
 export class UserMockRepository implements IUserRepository {
-  constructor(@inject(TYPES.USER_MAP) private readonly userMap: UserMap) {}
-  public entries: Array<IUserPersistenceDTO> = [
+  public entries: Array<User> = [
     {
       id: '1',
       name: 'ion',
@@ -29,38 +25,34 @@ export class UserMockRepository implements IUserRepository {
   ];
 
   async getAll() {
-    return this.entries.map((user) => this.userMap.toDomain(user));
+    return this.entries;
   }
 
-  async save(user: IUserPersistenceDTO): Promise<User> {
-    const indexOfExistingEntry = this.entries.findIndex((entry) => entry.id === user.id);
-    if (indexOfExistingEntry === -1) {
-      this.entries.push(user);
-    } else {
-      this.entries[indexOfExistingEntry] = user;
-    }
-    return this.userMap.toDomain(user);
+  async save(userProps: IUserProps): Promise<User> {
+    const user = new User(userProps);
+    this.entries.push(user);
+    return user;
   }
 
-  async update(user: IUserPersistenceDTO): Promise<User> {
+  async update(user: User): Promise<User> {
     const indexOfExistingEntry = this.entries.findIndex((entry) => entry.id === user.id);
     if (indexOfExistingEntry === -1) {
       throw new NoSuchElementException('User not found');
     } else {
       this.entries[indexOfExistingEntry] = user;
     }
-    return this.userMap.toDomain(user);
+    return user;
   }
 
   async getById(id: string): Promise<User | null> {
     const user = this.entries.find((u) => u.id === id);
     if (!user) return null;
-    return this.userMap.toDomain(user);
+    return user;
   }
 
   async getByEmail(email: string): Promise<User | null> {
     const user = this.entries.find((u) => u.email === email);
     if (!user) return null;
-    return this.userMap.toDomain(user);
+    return user;
   }
 }

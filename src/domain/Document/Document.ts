@@ -1,3 +1,5 @@
+import { BaseEntity } from '../BaseEntity/BaseEntity';
+
 export enum Status {
   NOU = 'nou',
   IN_ANALIZA = 'in analiza',
@@ -11,9 +13,6 @@ export enum Source {
 }
 
 export interface IDocumentProps {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
   title: string;
   project: string;
   identifier: string;
@@ -21,47 +20,42 @@ export interface IDocumentProps {
   source: Source;
   status: Status;
   isRulesBreaker?: boolean;
-  assignedUser: string | null;
-  deadline: Date | null;
-  originalFormat: string | null;
-  numberOfPages: number | null;
-  textInterpretationPrecision: number | null;
-  numberOfIdentifiedArticles: number | null;
-  numberOfIdentifiedTerms: number | null;
-  attachments: string[];
+  assignedUser?: string;
+  deadline?: Date;
+  originalFormat?: string;
+  numberOfPages?: number;
+  textInterpretationPrecision?: number;
+  numberOfIdentifiedArticles?: number;
+  numberOfIdentifiedTerms?: number;
+  attachments?: string[];
 }
 
-export class Document {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
+export class Document extends BaseEntity {
   title: string;
   project: string;
   identifier: string;
   publicationDate: Date;
   source: Source;
   status: Status;
-  isRulesBreaker: boolean;
-  assignedUser: string | undefined;
-  deadline: Date | undefined;
-  originalFormat: string | undefined;
-  numberOfPages: number | undefined;
-  textInterpretationPrecision: number | undefined;
-  numberOfIdentifiedArticles: number | undefined;
-  numberOfIdentifiedTerms: number | undefined;
-  attachments: string[];
+  isRulesBreaker?: boolean = false;
+  assignedUser?: string;
+  deadline?: Date;
+  originalFormat?: string;
+  numberOfPages?: number;
+  textInterpretationPrecision?: number;
+  numberOfIdentifiedArticles?: number;
+  numberOfIdentifiedTerms?: number;
+  attachments?: string[];
 
-  private constructor(props: IDocumentProps) {
-    this.id = props.id;
-    this.createdAt = props.createdAt;
-    this.updatedAt = props.updatedAt;
+  constructor(props: IDocumentProps) {
+    super();
     this.title = props.title;
     this.project = props.project;
     this.identifier = props.identifier;
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
-    this.isRulesBreaker = props.isRulesBreaker === true || false;
+    if (typeof props.isRulesBreaker === 'boolean') this.isRulesBreaker = props.isRulesBreaker;
     if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
     if (props.deadline !== null) this.deadline = props.deadline;
     if (props.originalFormat !== null) this.originalFormat = props.originalFormat;
@@ -75,9 +69,5 @@ export class Document {
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
     this.attachments = props.attachments;
-  }
-
-  public static create(props: IDocumentProps) {
-    return new Document(props);
   }
 }

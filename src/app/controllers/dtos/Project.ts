@@ -5,8 +5,8 @@ export interface IProjectIncomingDTO {
 
 export interface IProjectOutgoingDTO {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
   title: string;
 
   documents: IDocumentOutgoingDTO[];
@@ -20,7 +20,7 @@ export interface IProjectOutgoingDTO {
   termenAdoptare?: string;
   tipInitiativa?: string;
   caracter?: string;
-  esteProceduraDeUrgenta: boolean;
+  esteProceduraDeUrgenta?: boolean;
   stadiu?: string;
   initiator?: string;
   consultati?: string;

@@ -1,15 +1,14 @@
 import { NoSuchElementException } from '@lib';
 import { UniqueConstraintViolationException } from '@lib/exceptions/UniqueConstraintValidation.exception';
-import { IUserPersistenceDTO } from './../dtos/User';
 import { inject, injectable } from 'inversify';
 import { MikroORM, EntityRepository, wrap } from '@mikro-orm/core';
 import { TYPES } from '@server/types';
 import { UserMap } from '../../app/mappers/User.map';
 import { UserSchema } from './User.schema';
-import { User, IUserRepository } from '@domain/User';
+import { User, IUserRepository, IUserProps } from '@domain/User';
 @injectable()
 export class UserRepository implements IUserRepository {
-  private userEM: EntityRepository<IUserPersistenceDTO>;
+  private userEM: EntityRepository<User>;
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
     @inject(TYPES.USER_MAP) private readonly userMap: UserMap,
@@ -19,21 +18,21 @@ export class UserRepository implements IUserRepository {
   }
 
   async getAll() {
-    const users = await this.userEM.findAll();
-    return users.map((u) => this.userMap.toDomain(u));
+    return await this.userEM.findAll();
   }
 
-  async save(userDTO: IUserPersistenceDTO): Promise<User> {
+  async save(userDTO: IUserProps): Promise<User> {
     const user = this.userEM.create(userDTO);
     try {
       await this.userEM.persistAndFlush(user);
     } catch (err: any) {
+      // to do: the error here is missleading. it can be another error too. we should let the orm throw this kind of errors
       throw new UniqueConstraintViolationException('User with this email address already exists');
     }
-    return this.userMap.toDomain(userDTO);
+    return user;
   }
 
-  async update(userDTO: IUserPersistenceDTO): Promise<User> {
+  async update(userDTO: User): Promise<User> {
     const user = await this.userEM.findOne({ id: userDTO.id });
 
     if (!user) {
@@ -42,18 +41,18 @@ export class UserRepository implements IUserRepository {
 
     const updatedUser = wrap(user).assign(userDTO, { mergeObjects: true });
     await this.userEM.flush();
-    return this.userMap.toDomain(updatedUser);
+    return updatedUser;
   }
 
   async getById(id: string): Promise<User | null> {
     const user = await this.userEM.findOne({ id });
     if (!user) return null;
-    return this.userMap.toDomain(user);
+    return user;
   }
 
   async getByEmail(email: string): Promise<User | null> {
     const user = await this.userEM.findOne({ email });
     if (!user) return null;
-    return this.userMap.toDomain(user);
+    return user;
   }
 }
