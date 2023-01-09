@@ -35,7 +35,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       role: user.role,
-      sourcesOfInterest: user.sourcesOfInterest || [],
+      sourcesOfInterest: user.sourcesOfInterest,
     });
 
     return {
@@ -61,7 +61,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       role: user.role,
-      sourcesOfInterest: user.sourcesOfInterest || [],
+      sourcesOfInterest: user.sourcesOfInterest,
     });
     return { user, token };
   }
