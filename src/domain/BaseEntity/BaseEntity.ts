@@ -2,8 +2,8 @@ import crypto from 'crypto';
 
 export class BaseEntity {
   id: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor() {
     this.id = crypto.randomUUID();

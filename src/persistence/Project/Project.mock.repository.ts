@@ -5,15 +5,9 @@ import { injectable } from 'inversify';
 @injectable()
 export class ProjectMockRepository implements IProjectRepository {
   private entries: Array<Project> = [
-    {
-      id: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    new Project({
       title: 'primul doc',
-      documents: new Collection({}),
-      presentsInterest: false,
-      attachments: [],
-    },
+    }),
   ];
 
   async save(dto: IProjectProps) {

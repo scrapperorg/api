@@ -1,5 +1,6 @@
 import { BaseEntity } from './../BaseEntity/BaseEntity';
 import { Source } from '@domain/Document';
+import { OptionalProps } from '@mikro-orm/core';
 
 export enum Role {
   ITA = 'ITA', // IT Administrator
@@ -18,12 +19,15 @@ export interface IUserProps {
 }
 
 export class User extends BaseEntity {
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest';
+
   name: string;
   surname: string;
   role: string;
   email: string;
   password: string;
-  sourcesOfInterest?: Source[];
+  sourcesOfInterest: Source[];
+
   constructor(props: IUserProps) {
     super();
     this.name = props.name;

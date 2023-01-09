@@ -1,10 +1,7 @@
-import { Collection } from '@mikro-orm/core';
+import { Collection, OptionalProps } from '@mikro-orm/core';
 import { Document } from '..';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
 export interface IProjectProps {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
   title: string;
 
   presentsInterest?: boolean;
@@ -22,14 +19,15 @@ export interface IProjectProps {
   stadiu?: string;
   initiator?: string;
   consultati?: string;
-
-  attachments: string[];
+  attachments?: string[];
 }
 
 export class Project extends BaseEntity {
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'esteProceduraDeUrgenta' | 'presentsInterest';
+
   title: string;
 
-  presentsInterest?: boolean;
+  presentsInterest = false;
 
   documents?: Collection<Document>;
 
@@ -40,12 +38,12 @@ export class Project extends BaseEntity {
   termenAdoptare?: string;
   tipInitiativa?: string;
   caracter?: string;
-  esteProceduraDeUrgenta?: boolean;
+  esteProceduraDeUrgenta = false;
   stadiu?: string;
   initiator?: string;
   consultati?: string;
 
-  attachments: string[];
+  attachments: string[] = [];
 
   constructor(props: IProjectProps) {
     super();
@@ -69,7 +67,8 @@ export class Project extends BaseEntity {
 
     if (props.caracter !== null) this.caracter = props.caracter;
 
-    this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
+    if (typeof props.esteProceduraDeUrgenta === 'boolean')
+      this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
 
     if (props.stadiu !== null) this.stadiu = props.stadiu;
 
@@ -77,6 +76,6 @@ export class Project extends BaseEntity {
 
     if (props.consultati !== null) this.consultati = props.consultati;
 
-    this.attachments = props.attachments;
+    if (props.attachments) this.attachments = props.attachments;
   }
 }

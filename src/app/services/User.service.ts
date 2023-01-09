@@ -26,7 +26,7 @@ export class UserService {
     return this.userMap.toDTO(user);
   }
   async create(userDTO: IUserAPIincomingDTO) {
-    const userToSave: User = new User({
+    const userToSave = new User({
       name: userDTO.name,
       role: userDTO.role,
       surname: userDTO.surname,

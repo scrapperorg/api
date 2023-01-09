@@ -1,3 +1,4 @@
+import { OptionalProps } from '@mikro-orm/core';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
 
 export enum Status {
@@ -27,17 +28,19 @@ export interface IDocumentProps {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments?: string[];
+  attachments: string[];
 }
 
 export class Document extends BaseEntity {
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'isRulesBreaker';
+
   title: string;
   project: string;
   identifier: string;
   publicationDate: Date;
   source: Source;
   status: Status;
-  isRulesBreaker?: boolean = false;
+  isRulesBreaker = false;
   assignedUser?: string;
   deadline?: Date;
   originalFormat?: string;
