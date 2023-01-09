@@ -4,10 +4,7 @@ import { injectable } from 'inversify';
 @injectable()
 export class DocumentMockRepository implements IDocumentRepository {
   private entries: Array<Document> = [
-    {
-      id: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    new Document({
       title: 'primul doc',
       project: 'un proiect',
       identifier: '1',
@@ -15,9 +12,7 @@ export class DocumentMockRepository implements IDocumentRepository {
       publicationDate: new Date(),
       source: Source.SENAT,
       status: Status.NOU,
-      assignedUser: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
-      attachments: [],
-    },
+    }),
   ];
 
   async save(dto: IDocumentProps): Promise<Document> {

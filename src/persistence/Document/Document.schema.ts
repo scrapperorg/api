@@ -1,12 +1,8 @@
-import { EntitySchema, OptionalProps } from '@mikro-orm/core';
+import { EntitySchema } from '@mikro-orm/core';
 import { Document, Status } from '@domain/Document/Document';
 import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
 
-class DocumentWithOptionals extends Document {
-  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'isRulesBreaker';
-}
-
-export const DocumentSchema = new EntitySchema<DocumentWithOptionals, BaseEntity>({
+export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
   class: Document,
   extends: 'BaseEntity',
   properties: {

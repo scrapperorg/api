@@ -28,11 +28,11 @@ export interface IDocumentProps {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments: string[];
+  attachments?: string[];
 }
 
 export class Document extends BaseEntity {
-  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'isRulesBreaker';
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'isRulesBreaker' | 'attachments';
 
   title: string;
   project: string;
@@ -48,7 +48,7 @@ export class Document extends BaseEntity {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments?: string[];
+  attachments: string[] = [];
 
   constructor(props: IDocumentProps) {
     super();
@@ -71,6 +71,6 @@ export class Document extends BaseEntity {
       this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
-    this.attachments = props.attachments;
+    if (props.attachments) this.attachments = props.attachments;
   }
 }
