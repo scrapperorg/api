@@ -1,46 +1,13 @@
-import { injectable } from 'inversify';
-import { IProjectPersistenceDTO, IProjectPersistenceIncomingDTO } from '@persistence/dtos/Project';
+import { inject, injectable } from 'inversify';
 import { Project } from '@domain/Project';
 import { IProjectOutgoingDTO } from '@controllers/dtos';
 import { assignPropertyIfItHasValue } from './helpers/assignPropertyIfItHasValue';
-import { Document } from '@domain/Document';
+import { DocumentMap } from './Document.map';
+import { TYPES } from '@server/types';
 
 @injectable()
 export class ProjectMap {
-  toPersistence(project: Project): IProjectPersistenceIncomingDTO {
-    const persistenceObject = {
-      id: project.id,
-      createdAt: project.createdAt,
-      updatedAt: project.updatedAt,
-      title: project.title,
-      presentsInterest: project.presentsInterest,
-
-      numarInregistrareSenat: project.numarInregistrareSenat,
-      numarInregistrareGuvern: project.numarInregistrareGuvern,
-      proceduraLegislativa: project.proceduraLegislativa,
-      cameraDecizionala: project.cameraDecizionala,
-      termenAdoptare: project.termenAdoptare,
-      tipInitiativa: project.tipInitiativa,
-      caracter: project.caracter,
-      esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
-      stadiu: project.stadiu,
-      initiator: project.initiator,
-      consultati: project.consultati,
-
-      attachments: project.attachments,
-    };
-
-    return persistenceObject;
-  }
-
-  toDomain(persistenceProject: IProjectPersistenceDTO): Project {
-    const persistedDocuments = Array.prototype.slice.call(persistenceProject.documents, 0);
-    const documents = persistedDocuments.map((doc) => {
-      return Document.create(doc);
-    });
-    const projectWithMappedDocuments = Object.assign(persistenceProject, { documents });
-    return Project.create(projectWithMappedDocuments);
-  }
+  constructor(@inject(TYPES.DOCUMENT_MAP) private documentMapper: DocumentMap) {}
 
   toDTO(project: Project): IProjectOutgoingDTO {
     const dtoObject = {
@@ -48,11 +15,25 @@ export class ProjectMap {
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
       title: project.title,
-      documents: project.documents,
-      presentsInterest: project.presentsInterest,
+      documents: [],
+      presentsInterest: false,
       attachments: project.attachments,
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
+
+    if (project.documents) {
+      Object.assign(dtoObject, {
+        documents: project.documents
+          .getItems()
+          .map((document) => this.documentMapper.toDTO(document)),
+      });
+    }
+
+    if (typeof project.presentsInterest === 'boolean') {
+      Object.assign(dtoObject, {
+        presentsInterest: project.presentsInterest,
+      });
+    }
 
     const optionalProperties: Array<keyof Project> = [
       'numarInregistrareSenat',

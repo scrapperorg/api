@@ -1,63 +1,55 @@
-import { Document } from '../';
-
+import { Collection, OptionalProps } from '@mikro-orm/core';
+import { Document } from '..';
+import { BaseEntity } from '../BaseEntity/BaseEntity';
 export interface IProjectProps {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
   title: string;
 
-  documents: Document[];
+  presentsInterest?: boolean;
 
-  presentsInterest: boolean;
+  documents?: Collection<Document>;
 
-  numarInregistrareSenat: string | null;
-  numarInregistrareGuvern: string | null;
-  proceduraLegislativa: string | null;
-  cameraDecizionala: string | null;
-  termenAdoptare: string | null;
-  tipInitiativa: string | null;
-  caracter: string | null;
-  esteProceduraDeUrgenta: boolean;
-  stadiu: string | null;
-  initiator: string | null;
-  consultati: string | null;
-
-  attachments: string[];
+  numarInregistrareSenat?: string;
+  numarInregistrareGuvern?: string;
+  proceduraLegislativa?: string;
+  cameraDecizionala?: string;
+  termenAdoptare?: string;
+  tipInitiativa?: string;
+  caracter?: string;
+  esteProceduraDeUrgenta?: boolean;
+  stadiu?: string;
+  initiator?: string;
+  consultati?: string;
+  attachments?: string[];
 }
 
-export class Project {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
+export class Project extends BaseEntity {
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'esteProceduraDeUrgenta' | 'presentsInterest';
+
   title: string;
 
-  documents: Document[];
+  presentsInterest = false;
 
-  presentsInterest: boolean;
+  documents?: Collection<Document>;
 
-  numarInregistrareSenat: string | undefined;
-  numarInregistrareGuvern: string | undefined;
-  proceduraLegislativa: string | undefined;
-  cameraDecizionala: string | undefined;
-  termenAdoptare: string | undefined;
-  tipInitiativa: string | undefined;
-  caracter: string | undefined;
-  esteProceduraDeUrgenta: boolean;
-  stadiu: string | undefined;
-  initiator: string | undefined;
-  consultati: string | undefined;
+  numarInregistrareSenat?: string;
+  numarInregistrareGuvern?: string;
+  proceduraLegislativa?: string;
+  cameraDecizionala?: string;
+  termenAdoptare?: string;
+  tipInitiativa?: string;
+  caracter?: string;
+  esteProceduraDeUrgenta = false;
+  stadiu?: string;
+  initiator?: string;
+  consultati?: string;
 
-  attachments: string[];
+  attachments: string[] = [];
 
-  private constructor(props: IProjectProps) {
-    this.id = props.id;
-    this.createdAt = props.createdAt;
-    this.updatedAt = props.updatedAt;
+  constructor(props: IProjectProps) {
+    super();
     this.title = props.title;
 
-    this.documents = props.documents;
-
-    this.presentsInterest = props.presentsInterest;
+    if (typeof props.presentsInterest === 'boolean') this.presentsInterest = props.presentsInterest;
 
     if (props.numarInregistrareSenat !== null)
       this.numarInregistrareSenat = props.numarInregistrareSenat;
@@ -75,7 +67,8 @@ export class Project {
 
     if (props.caracter !== null) this.caracter = props.caracter;
 
-    this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
+    if (typeof props.esteProceduraDeUrgenta === 'boolean')
+      this.esteProceduraDeUrgenta = props.esteProceduraDeUrgenta;
 
     if (props.stadiu !== null) this.stadiu = props.stadiu;
 
@@ -83,10 +76,6 @@ export class Project {
 
     if (props.consultati !== null) this.consultati = props.consultati;
 
-    this.attachments = props.attachments;
-  }
-
-  public static create(props: IProjectProps): Project {
-    return new Project(props);
+    if (props.attachments) this.attachments = props.attachments;
   }
 }

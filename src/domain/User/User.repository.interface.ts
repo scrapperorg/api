@@ -1,10 +1,9 @@
-import { IUserPersistenceDTO } from '@persistence/dtos/User';
-import { User } from './User';
+import { IUserProps, User } from './User';
 
 export interface IUserRepository {
   getAll(): Promise<User[]>;
-  save(userProps: IUserPersistenceDTO): Promise<User>;
-  update(userProps: IUserPersistenceDTO): Promise<User>;
+  save(userProps: IUserProps): Promise<User>;
+  update(userProps: User): Promise<User>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
 }

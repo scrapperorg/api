@@ -37,6 +37,7 @@ export class AuthContoller {
         const { user, token } = await this.authService.login(email, password);
         return res.status(HttpStatus.OK).json({ user, token });
       } catch (error: any) {
+        console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }

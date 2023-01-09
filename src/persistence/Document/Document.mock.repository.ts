@@ -1,18 +1,10 @@
-import { Document, IDocumentRepository, Source, Status } from '@domain/Document';
-import { DocumentMap } from '@mappers';
-import { IDocumentPersistenceDTO } from '@persistence/dtos';
-import { TYPES } from '@server/types';
-import { inject, injectable } from 'inversify';
+import { Document, IDocumentProps, IDocumentRepository, Source, Status } from '@domain/Document';
+import { injectable } from 'inversify';
 
 @injectable()
 export class DocumentMockRepository implements IDocumentRepository {
-  constructor(@inject(TYPES.DOCUMENT_MAP) private readonly mapper: DocumentMap) {}
-
-  private entries: Array<IDocumentPersistenceDTO> = [
-    {
-      id: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+  private entries: Array<Document> = [
+    new Document({
       title: 'primul doc',
       project: 'un proiect',
       identifier: '1',
@@ -20,36 +12,28 @@ export class DocumentMockRepository implements IDocumentRepository {
       publicationDate: new Date(),
       source: Source.SENAT,
       status: Status.NOU,
-      assignedUser: '822b7f37-1faa-4da5-8bd6-ee75eb59613e',
-      deadline: null,
-      originalFormat: null,
-      numberOfPages: null,
-      textInterpretationPrecision: null,
-      numberOfIdentifiedArticles: null,
-      numberOfIdentifiedTerms: null,
-      attachments: [],
-    },
+    }),
   ];
 
-  async save(dto: IDocumentPersistenceDTO): Promise<Document> {
+  async save(dto: IDocumentProps): Promise<Document> {
     // to implement
-    return this.mapper.toDomain(dto);
+    return this.entries[0];
   }
 
-  async update(dto: IDocumentPersistenceDTO): Promise<Document> {
+  async update(dto: Document): Promise<Document> {
     // to implement
-    return this.mapper.toDomain(dto);
+    return dto;
   }
 
   async getAll() {
     return {
-      entries: this.entries.map((entry) => this.mapper.toDomain(entry)),
+      entries: this.entries,
       count: this.entries.length,
     };
   }
 
   async getById(id: string): Promise<Document | null> {
     // to implement
-    return this.mapper.toDomain(this.entries[0]);
+    return this.entries[0];
   }
 }

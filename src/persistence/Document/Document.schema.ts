@@ -1,21 +1,13 @@
-import { v4 } from 'uuid';
-import { IDocumentPersistenceDTO } from './../dtos/Document';
 import { EntitySchema } from '@mikro-orm/core';
-import { Status } from '@domain/Document/Document';
+import { Document, Status } from '@domain/Document/Document';
+import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
 
-export const DocumentSchema = new EntitySchema<IDocumentPersistenceDTO>({
-  name: 'Document',
+export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
+  class: Document,
+  extends: 'BaseEntity',
   properties: {
-    // base
-    id: { type: 'uuid', primary: true, onCreate: () => v4() },
-    createdAt: { type: 'Date', onCreate: () => new Date() },
-    updatedAt: {
-      type: 'Date',
-      onCreate: () => new Date(),
-      onUpdate: () => new Date(),
-    },
     // general
-    title: { type: 'string', nullable: false },
+    title: { type: 'text', nullable: false },
     identifier: { type: 'string', nullable: false },
     publicationDate: { type: 'Date', nullable: false },
     source: { type: 'string', nullable: false }, // if Source will ever become entity, replace with relation
@@ -25,7 +17,7 @@ export const DocumentSchema = new EntitySchema<IDocumentPersistenceDTO>({
     project: { reference: 'm:1', entity: 'Project' },
     deadline: { type: 'Date', nullable: true },
     // AI
-    isRulesBreaker: { type: 'boolean', default: false },
+    isRulesBreaker: { type: 'boolean', nullable: true, default: false },
     originalFormat: { type: 'string', nullable: true },
     numberOfPages: { type: 'number', nullable: true },
     textInterpretationPrecision: { type: 'number', nullable: true },

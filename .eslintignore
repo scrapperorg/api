@@ -4,3 +4,4 @@ dist
 jest.config.js
 tests/testServer.ts
 /src/persistence/migrations
+/src/persistence/seeders

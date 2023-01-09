@@ -1,5 +1,4 @@
-import { IDocumentPersistenceDTO } from '@persistence/dtos/Document';
-import { Document } from './Document';
+import { Document, IDocumentProps } from './Document';
 
 export interface IDocumentRepository {
   getAll(
@@ -7,7 +6,7 @@ export interface IDocumentRepository {
     offset?: number,
     limit?: number,
   ): Promise<{ entries: Document[]; count: number }>;
-  save(dto: IDocumentPersistenceDTO): Promise<Document>;
-  update(dto: IDocumentPersistenceDTO): Promise<Document>;
+  save(dto: IDocumentProps): Promise<Document>;
+  update(dto: Document): Promise<Document>;
   getById(id: string): Promise<Document | null>;
 }

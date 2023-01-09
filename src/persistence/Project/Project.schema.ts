@@ -1,20 +1,12 @@
+import { Project, BaseEntity, Document } from '@domain';
 import { EntitySchema } from '@mikro-orm/core';
-import { IDocumentPersistenceDTO } from '@persistence/dtos';
-import { IProjectPersistenceDTO } from '@persistence/dtos/Project';
-import { v4 } from 'uuid';
 
-export const ProjectSchema = new EntitySchema<IProjectPersistenceDTO>({
-  name: 'Project',
+export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
+  class: Project,
+  extends: 'BaseEntity',
   properties: {
-    id: { type: 'uuid', primary: true, onCreate: () => v4() },
-    createdAt: { type: 'Date', onCreate: () => new Date() },
-    updatedAt: {
-      type: 'Date',
-      onCreate: () => new Date(),
-      onUpdate: () => new Date(),
-    },
-    title: { type: 'string', nullable: false },
-    presentsInterest: { type: 'boolean', onCreate: () => false },
+    title: { type: 'text', nullable: false },
+    presentsInterest: { type: 'boolean', default: false },
     // project technical details
     numarInregistrareSenat: { type: 'string', nullable: true },
     numarInregistrareGuvern: { type: 'string', nullable: true },
@@ -32,7 +24,7 @@ export const ProjectSchema = new EntitySchema<IProjectPersistenceDTO>({
     documents: {
       reference: '1:m',
       entity: () => 'Document',
-      mappedBy: (document: IDocumentPersistenceDTO) => document.project,
+      mappedBy: (document: Document) => document.project,
     },
   },
 });

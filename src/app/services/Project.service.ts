@@ -15,14 +15,11 @@ export class ProjectService {
 
   async getById(id: string): Promise<IProjectOutgoingDTO | null> {
     const entry = await this.repository.getById(id);
+
     if (!entry) {
       throw new NoSuchElementException('project not found');
     }
 
-    const documents = entry.documents.map((doc) => this.documentMapper.toDTO(doc, true));
-
-    const entryWithMappedDocuments = Object.assign(entry, { documents });
-
-    return this.mapper.toDTO(entryWithMappedDocuments);
+    return this.mapper.toDTO(entry);
   }
 }

@@ -7,7 +7,7 @@ export interface IDocumentIncomingDTO {
   publicationDate: Date;
   source: string;
   status: Status;
-  isRulesBreaker: boolean;
+  isRulesBreaker?: boolean;
   assignedUser?: string;
   deadline?: Date;
   originalFormat?: string;
@@ -20,8 +20,8 @@ export interface IDocumentIncomingDTO {
 
 export interface IDocumentOutgoingDTO extends IDocumentIncomingDTO {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
   assignedUser: string | undefined;
 }
 

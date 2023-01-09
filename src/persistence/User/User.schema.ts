@@ -1,16 +1,17 @@
-import { IUserPersistenceDTO } from './../dtos/User';
+import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
+import { User, Role } from '@domain/User/User';
 import { EntitySchema } from '@mikro-orm/core';
 import { Source } from '@domain/Document';
 
-export const UserSchema = new EntitySchema<IUserPersistenceDTO>({
-  name: 'User',
+export const UserSchema = new EntitySchema<User, BaseEntity>({
+  class: User,
+  extends: 'BaseEntity',
   properties: {
-    id: { type: 'string', primary: true }, // todo: add uuid generation here
     name: { type: 'string' },
     surname: { type: 'string' },
-    role: { type: 'string' }, // todo: use role enum here, defaults to generic user https://mikro-orm.io/docs/defining-entities#enum-arrays
+    role: { enum: true, array: false, default: Role.GU, items: () => Role },
     email: { type: 'string', unique: true },
     password: { type: 'string' },
-    sources_of_interest: { enum: true, array: true, default: [], items: () => Source },
+    sourcesOfInterest: { enum: true, array: true, default: [], items: () => Source },
   },
 });
