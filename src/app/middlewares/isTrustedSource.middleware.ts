@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 
-export async function isTrustedSource(request: Request, response: Response, next: () => void) {
+export async function isTrustedSourceMiddleware(
+  request: Request,
+  response: Response,
+  next: () => void,
+) {
   const token = request.headers['authorization'];
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

@@ -5,6 +5,9 @@ import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
+import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
+import { createSchema } from '@controllers/validationSchemas/Document';
+import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 
 @injectable()
 export class DocumentController {
@@ -12,7 +15,7 @@ export class DocumentController {
   constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
     this.router.get(
       '/',
-      isAuthenticated,
+      isAuthenticatedOrTrustedSource,
       parseDocumentsFilters,
       async (req: Request, res: Response) => {
         try {
@@ -38,6 +41,23 @@ export class DocumentController {
         const document = await this.documentService.getById(req.params.id);
         return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('/', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
+      try {
+        try {
+          await createSchema.validateAsync(req.body);
+        } catch (err: any) {
+          const error: Error = err;
+          return res.status(statusMap[Exception.INVALID]).json(error.message);
+        }
+        const document = await this.documentService.createDocument(req.body);
+        return res.status(HttpStatus.OK).json(document);
+      } catch (error: any) {
+        console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }

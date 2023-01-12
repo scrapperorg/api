@@ -20,6 +20,7 @@ export interface IDocumentProps {
   publicationDate: Date;
   source: Source;
   status: Status;
+  link?: string;
   isRulesBreaker?: boolean;
   assignedUser?: string;
   deadline?: Date;
@@ -43,6 +44,7 @@ export class Document extends BaseEntity {
   isRulesBreaker = false;
   assignedUser?: string;
   deadline?: Date;
+  link?: string;
   originalFormat?: string;
   numberOfPages?: number;
   textInterpretationPrecision?: number;

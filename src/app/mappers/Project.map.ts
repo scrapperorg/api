@@ -9,7 +9,7 @@ import { TYPES } from '@server/types';
 export class ProjectMap {
   constructor(@inject(TYPES.DOCUMENT_MAP) private documentMapper: DocumentMap) {}
 
-  toDTO(project: Project): IProjectOutgoingDTO {
+  toDTO(project: Project, excludeDocuments = false): IProjectOutgoingDTO {
     const dtoObject = {
       id: project.id,
       createdAt: project.createdAt,
@@ -21,11 +21,11 @@ export class ProjectMap {
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
 
-    if (project.documents) {
+    if (!excludeDocuments && project.documents) {
       Object.assign(dtoObject, {
         documents: project.documents
           .getItems()
-          .map((document) => this.documentMapper.toDTO(document)),
+          .map((document) => this.documentMapper.toDTO(document, true)),
       });
     }
 

@@ -10,6 +10,7 @@ export interface IDocumentIncomingDTO {
   isRulesBreaker?: boolean;
   assignedUser?: string;
   deadline?: Date;
+  link?: string;
   originalFormat?: string;
   numberOfPages?: number;
   textInterpretationPrecision?: number;

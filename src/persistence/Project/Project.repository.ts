@@ -4,6 +4,8 @@ import { EntityRepository, MikroORM } from '@mikro-orm/core';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ProjectSchema } from './Project.schema';
+import { UniqueConstraintViolationException } from '@lib/exceptions/UniqueConstraintValidation.exception';
+import { ProjectFiltersDTO } from '@controllers/dtos';
 
 @injectable()
 export class ProjectRepository implements IProjectRepository {
@@ -20,10 +22,23 @@ export class ProjectRepository implements IProjectRepository {
     offset?: number | undefined,
     limit?: number | undefined,
   ): Promise<{ entries: Project[]; count: number }> {
-    throw new Error('Method not implemented.');
+    const [entries, count] = await this.entityRepository.findAndCount(
+      {},
+      {
+        populate: ['documents'],
+      },
+    );
+    return { entries, count };
   }
-  async save(dto: IProjectProps): Promise<Project> {
-    throw new Error('Method not implemented.');
+  async save(dto: Project): Promise<Project> {
+    const project = this.entityRepository.create(dto);
+    try {
+      await this.entityRepository.persistAndFlush(project);
+    } catch (err: any) {
+      // to do: the error here is missleading. it can be another error too. we should let the orm throw this kind of errors
+      throw new UniqueConstraintViolationException('Project with this name already exists');
+    }
+    return project;
   }
   async update(dto: Project): Promise<Project> {
     throw new Error('Method not implemented.');
@@ -37,5 +52,12 @@ export class ProjectRepository implements IProjectRepository {
     );
     if (!entry) return null;
     return entry;
+  }
+
+  async getBy(filters: ProjectFiltersDTO): Promise<{ entries: Project[]; count: number }> {
+    const [entries, count] = await this.entityRepository.findAndCount(filters, {
+      populate: ['documents'],
+    });
+    return { entries, count };
   }
 }

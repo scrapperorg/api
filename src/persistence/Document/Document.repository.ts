@@ -5,6 +5,7 @@ import { TYPES } from '@server/types';
 import { DocumentMap } from '@mappers';
 import { DocumentSchema } from './Document.schema';
 import { NoSuchElementException } from '@lib';
+import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 
 @injectable()
 export class DocumentRepository implements IDocumentRepository {
@@ -17,9 +18,21 @@ export class DocumentRepository implements IDocumentRepository {
     this.entityRepository = entityManager.getRepository(DocumentSchema);
   }
 
-  async getAll(sourcesOfInterest: string[], offset = 0, limit = 0) {
-    const sourceCondition =
-      sourcesOfInterest.length === 0 ? {} : { source: { $in: sourcesOfInterest } };
+  async getAll(filters: IDocumentsFilters, offset = 0, limit = 0) {
+    const sourceCondition: any =
+      filters.sourcesOfInterest!.length === 0 ? {} : { source: { $in: filters.sourcesOfInterest } };
+
+    if (filters.title != null || filters.title !== undefined) {
+      sourceCondition['title'] = filters.title;
+    }
+
+    if (filters.link != null || filters.link !== undefined) {
+      sourceCondition['link'] = filters.link;
+    }
+
+    if (filters.project != null || filters.project !== undefined) {
+      sourceCondition['project'] = filters.project;
+    }
 
     const [entries, count] = await this.entityRepository.findAndCount(sourceCondition, {
       limit,

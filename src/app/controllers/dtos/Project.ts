@@ -27,3 +27,7 @@ export interface IProjectOutgoingDTO {
 
   attachments: string[];
 }
+
+export interface ProjectFiltersDTO {
+  title?: string;
+}
