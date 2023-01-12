@@ -48,6 +48,8 @@ export class ProjectRepository implements IProjectRepository {
       { id },
       {
         populate: ['documents'],
+        refresh: true,
+        cache: false,
       },
     );
     if (!entry) return null;
