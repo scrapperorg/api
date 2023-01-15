@@ -1,6 +1,11 @@
 import { Collection, OptionalProps } from '@mikro-orm/core';
 import { Document } from '..';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
+
+export interface IProjectFiltersProps {
+  forumLegislativ?: string[];
+}
+
 export interface IProjectProps {
   title: string;
 
