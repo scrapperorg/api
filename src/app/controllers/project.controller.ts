@@ -25,8 +25,6 @@ export class ProjectController {
 
           const projects = await this.projectService.getAll(filters, page, pageSize);
 
-          console.log(projects);
-
           res.status(200).send(projects);
         } catch (error: any) {
           const errorType: Exception = error.constructor.name;

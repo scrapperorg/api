@@ -1,4 +1,4 @@
-import { IProjectFiltersProps, IProjectProps, Project } from "./Project";
+import { IProjectFiltersProps, IProjectProps, Project } from './Project';
 
 export interface IProjectRepository {
   getAll(
