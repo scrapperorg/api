@@ -1,9 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { Project } from '@domain/Project';
-import { IProjectOutgoingDTO } from '@controllers/dtos';
+import { IDocumentOutgoingDTO, IProjectOutgoingDTO } from '@controllers/dtos';
 import { assignPropertyIfItHasValue } from './helpers/assignPropertyIfItHasValue';
 import { DocumentMap } from './Document.map';
 import { TYPES } from '@server/types';
+import { Document } from '@domain';
 
 @injectable()
 export class ProjectMap {
@@ -22,11 +23,9 @@ export class ProjectMap {
     };
 
     if (project.documents) {
-      Object.assign(dtoObject, {
-        documents: project.documents
-          .getItems()
-          .map((document) => this.documentMapper.toDTO(document)),
-      });
+      (dtoObject.documents as IDocumentOutgoingDTO[]) = project.documents
+        .getItems(false)
+        .map((document) => this.documentMapper.toDTO(document, true));
     }
 
     if (typeof project.presentsInterest === 'boolean') {
