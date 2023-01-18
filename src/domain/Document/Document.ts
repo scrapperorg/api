@@ -1,3 +1,4 @@
+import { Role, User } from '@domain/User/User';
 import { OptionalProps } from '@mikro-orm/core';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
 
@@ -72,5 +73,23 @@ export class Document extends BaseEntity {
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
     if (props.attachments) this.attachments = props.attachments;
+  }
+
+  /**
+   * Assign responsible on a document.
+   * The assigner is required to be at least a LSE as per specification.
+   * This is verified at the controller level.
+   *
+   * The asignee is a LSS as per current specification.
+   * This is a domain constraint enforced here.
+   *
+   * @param user
+   */
+  assignResponsible(user: User): boolean {
+    if (user.role !== Role.LSS)
+      throw new Error('user to be assigned does not have the required LSS role');
+
+    this.assignedUser = user.id;
+    return true;
   }
 }
