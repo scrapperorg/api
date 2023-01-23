@@ -77,17 +77,17 @@ export class Document extends BaseEntity {
 
   /**
    * Assign responsible on a document.
-   * The assigner is required to be at least a LSE as per specification.
+   * The assigner is required to be at least a LSE or LSS as per specification.
    * This is verified at the controller level.
    *
-   * The asignee is a LSS as per current specification.
+   * The asignee is a LSS or LSE as per current specification.
    * This is a domain constraint enforced here.
    *
    * @param user
    */
   assignResponsible(user: User): boolean {
-    if (user.role !== Role.LSS)
-      throw new Error('user to be assigned does not have the required LSS role');
+    if (user.role !== Role.LSS && user.role !== Role.LSE)
+      throw new Error('user to be assigned does not have the required LSS or LSE role');
 
     this.assignedUser = user.id;
     return true;

@@ -12,7 +12,7 @@ export enum Role {
 export interface IUserProps {
   name: string;
   surname: string;
-  role: string;
+  role: Role;
   password: string;
   email: string;
   sources_of_interest?: Source[];
@@ -23,7 +23,7 @@ export class User extends BaseEntity {
 
   name: string;
   surname: string;
-  role: string;
+  role: Role;
   email: string;
   password: string;
   sourcesOfInterest: Source[];
@@ -36,5 +36,17 @@ export class User extends BaseEntity {
     this.email = props.email;
     this.password = props.password;
     this.sourcesOfInterest = props.sources_of_interest ?? [];
+  }
+
+  /**
+   * Get the input role and return an existing role.
+   * If no role found, return the role with the least rights: GU
+   * @param role
+   */
+  static matchRole(role: string): Role {
+    if (role in Role) {
+      return (<any>Role)[role as keyof Role];
+    }
+    return Role.GU;
   }
 }

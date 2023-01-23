@@ -49,7 +49,7 @@ export class DocumentController {
     this.router.post(
       '/assign-responsible',
       isAuthenticated,
-      hasRoleAtLeast(Role.LSE),
+      hasRoleAtLeast(Role.LSS),
       async (req: Request, res: Response) => {
         try {
           await assignResponsibleSchema.validateAsync(req.body);
