@@ -29,11 +29,6 @@ export class UserService {
 
   async getByRoles(roles: string[]): Promise<IUserAPIDTO[]> {
     const results = await this.repository.getByRoles(roles);
-
-    if (!results) {
-      return [];
-    }
-
     return results.map((result) => this.userMap.toDTO(result));
   }
 

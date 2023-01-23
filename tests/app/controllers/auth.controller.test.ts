@@ -86,7 +86,7 @@ describe('User controller test', () => {
     const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
-      role: 'LSE',
+      role: User.matchRole('LSE'),
       email: userEmail,
       password: encryptionService.hash(currentPassword),
     });
@@ -134,7 +134,7 @@ describe('User controller test', () => {
     const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
-      role: 'LSE',
+      role: User.matchRole('LSE'),
       email: userEmail,
       password: encryptionService.hash(currentPassword),
     });
@@ -176,7 +176,7 @@ describe('User controller test', () => {
     const user: User = new User({
       name: 'vasile',
       surname: 'vasilache',
-      role: 'LSE',
+      role: User.matchRole('LSE'),
       email: userEmail,
       password: encryptionService.hash(currentPassword),
     });
