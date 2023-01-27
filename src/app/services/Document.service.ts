@@ -7,7 +7,6 @@ import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
-import { string } from 'joi';
 
 @injectable()
 export class DocumentService {
