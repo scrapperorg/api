@@ -18,11 +18,12 @@ export class UserController {
     @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
   ) {
     this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
-      const roles: string[] = Array.isArray(req.query.roles)
-        ? <string[]>req.query.roles
-        : typeof req.query.roles === 'string'
-        ? [req.query.roles]
-        : [];
+      let roles: string[] = [];
+      if (Array.isArray(req.query.roles)) {
+        roles = <string[]>req.query.roles;
+      } else if (typeof req.query.roles === 'string') {
+        roles = [req.query.roles];
+      }
 
       let users: IUserAPIDTO[];
 

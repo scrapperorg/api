@@ -58,7 +58,7 @@ export class DocumentService {
     }
     const user = await this.userRepository.getById(userId);
     if (!user) {
-      throw new NoSuchElementException('document not found');
+      throw new NoSuchElementException('user not found');
     }
 
     try {

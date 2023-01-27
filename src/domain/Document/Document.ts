@@ -85,11 +85,10 @@ export class Document extends BaseEntity {
    *
    * @param user
    */
-  assignResponsible(user: User): boolean {
+  assignResponsible(user: User): void {
     if (user.role !== Role.LSS && user.role !== Role.LSE)
       throw new Error('user to be assigned does not have the required LSS or LSE role');
 
     this.assignedUser = user.id;
-    return true;
   }
 }
