@@ -5,12 +5,15 @@ import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
+import { IUserRepository } from '@domain/User';
+import { InvalidException } from '@lib';
 
 @injectable()
 export class DocumentService {
   constructor(
     @inject(TYPES.DOCUMENT_REPOSITORY) private repository: IDocumentRepository,
     @inject(TYPES.DOCUMENT_MAP) private mapper: DocumentMap,
+    @inject(TYPES.USER_REPOSITORY) private userRepository: IUserRepository,
   ) {}
 
   async getAll(
@@ -38,5 +41,38 @@ export class DocumentService {
       throw new NoSuchElementException('document not found');
     }
     return this.mapper.toDTO(entry);
+  }
+
+  /**
+   * Assign responsible on a document.
+   * The assigner is required to be at least a LSE as per specification.
+   * The asignee is a LSS as per current specification.
+   *
+   * @param documentId
+   * @param userId
+   */
+  async assignResponsible(documentId: string, userId: string): Promise<IDocumentOutgoingDTO> {
+    const document = await this.repository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+    const user = await this.userRepository.getById(userId);
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    try {
+      document.assignResponsible(user);
+    } catch (err: any) {
+      // the only possible error here is a role missmatch
+      throw new InvalidException(err.message);
+    }
+
+    try {
+      const updatedDoc = await this.repository.update(document);
+      return this.mapper.toDTO(updatedDoc);
+    } catch (e: any) {
+      throw new Error(e);
+    }
   }
 }
