@@ -1,10 +1,11 @@
+import { Router, Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+import { IUserAPIDTO } from '@controllers/dtos/User';
 import { HttpStatus } from '@lib';
 import { Exception, statusMap } from '@lib';
 import { createSchema, updatedSourcesSchema } from './validationSchemas/User';
 import { TYPES } from '@server/types';
 import { UserService } from '@services';
-import { Router, Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 import { Source } from '@domain/Document';
@@ -17,9 +18,23 @@ export class UserController {
     @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
   ) {
     this.router.get('/', isAuthenticated, async (req: Request, res: Response) => {
-      const users = await this.userService.getAll();
+      let roles: string[] = [];
+      if (Array.isArray(req.query.roles)) {
+        roles = <string[]>req.query.roles;
+      } else if (typeof req.query.roles === 'string') {
+        roles = [req.query.roles];
+      }
+
+      let users: IUserAPIDTO[];
+
+      if (roles.length > 0) {
+        users = await this.userService.getByRoles(roles);
+      } else {
+        users = await this.userService.getAll();
+      }
       res.send(users);
     });
+
     this.router.get('/:id', async (req: Request, res: Response) => {
       try {
         const user = await this.userService.getById(req.params.id);

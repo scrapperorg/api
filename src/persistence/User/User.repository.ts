@@ -5,7 +5,7 @@ import { MikroORM, EntityRepository, wrap } from '@mikro-orm/core';
 import { TYPES } from '@server/types';
 import { UserMap } from '../../app/mappers/User.map';
 import { UserSchema } from './User.schema';
-import { User, IUserRepository, IUserProps } from '@domain/User';
+import { User, IUserRepository, IUserProps, Role } from '@domain/User';
 @injectable()
 export class UserRepository implements IUserRepository {
   private userEM: EntityRepository<User>;
@@ -54,5 +54,13 @@ export class UserRepository implements IUserRepository {
     const user = await this.userEM.findOne({ email });
     if (!user) return null;
     return user;
+  }
+
+  async getByRoles(roles: string[]): Promise<User[]> {
+    return await this.userEM.find({
+      role: {
+        $in: roles,
+      },
+    });
   }
 }

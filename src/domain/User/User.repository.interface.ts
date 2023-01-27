@@ -1,3 +1,4 @@
+import { Role } from '@domain/User';
 import { IUserProps, User } from './User';
 
 export interface IUserRepository {
@@ -6,4 +7,5 @@ export interface IUserRepository {
   update(userProps: User): Promise<User>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
+  getByRoles(roles: string[]): Promise<User[]>;
 }

@@ -1,3 +1,4 @@
+import { assignResponsibleSchema, setDeadlineSchema } from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
 import { DocumentService } from '@services';
@@ -5,6 +6,8 @@ import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
+import { hasRoleAtLeast } from '@middlewares/hasRole.middleware';
+import { Role } from '@domain/User';
 import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
 import { createSchema } from '@controllers/validationSchemas/Document';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
@@ -55,6 +58,53 @@ export class DocumentController {
         console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post(
+      '/assign-responsible',
+      isAuthenticated,
+      hasRoleAtLeast(Role.LSS),
+      async (req: Request, res: Response) => {
+        try {
+          await assignResponsibleSchema.validateAsync(req.body);
+        } catch (err: any) {
+          const error: Error = err;
+          return res.status(statusMap[Exception.INVALID]).json(error.message);
+        }
+
+        const { documentId, userId } = req.body;
+
+        try {
+          const document = await documentService.assignResponsible(documentId, userId);
+
+          return res.status(200).json(document);
+        } catch (err: any) {
+          console.log(err);
+          const errorType: Exception = err.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+        }
+      },
+    );
+
+    this.router.post('/set-deadline', isAuthenticated, async (req: Request, res: Response) => {
+      try {
+        await setDeadlineSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      const { documentId, date } = req.body;
+
+      try {
+        const document = await documentService.setDeadline(documentId, date);
+
+        return res.status(200).json(document);
+      } catch (err: any) {
+        console.log(err);
+        const errorType: Exception = err.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
   }

@@ -1,6 +1,6 @@
-import { IProjectProps, IProjectRepository, Project } from '@domain/Project';
+import { IProjectFiltersProps, IProjectProps, IProjectRepository, Project } from '@domain/Project';
 import { ProjectMap } from '@mappers/Project.map';
-import { EntityRepository, MikroORM } from '@mikro-orm/core';
+import { EntityRepository, FilterQuery, MikroORM } from '@mikro-orm/core';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ProjectSchema } from './Project.schema';
@@ -19,16 +19,27 @@ export class ProjectRepository implements IProjectRepository {
     this.entityRepository = entityManager.getRepository(ProjectSchema);
   }
   async getAll(
-    offset?: number | undefined,
-    limit?: number | undefined,
+    filters: IProjectFiltersProps,
+    offset = 0,
+    limit = 0,
   ): Promise<{ entries: Project[]; count: number }> {
-    const [entries, count] = await this.entityRepository.findAndCount(
-      {},
-      {
-        populate: ['documents'],
-      },
-    );
-    return { entries, count };
+    const filterQuery: FilterQuery<Project> = {};
+
+    if (filters.forumLegislativ) {
+      if (filters.forumLegislativ.length > 0) {
+        filterQuery.cameraDecizionala = { $in: filters.forumLegislativ };
+      }
+    }
+
+    const [entries, count] = await this.entityRepository.findAndCount(filterQuery, {
+      limit,
+      offset,
+    });
+
+    return {
+      entries,
+      count,
+    };
   }
   async save(dto: Project): Promise<Project> {
     const project = this.entityRepository.create(dto);
