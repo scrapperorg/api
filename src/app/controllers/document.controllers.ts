@@ -61,9 +61,9 @@ export class DocumentController {
         const { documentId, userId } = req.body;
 
         try {
-          await documentService.assignResponsible(documentId, userId);
+          const document = await documentService.assignResponsible(documentId, userId);
 
-          return res.sendStatus(200);
+          return res.status(200).json(document);
         } catch (err: any) {
           console.log(err);
           const errorType: Exception = err.constructor.name;

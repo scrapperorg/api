@@ -51,7 +51,7 @@ export class DocumentService {
    * @param documentId
    * @param userId
    */
-  async assignResponsible(documentId: string, userId: string): Promise<boolean> {
+  async assignResponsible(documentId: string, userId: string): Promise<IDocumentOutgoingDTO> {
     const document = await this.repository.getById(documentId);
     if (!document) {
       throw new NoSuchElementException('document not found');
@@ -69,11 +69,10 @@ export class DocumentService {
     }
 
     try {
-      this.repository.update(document);
+      const updatedDoc = await this.repository.update(document);
+      return this.mapper.toDTO(updatedDoc);
     } catch (e: any) {
       throw new Error(e);
     }
-
-    return true;
   }
 }
