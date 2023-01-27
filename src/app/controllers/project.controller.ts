@@ -44,12 +44,7 @@ export class ProjectController {
 
     this.router.post('/', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
       try {
-        try {
-          await createSchema.validateAsync(req.body);
-        } catch (err: any) {
-          const error: Error = err;
-          return res.status(statusMap[Exception.INVALID]).json(error.message);
-        }
+        await createSchema.validateAsync(req.body);
         const project = await this.projectService.createProject(req.body);
         return res.status(HttpStatus.OK).json(project);
       } catch (error: any) {
