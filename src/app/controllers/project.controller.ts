@@ -5,7 +5,7 @@ import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { ProjectService } from '@services/Project.service';
 import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
-import { createSchema, findSchema } from '@controllers/validationSchemas/Project';
+import { createSchema } from '@controllers/validationSchemas/Project';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 import { parseProjectsFilters } from '@middlewares/parseProjectsFilters.middleware';
 
@@ -77,6 +77,5 @@ export class ProjectController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
-
   }
 }

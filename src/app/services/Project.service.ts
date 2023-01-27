@@ -2,9 +2,7 @@ import { NoSuchElementException } from '@lib';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { IProjectFiltersProps, IProjectRepository, IProjectProps } from '@domain/Project';
-import { IProjectProps, } from '@domain/Project';
 import { DocumentMap, ProjectMap } from '@mappers';
-import { IProjectOutgoingDTO } from '@controllers/dtos';
 import { IProjectFilters } from '@middlewares/parseProjectsFilters.middleware';
 import { IPaginatedOutgoingDto } from '@controllers/dtos/Paginated';
 import { IProjectOutgoingDTO, ProjectFiltersDTO } from '@controllers/dtos';
@@ -51,11 +49,6 @@ export class ProjectService {
   async createProject(project: IProjectProps): Promise<IProjectOutgoingDTO> {
     const entry = await this.repository.save(project);
     return this.mapper.toDTO(entry);
-  }
-
-  async getAllProjects(): Promise<IProjectOutgoingDTO[]> {
-    const { entries } = await this.repository.getAll();
-    return entries.map((entry) => this.mapper.toDTO(entry));
   }
 
   async find(filters: ProjectFiltersDTO): Promise<IProjectOutgoingDTO[]> {
