@@ -7,6 +7,7 @@ import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
+import { string } from 'joi';
 
 @injectable()
 export class DocumentService {
@@ -66,6 +67,26 @@ export class DocumentService {
     } catch (err: any) {
       // the only possible error here is a role missmatch
       throw new InvalidException(err.message);
+    }
+
+    try {
+      const updatedDoc = await this.repository.update(document);
+      return this.mapper.toDTO(updatedDoc);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async setDeadline(documentId: string, date: string): Promise<IDocumentOutgoingDTO> {
+    const document = await this.repository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    if (date === '') {
+      document.deadline = undefined;
+    } else {
+      document.deadline = new Date(date);
     }
 
     try {
