@@ -75,4 +75,24 @@ export class DocumentService {
       throw new Error(e);
     }
   }
+
+  async setDeadline(documentId: string, date: string): Promise<IDocumentOutgoingDTO> {
+    const document = await this.repository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    if (date === '') {
+      document.deadline = undefined;
+    } else {
+      document.deadline = new Date(date);
+    }
+
+    try {
+      const updatedDoc = await this.repository.update(document);
+      return this.mapper.toDTO(updatedDoc);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
 }
