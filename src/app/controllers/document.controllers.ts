@@ -39,7 +39,7 @@ export class DocumentController {
       },
     );
 
-    this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
+    this.router.get('/:id', isAuthenticatedOrTrustedSource, async (req: Request, res: Response) => {
       try {
         const document = await this.documentService.getById(req.params.id);
         return res.status(HttpStatus.OK).json(document);
