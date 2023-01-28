@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 
 export interface IDocumentsFilters {
   sourcesOfInterest?: string[];
+  title?: string;
+  link?: string;
+  project?: string;
 }
 
 export async function parseDocumentsFilters(
@@ -21,6 +24,9 @@ export async function parseDocumentsFilters(
 
   const documentsFilters: IDocumentsFilters = {
     sourcesOfInterest,
+    title: request.query.title as string,
+    link: request.query.link as string,
+    project: request.query.project as string,
   };
 
   request.documentsFilters = documentsFilters;

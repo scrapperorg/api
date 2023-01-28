@@ -8,6 +8,9 @@ import { inject, injectable } from 'inversify';
 import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import { hasRoleAtLeast } from '@middlewares/hasRole.middleware';
 import { Role } from '@domain/User';
+import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
+import { createSchema } from '@controllers/validationSchemas/Document';
+import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 
 @injectable()
 export class DocumentController {
@@ -15,7 +18,7 @@ export class DocumentController {
   constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
     this.router.get(
       '/',
-      isAuthenticated,
+      isAuthenticatedOrTrustedSource,
       parseDocumentsFilters,
       async (req: Request, res: Response) => {
         try {
@@ -36,11 +39,23 @@ export class DocumentController {
       },
     );
 
-    this.router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
+    this.router.get('/:id', isAuthenticatedOrTrustedSource, async (req: Request, res: Response) => {
       try {
         const document = await this.documentService.getById(req.params.id);
         return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('/', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
+      try {
+        await createSchema.validateAsync(req.body);
+        const document = await this.documentService.createDocument(req.body);
+        return res.status(HttpStatus.OK).json(document);
+      } catch (error: any) {
+        console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }

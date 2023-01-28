@@ -10,7 +10,7 @@ import { Document } from '@domain';
 export class ProjectMap {
   constructor(@inject(TYPES.DOCUMENT_MAP) private documentMapper: DocumentMap) {}
 
-  toDTO(project: Project): IProjectOutgoingDTO {
+  toDTO(project: Project, excludeDocuments = false): IProjectOutgoingDTO {
     const dtoObject = {
       id: project.id,
       createdAt: project.createdAt,
@@ -22,7 +22,7 @@ export class ProjectMap {
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
 
-    if (project.documents) {
+    if (!excludeDocuments && project.documents) {
       (dtoObject.documents as IDocumentOutgoingDTO[]) = project.documents
         .getItems(false)
         .map((document) => this.documentMapper.toDTO(document, true));

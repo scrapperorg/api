@@ -31,4 +31,12 @@ export class ProjectMockRepository implements IProjectRepository {
     // to implement
     return this.entries[0];
   }
+
+  async getBy(filters: any) {
+    // to implement
+    return {
+      entries: this.entries,
+      count: this.entries.length,
+    };
+  }
 }
