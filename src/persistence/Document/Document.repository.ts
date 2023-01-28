@@ -40,7 +40,7 @@ export class DocumentRepository implements IDocumentRepository {
   }
 
   async update(dto: Document): Promise<Document> {
-    const entry = await this.entityRepository.findOne({ id: dto.id });
+    const entry = await this.getById(dto.id);
 
     if (!entry) {
       throw new NoSuchElementException('Document not found');
@@ -48,6 +48,7 @@ export class DocumentRepository implements IDocumentRepository {
 
     const updated = wrap(entry).assign(dto, { mergeObjects: true });
     await this.entityRepository.flush();
+
     return updated;
   }
 
