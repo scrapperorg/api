@@ -42,5 +42,22 @@ export class DocumentController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
+    this.router.post('/upload', async (req: Request, res: Response) => {
+      try {
+        if (req.body.file == undefined) {
+          return res.status(400).send({ message: 'No uploaded file' });
+        } else {
+          await this.documentService.uploadDocument(req.body.file);
+          res.status(200).send({
+            message: 'File uploaded ' + req.body.file,
+          });
+        }
+      } catch (err: any) {
+        res.status(500).send({
+          message: `File can't be loaded. ${err}`,
+        });
+      }
+    });
   }
 }
