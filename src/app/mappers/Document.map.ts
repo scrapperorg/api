@@ -17,7 +17,7 @@ export class DocumentMap {
       source: document.source,
       status: document.status,
       isRulesBreaker: document.isRulesBreaker,
-      attachments: document.attachments,
+      attachments: document.attachments?.toArray(),
       assignedUser: document.assignedUser,
     };
 

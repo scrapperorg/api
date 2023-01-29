@@ -6,11 +6,14 @@ import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
-import { hasRoleAtLeast } from '@middlewares/hasRole.middleware';
-import { Role } from '@domain/User';
-import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
-import { createSchema } from '@controllers/validationSchemas/Document';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
+import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
+import { hasRoleAtLeast } from '@middlewares/hasRole.middleware';
+import { createSchema } from '@controllers/validationSchemas/Document';
+import { Role } from '@domain/User';
+import multer from 'multer';
+
+const m = multer();
 
 @injectable()
 export class DocumentController {
@@ -56,7 +59,7 @@ export class DocumentController {
         return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
         console.log(error);
-        const errorType: Exception = error.constructor.name;
+        const errorType: Exception = error.constructor.naÏme;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
@@ -107,5 +110,29 @@ export class DocumentController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
+
+    this.router.post(
+      '/upload/:documentId',
+      m.single('attachment'),
+      async (req: Request, res: Response) => {
+        const params = req.params;
+
+        if (params.documentId === '' || params.documentId === undefined) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Document id missing' });
+        }
+
+        if (!req.file) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'File missing' });
+        }
+
+        try {
+          const document = await this.documentService.uploadDocument(params.documentId, req.file);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
   }
 }

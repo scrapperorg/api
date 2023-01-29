@@ -1,6 +1,7 @@
 import { EntitySchema } from '@mikro-orm/core';
 import { Document, Status } from '@domain/Document/Document';
 import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
+import { Attachment } from '@domain/Attachment';
 
 export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
   class: Document,
@@ -24,7 +25,10 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     textInterpretationPrecision: { type: 'number', nullable: true },
     numberOfIdentifiedArticles: { type: 'number', nullable: true },
     numberOfIdentifiedTerms: { type: 'number', nullable: true },
-    // attachments
-    attachments: { type: 'string[]', default: [] }, // todo: create Attachement : { reference: '1:m', entity: 'Attachement' },
+    attachments: {
+      reference: '1:m',
+      entity: () => 'Attachment',
+      mappedBy: (attachment: Attachment) => attachment.document,
+    },
   },
 });

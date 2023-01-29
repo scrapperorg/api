@@ -27,4 +27,5 @@ export enum TYPES_ENUM {
   ENCRYPTION_SERVICE = 'EncryptionService',
   DOCUMENT_SERVICE = 'DocumentService',
   PROJECT_SERVICE = 'ProjectService',
+  FILE_REPOSITORY_SERVICE = 'FileRepositoryService',
 }

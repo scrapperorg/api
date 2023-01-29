@@ -60,6 +60,8 @@ export class DocumentRepository implements IDocumentRepository {
     }
 
     const updated = wrap(entry).assign(dto, { mergeObjects: true });
+
+    updated.attachments?.loadItems();
     await this.entityRepository.flush();
 
     return updated;
@@ -68,7 +70,7 @@ export class DocumentRepository implements IDocumentRepository {
   async getById(id: string): Promise<Document | null> {
     const entry = await this.entityRepository.findOne(
       { id },
-      { populate: ['project', 'assignedUser'], refresh: true, cache: false },
+      { populate: ['project', 'assignedUser', 'attachments'] },
     );
     if (!entry) return null;
     return entry;

@@ -34,6 +34,7 @@ import {
 import { AuthContoller, UserController, DocumentController, ProjectController } from '@controllers';
 
 import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
+import { FileRepositoryService } from '@services/FileRepository.service';
 
 export class DiContainer {
   private diContainer: Container;
@@ -87,6 +88,10 @@ export class DiContainer {
       .inSingletonScope;
     this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
     this.diContainer.bind<ProjectService>(TYPES.PROJECT_SERVICE).to(ProjectService);
+    this.diContainer
+      .bind<FileRepositoryService>(TYPES.FILE_REPOSITORY_SERVICE)
+      .to(FileRepositoryService)
+      .inSingletonScope();
 
     // controllers
     this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
