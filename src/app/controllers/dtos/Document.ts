@@ -15,7 +15,7 @@ export interface IDocumentIncomingDTO {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments?: string[];
+  attachments?: { name: string }[];
 }
 
 export interface IDocumentOutgoingDTO extends IDocumentIncomingDTO {

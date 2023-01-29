@@ -1,5 +1,6 @@
-import { OptionalProps } from '@mikro-orm/core';
+import { Collection, OptionalProps } from '@mikro-orm/core';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
+import { Attachment } from '@domain/Attachment';
 
 export enum Status {
   NOU = 'nou',
@@ -28,7 +29,7 @@ export interface IDocumentProps {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments?: string[];
+  attachments?: Collection<Attachment>;
 }
 
 export class Document extends BaseEntity {
@@ -48,7 +49,7 @@ export class Document extends BaseEntity {
   textInterpretationPrecision?: number;
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
-  attachments: string[] = [];
+  attachments?: Collection<Attachment>;
 
   constructor(props: IDocumentProps) {
     super();
@@ -71,6 +72,14 @@ export class Document extends BaseEntity {
       this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
-    if (props.attachments) this.attachments = props.attachments;
+  }
+
+  addAttachment(attachment: Attachment): void {
+    if (this.attachments) {
+      this.attachments.add(attachment);
+    } else {
+      // TODO change this to not be collection
+      this.attachments = new Collection<Attachment>(attachment);
+    }
   }
 }

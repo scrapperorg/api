@@ -539,16 +539,6 @@
           "primary": false,
           "nullable": true,
           "mappedType": "integer"
-        },
-        "attachments": {
-          "name": "attachments",
-          "type": "text[]",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'{}'",
-          "mappedType": "array"
         }
       },
       "name": "document",
@@ -589,6 +579,104 @@
             "id"
           ],
           "referencedTableName": "public.project",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "size": {
+          "name": "size",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "path": {
+          "name": "path",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "document_id": {
+          "name": "document_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "attachment",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "attachment_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "attachment_document_id_foreign": {
+          "constraintName": "attachment_document_id_foreign",
+          "columnNames": [
+            "document_id"
+          ],
+          "localTableName": "public.attachment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.document",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }

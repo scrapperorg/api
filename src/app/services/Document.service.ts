@@ -5,15 +5,17 @@ import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
-import { createWriteStream } from 'fs';
 import path from 'path';
-import fs from 'fs';
+import { FileRepositoryService } from '@services/FileRepository.service';
+import { Attachment } from '@domain/Attachment';
 
 @injectable()
 export class DocumentService {
   constructor(
     @inject(TYPES.DOCUMENT_REPOSITORY) private repository: IDocumentRepository,
     @inject(TYPES.DOCUMENT_MAP) private mapper: DocumentMap,
+
+    @inject(TYPES.FILE_REPOSITORY_SERVICE) private fileRepo: FileRepositoryService,
   ) {}
 
   async getAll(
@@ -43,62 +45,39 @@ export class DocumentService {
     return this.mapper.toDTO(entry);
   }
 
-  async uploadDocument(file: Express.Multer.File) {
-    // if (file !== '') {
-    //   throw new Error('No file provided');
-    // }
+  async uploadDocument(
+    id: string,
+    file: Express.Multer.File,
+  ): Promise<IDocumentOutgoingDTO | null> {
+    const document = await this.repository.getById(id);
 
-    // const path = 'src/temp-file-bucket/';
-    // const writeStream = createWriteStream(path);
-    // file.pipe(writeStream);
+    if (!document) {
+      throw new NoSuchElementException('Document not found.');
+    }
 
-    // return new Promise((resolve, reject) => {
-    //   file.on('end', resolve);
-    //   writeStream.on('error', reject);
-    // });
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    // const upload = multer({ dest: 'uploads/' });
-    // app.post('/upload', upload.single('pdf'), (req: Request, res: Response) => {
-    // The PDF file is available in req.file
-    // You can use the fs module to save the file to a specific location on the server
-    // });
-    // app.use(upload.single('file'));
-    // router.post('/upload', upload.single('file'), (req, res) => {
-    //   try {
-    //     res.send({ file: req.file });
-    //   } catch (err) {
-    //     console.error(err);
-    //     res.status(500).send(err);
-    //   }
-    // });
+    const uploadPath = path.resolve(`./file-repository-bucket/${id}/${file.originalname}`);
 
-    //   const storage = multer.diskStorage({
-    //     destination: function (req: any, file: any, cb: any) {
-    //       cb(null, 'src/temp-file-bucket/');
-    //     },
-    //     filename: function (req: any, file: any, cb: any) {
-    //       cb(null, new Date().toISOString() + file.originalname);
-    //     },
-    //   });
-    //   const fileFilter = (req: any, file: any, cb: any) => {
-    //     if (file.mimetype === 'application/pdf') {
-    //       cb(null, true);
-    //     } else {
-    //       cb(new Error('Invalid file type. Only PDFs are allowed.'), false);
-    //     }
-    //   };
-    //   return multer({
-    //     storage: storage,
-    //     limits: {
-    //       fileSize: 1024 * 1024 * 5,
-    //     },
-    //     fileFilter: fileFilter,
-    //   });
-    // }
+    const isPathAlreadyUsed = document.attachments?.toArray().find((attachment) => {
+      return attachment.path === uploadPath;
+    });
 
-    const { originalname, buffer } = file;
-    const filepath = path.join(__dirname, '..', 'public', 'uploads', originalname);
-    await fs.promises.writeFile(filepath, buffer);
-    return filepath;
+    if (isPathAlreadyUsed) {
+      throw new Error('Path already exists.');
+    }
+
+    await this.fileRepo.upload(uploadPath, file.buffer);
+
+    const attachment = new Attachment({
+      name: file.originalname,
+      size: file.size,
+      path: uploadPath,
+      document,
+    });
+
+    document.addAttachment(attachment);
+
+    const updatedDocument = await this.repository.update(document);
+
+    return this.mapper.toDTO(updatedDocument);
   }
 }

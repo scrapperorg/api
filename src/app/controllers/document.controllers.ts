@@ -5,6 +5,9 @@ import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { parseDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
+import multer from 'multer';
+
+const m = multer();
 
 @injectable()
 export class DocumentController {
@@ -43,21 +46,28 @@ export class DocumentController {
       }
     });
 
-    this.router.post('/upload', async (req: Request, res: Response) => {
-      try {
-        if (req.body.file == undefined) {
-          return res.status(400).send({ message: 'No uploaded file' });
-        } else {
-          await this.documentService.uploadDocument(req.body.file);
-          res.status(200).send({
-            message: 'File uploaded ' + req.body.file,
-          });
+    this.router.post(
+      '/upload/:documentId',
+      m.single('attachment'),
+      async (req: Request, res: Response) => {
+        const params = req.params;
+
+        if (params.documentId === '' || params.documentId === undefined) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Document id missing' });
         }
-      } catch (err: any) {
-        res.status(500).send({
-          message: `File can't be loaded. ${err}`,
-        });
-      }
-    });
+
+        if (!req.file) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'File missing' });
+        }
+
+        try {
+          const document = await this.documentService.uploadDocument(params.documentId, req.file);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
   }
 }
