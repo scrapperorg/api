@@ -8,8 +8,7 @@ export class FileRepositoryService {
     try {
       const dir = dirname(path);
       await mkdir(dir, { recursive: true });
-      const res = await writeFile(path, file, {});
-      console.log(res);
+      await writeFile(path, file, {});
     } catch (err) {
       throw new Error(`File could not be uploaded to path ${path}`);
     }
