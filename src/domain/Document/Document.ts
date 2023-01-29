@@ -1,3 +1,4 @@
+import { Role, User } from '@domain/User/User';
 import { Collection, OptionalProps } from '@mikro-orm/core';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
 import { Attachment } from '@domain/Attachment';
@@ -21,6 +22,7 @@ export interface IDocumentProps {
   publicationDate: Date;
   source: Source;
   status: Status;
+  link?: string;
   isRulesBreaker?: boolean;
   assignedUser?: string;
   deadline?: Date;
@@ -44,6 +46,7 @@ export class Document extends BaseEntity {
   isRulesBreaker = false;
   assignedUser?: string;
   deadline?: Date;
+  link?: string;
   originalFormat?: string;
   numberOfPages?: number;
   textInterpretationPrecision?: number;
@@ -81,5 +84,22 @@ export class Document extends BaseEntity {
       // TODO change this to not be collection
       this.attachments = new Collection<Attachment>(attachment);
     }
+  }
+
+  /**
+   * Assign responsible on a document.
+   * The assigner is required to be at least a LSE or LSS as per specification.
+   * This is verified at the controller level.
+   *
+   * The asignee is a LSS or LSE as per current specification.
+   * This is a domain constraint enforced here.
+   *
+   * @param user
+   */
+  assignResponsible(user: User): void {
+    if (user.role !== Role.LSS && user.role !== Role.LSE)
+      throw new Error('user to be assigned does not have the required LSS or LSE role');
+
+    this.assignedUser = user.id;
   }
 }

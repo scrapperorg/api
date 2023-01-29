@@ -1,5 +1,5 @@
 import { NoSuchElementException } from '@lib';
-import { User } from '@domain/User';
+import { Role, User } from '@domain/User';
 import { injectable } from 'inversify';
 import { IUserRepository } from '@domain/User';
 
@@ -9,14 +9,14 @@ export class UserMockRepository implements IUserRepository {
     new User({
       name: 'ion',
       surname: 'popescu',
-      role: 'LSE',
+      role: Role.LSE,
       email: 'ion@fundatiax.ro',
       password: 'hashedpassowrd',
     }),
     new User({
       name: 'gheorghe',
       surname: 'ionescu',
-      role: 'LSS',
+      role: Role.LSS,
       email: 'gheorghe@fundatiax.ro',
       password: 'hashedpassowrd',
     }),
@@ -51,5 +51,9 @@ export class UserMockRepository implements IUserRepository {
     const user = this.entries.find((u) => u.email === email);
     if (!user) return null;
     return user;
+  }
+
+  async getByRoles(roles: string[]): Promise<User[]> {
+    return this.entries.filter((entry) => roles.includes(entry.role));
   }
 }

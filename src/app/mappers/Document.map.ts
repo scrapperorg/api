@@ -12,6 +12,7 @@ export class DocumentMap {
       updatedAt: document.updatedAt,
       title: document.title,
       identifier: document.identifier,
+      link: document.link,
       publicationDate: document.publicationDate,
       source: document.source,
       status: document.status,

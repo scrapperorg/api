@@ -12,4 +12,5 @@ export interface IProjectRepository {
   update(dto: Project): Promise<Project>;
 
   getById(id: string): Promise<Project | null>;
+  getBy(filters: any): Promise<{ entries: Project[]; count: number }>;
 }

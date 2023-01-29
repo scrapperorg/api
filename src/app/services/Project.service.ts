@@ -1,11 +1,11 @@
-import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
+import { NoSuchElementException } from '@lib';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
-import { IProjectFiltersProps, IProjectRepository } from '@domain/Project';
+import { IProjectFiltersProps, IProjectRepository, IProjectProps } from '@domain/Project';
 import { DocumentMap, ProjectMap } from '@mappers';
-import { IProjectOutgoingDTO } from '@controllers/dtos';
 import { IProjectFilters } from '@middlewares/parseProjectsFilters.middleware';
 import { IPaginatedOutgoingDto } from '@controllers/dtos/Paginated';
+import { IProjectOutgoingDTO, ProjectFiltersDTO } from '@controllers/dtos';
 
 @injectable()
 export class ProjectService {
@@ -44,5 +44,15 @@ export class ProjectService {
     }
 
     return this.mapper.toDTO(entry);
+  }
+
+  async createProject(project: IProjectProps): Promise<IProjectOutgoingDTO> {
+    const entry = await this.repository.save(project);
+    return this.mapper.toDTO(entry);
+  }
+
+  async find(filters: ProjectFiltersDTO): Promise<IProjectOutgoingDTO[]> {
+    const { entries } = await this.repository.getBy(filters);
+    return entries.map((entry) => this.mapper.toDTO(entry));
   }
 }

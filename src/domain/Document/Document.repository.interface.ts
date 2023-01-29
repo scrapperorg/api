@@ -1,8 +1,9 @@
 import { Document, IDocumentProps } from './Document';
+import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 
 export interface IDocumentRepository {
   getAll(
-    sourcesOfInterest?: string[],
+    filters: IDocumentsFilters,
     offset?: number,
     limit?: number,
   ): Promise<{ entries: Document[]; count: number }>;
