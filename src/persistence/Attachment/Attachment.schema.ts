@@ -10,6 +10,11 @@ export const AttachmentSchema = new EntitySchema<Attachment, BaseEntity>({
     name: { type: 'text', nullable: false },
     size: { type: 'int', nullable: false },
     path: { type: 'text', nullable: false },
-    document: { reference: 'm:1', entity: 'Document', nullable: true },
+    document: {
+      reference: 'm:1',
+      entity: 'Document',
+      nullable: true,
+      eager: false,
+    },
   },
 });

@@ -18,6 +18,7 @@ import {
   IUserRepository,
   IDocumentRepository,
   IProjectRepository,
+  IAttachmentRepository,
 } from '@domain';
 
 import {
@@ -29,15 +30,18 @@ import {
   DocumentMockRepository,
   ProjectRepository,
   ProjectMockRepository,
+  AttachmentRepository,
+  AttachmentMockRepository,
 } from '@persistence';
 
-import { AuthContoller, UserController, DocumentController, ProjectController } from '@controllers';
+import { AuthController, UserController, DocumentController, ProjectController } from '@controllers';
 
 import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
 import { FileRepositoryService } from '@services/FileRepository.service';
+import { AttachmentMap } from '@mappers/Attachment.map';
 
 export class DiContainer {
-  private diContainer: Container;
+  private readonly diContainer: Container;
   private databaseClient?: DatabaseClient;
 
   constructor() {
@@ -69,9 +73,11 @@ export class DiContainer {
     this.diContainer.bind<UserMap>(TYPES.USER_MAP).to(UserMap).inSingletonScope();
     this.diContainer
       .bind<ResetPasswordTokenMap>(TYPES.RESET_PASSWORD_TOKEN_MAP)
-      .to(ResetPasswordTokenMap).inSingletonScope;
-    this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope;
-    this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope;
+      .to(ResetPasswordTokenMap)
+      .inSingletonScope();
+    this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope();
+    this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope();
+    this.diContainer.bind<AttachmentMap>(TYPES.ATTACHMENT_MAP).to(AttachmentMap).inSingletonScope();
 
     // repositories
     if (process.env.MOCK === 'true') {
@@ -81,11 +87,13 @@ export class DiContainer {
     }
 
     // services
-    this.diContainer.bind<UserService>(TYPES.USER_SERVICE).to(UserService).inSingletonScope;
-    this.diContainer.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthService).inSingletonScope;
-    this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope;
-    this.diContainer.bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE).to(EncryptionService)
-      .inSingletonScope;
+    this.diContainer.bind<UserService>(TYPES.USER_SERVICE).to(UserService).inSingletonScope();
+    this.diContainer.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthService).inSingletonScope();
+    this.diContainer.bind<EmailService>(TYPES.EMAIL_SERVICE).to(EmailService).inSingletonScope();
+    this.diContainer
+      .bind<EncryptionService>(TYPES.ENCRYPTION_SERVICE)
+      .to(EncryptionService)
+      .inSingletonScope();
     this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
     this.diContainer.bind<ProjectService>(TYPES.PROJECT_SERVICE).to(ProjectService);
     this.diContainer
@@ -94,13 +102,22 @@ export class DiContainer {
       .inSingletonScope();
 
     // controllers
-    this.diContainer.bind<UserController>(TYPES.USER_CONTROLLER).to(UserController)
-      .inSingletonScope;
-    this.diContainer.bind<AuthContoller>(TYPES.AUTH_CONTROLLER).to(AuthContoller).inSingletonScope;
-    this.diContainer.bind<DocumentController>(TYPES.DOCUMENT_CONTROLLER).to(DocumentController)
-      .inSingletonScope;
-    this.diContainer.bind<ProjectController>(TYPES.PROJECT_CONTROLLER).to(ProjectController)
-      .inSingletonScope;
+    this.diContainer
+      .bind<UserController>(TYPES.USER_CONTROLLER)
+      .to(UserController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<AuthController>(TYPES.AUTH_CONTROLLER)
+      .to(AuthController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<DocumentController>(TYPES.DOCUMENT_CONTROLLER)
+      .to(DocumentController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<ProjectController>(TYPES.PROJECT_CONTROLLER)
+      .to(ProjectController)
+      .inSingletonScope();
 
     return this.diContainer;
   }
@@ -125,6 +142,11 @@ export class DiContainer {
       .bind<IProjectRepository>(TYPES.PROJECT_REPOSITORY)
       .to(ProjectRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
+      .to(AttachmentRepository)
+      .inSingletonScope();
   }
 
   public configureMockRepositories() {
@@ -146,6 +168,11 @@ export class DiContainer {
     this.diContainer
       .bind<IProjectRepository>(TYPES.PROJECT_REPOSITORY)
       .to(ProjectMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
+      .to(AttachmentMockRepository)
       .inSingletonScope();
   }
 }

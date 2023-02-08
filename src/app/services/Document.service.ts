@@ -7,18 +7,22 @@ import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import path from 'path';
 import { FileRepositoryService } from '@services/FileRepository.service';
-import { Attachment } from '@domain/Attachment';
+import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
+import { FlushMode, MikroORM, Reference } from '@mikro-orm/core';
 
 @injectable()
 export class DocumentService {
   constructor(
-    @inject(TYPES.DOCUMENT_REPOSITORY) private repository: IDocumentRepository,
-    @inject(TYPES.DOCUMENT_MAP) private mapper: DocumentMap,
+    @inject(TYPES.DOCUMENT_REPOSITORY) private readonly documentRepository: IDocumentRepository,
+    @inject(TYPES.USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @inject(TYPES.ATTACHMENT_REPOSITORY)
+    private readonly attachmentRepository: IAttachmentRepository,
+    @inject(TYPES.DOCUMENT_MAP) private readonly documentMap: DocumentMap,
+    @inject(TYPES.FILE_REPOSITORY_SERVICE) private readonly fileRepo: FileRepositoryService,
 
-    @inject(TYPES.FILE_REPOSITORY_SERVICE) private fileRepo: FileRepositoryService,
-    @inject(TYPES.USER_REPOSITORY) private userRepository: IUserRepository,
+    @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
   ) {}
 
   async getAll(
@@ -28,8 +32,12 @@ export class DocumentService {
   ): Promise<IAllDocumentsOutgoingDTO> {
     const offset = page * pageSize;
 
-    const { entries, count } = await this.repository.getAll(documentsFilters, offset, pageSize);
-    const dtoDocuments = entries.map((entry) => this.mapper.toDTO(entry));
+    const { entries, count } = await this.documentRepository.getAll(
+      documentsFilters,
+      offset,
+      pageSize,
+    );
+    const dtoDocuments = entries.map((entry) => this.documentMap.toDTO(entry));
     return {
       totalNumberOfResults: count,
       results: dtoDocuments,
@@ -37,16 +45,16 @@ export class DocumentService {
   }
 
   async getById(id: string): Promise<IDocumentOutgoingDTO | null> {
-    const entry = await this.repository.getById(id);
+    const entry = await this.documentRepository.getById(id);
     if (!entry) {
       throw new NoSuchElementException('document not found');
     }
-    return this.mapper.toDTO(entry);
+    return this.documentMap.toDTO(entry);
   }
 
   async createDocument(document: IDocumentProps): Promise<IDocumentOutgoingDTO> {
-    const entry = await this.repository.save(document);
-    return this.mapper.toDTO(entry);
+    const entry = await this.documentRepository.save(document);
+    return this.documentMap.toDTO(entry);
   }
 
   /**
@@ -58,7 +66,7 @@ export class DocumentService {
    * @param userId
    */
   async assignResponsible(documentId: string, userId: string): Promise<IDocumentOutgoingDTO> {
-    const document = await this.repository.getById(documentId);
+    const document = await this.documentRepository.getById(documentId);
     if (!document) {
       throw new NoSuchElementException('document not found');
     }
@@ -75,15 +83,15 @@ export class DocumentService {
     }
 
     try {
-      const updatedDoc = await this.repository.update(document);
-      return this.mapper.toDTO(updatedDoc);
+      const updatedDoc = await this.documentRepository.update(document);
+      return this.documentMap.toDTO(updatedDoc);
     } catch (e: any) {
       throw new Error(e);
     }
   }
 
   async setDeadline(documentId: string, date: string): Promise<IDocumentOutgoingDTO> {
-    const document = await this.repository.getById(documentId);
+    const document = await this.documentRepository.getById(documentId);
     if (!document) {
       throw new NoSuchElementException('document not found');
     }
@@ -95,18 +103,15 @@ export class DocumentService {
     }
 
     try {
-      const updatedDoc = await this.repository.update(document);
-      return this.mapper.toDTO(updatedDoc);
+      const updatedDoc = await this.documentRepository.update(document);
+      return this.documentMap.toDTO(updatedDoc);
     } catch (e: any) {
       throw new Error(e);
     }
   }
 
-  async uploadDocument(
-    id: string,
-    file: Express.Multer.File,
-  ): Promise<IDocumentOutgoingDTO | null> {
-    const document = await this.repository.getById(id);
+  async addAttachment(id: string, file: Express.Multer.File): Promise<IDocumentOutgoingDTO | null> {
+    const document = await this.documentRepository.getById(id);
 
     if (!document) {
       throw new NoSuchElementException('Document not found.');
@@ -133,8 +138,39 @@ export class DocumentService {
 
     document.addAttachment(attachment);
 
-    const updatedDocument = await this.repository.update(document);
+    const updatedDocument = await this.documentRepository.update(document);
 
-    return this.mapper.toDTO(updatedDocument);
+    return this.documentMap.toDTO(updatedDocument);
+  }
+
+  async deleteAttachment(documentId: string, attachmentId: string): Promise<IDocumentOutgoingDTO> {
+    const attachment = await this.attachmentRepository.getById(attachmentId);
+
+    console.log(attachment);
+
+    if (!attachment) {
+      throw new NoSuchElementException(`Attachment ${attachmentId} does not exist`);
+    }
+
+    // TODO add transaction when switching to aws/real servers
+    // to prevent entity delete when delete io fails
+    await this.fileRepo.delete(attachment.path);
+    await this.attachmentRepository.delete(attachmentId);
+
+    const document = await this.documentRepository.getById(documentId);
+
+    console.log('exists', document?.attachments?.contains(attachment));
+
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+    document.attachments?.remove(attachment);
+
+    // console.log('doc removed att', document.attachments);
+    // const updatedDoc = await this.documentRepository.update(document);
+
+    console.log('fucking update ', document);
+
+    return this.documentMap.toDTO(document);
   }
 }
