@@ -36,4 +36,8 @@ export class DocumentMockRepository implements IDocumentRepository {
     // to implement
     return this.entries[0];
   }
+
+  async refresh() {
+    return Promise.resolve();
+  }
 }

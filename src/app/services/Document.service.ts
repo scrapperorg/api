@@ -7,10 +7,10 @@ import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import path from 'path';
 import { FileRepositoryService } from '@services/FileRepository.service';
-import { Attachment, IAttachmentRepository } from '@domain/Attachment';
+import { Attachment, IAttachmentRepository, IAttachmentProps } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
-import { FlushMode, MikroORM, Reference } from '@mikro-orm/core';
+import { Collection, EntityDTO, FlushMode, MikroORM, Reference } from '@mikro-orm/core';
 
 @injectable()
 export class DocumentService {
@@ -144,33 +144,28 @@ export class DocumentService {
   }
 
   async deleteAttachment(documentId: string, attachmentId: string): Promise<IDocumentOutgoingDTO> {
-    const attachment = await this.attachmentRepository.getById(attachmentId);
-
-    console.log(attachment);
-
-    if (!attachment) {
-      throw new NoSuchElementException(`Attachment ${attachmentId} does not exist`);
-    }
-
-    // TODO add transaction when switching to aws/real servers
-    // to prevent entity delete when delete io fails
-    await this.fileRepo.delete(attachment.path);
-    await this.attachmentRepository.delete(attachmentId);
-
     const document = await this.documentRepository.getById(documentId);
-
-    console.log('exists', document?.attachments?.contains(attachment));
 
     if (!document) {
       throw new NoSuchElementException('document not found');
     }
+
+    const attachment = await this.attachmentRepository.getById(attachmentId);
+
+    if (!attachment) {
+      throw new NoSuchElementException('attachment not found');
+    }
+
     document.attachments?.remove(attachment);
 
-    // console.log('doc removed att', document.attachments);
-    // const updatedDoc = await this.documentRepository.update(document);
+    await this.documentRepository.refresh();
 
-    console.log('fucking update ', document);
+    const updatedDocument = await this.documentRepository.getById(documentId);
 
-    return this.documentMap.toDTO(document);
+    if (!updatedDocument) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    return this.documentMap.toDTO(updatedDocument);
   }
 }

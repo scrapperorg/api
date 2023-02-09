@@ -1,4 +1,4 @@
-import { EntityRepository, MikroORM, wrap } from '@mikro-orm/core';
+import { EntityRepository, MikroORM, wrap, EntityManager, IDatabaseDriver, Connection } from '@mikro-orm/core';
 import { Document, IDocumentProps, IDocumentRepository } from '@domain/Document';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@server/types';
@@ -10,12 +10,13 @@ import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware
 @injectable()
 export class DocumentRepository implements IDocumentRepository {
   private entityRepository: EntityRepository<Document>;
+  private entityManager: EntityManager<IDatabaseDriver<Connection>>;
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
     @inject(TYPES.DOCUMENT_MAP) private readonly mapper: DocumentMap,
   ) {
-    const entityManager = this.orm.em.fork();
-    this.entityRepository = entityManager.getRepository(DocumentSchema);
+    this.entityManager = this.orm.em.fork();
+    this.entityRepository = this.entityManager.getRepository(DocumentSchema);
   }
 
   async getAll(filters: IDocumentsFilters, offset = 0, limit = 0) {
@@ -61,16 +62,22 @@ export class DocumentRepository implements IDocumentRepository {
 
     const updated = wrap(entry).assign(dto, { mergeObjects: true });
 
-    updated.attachments?.loadItems();
     await this.entityRepository.flush();
 
     return updated;
   }
 
+  async refresh() {
+    this.entityRepository.flush();
+  }
+
   async getById(id: string): Promise<Document | null> {
     const entry = await this.entityRepository.findOne(
       { id },
-      { populate: ['project', 'assignedUser', 'attachments'] },
+      {
+        populate: ['project', 'assignedUser', 'attachments'],
+        refresh: true,
+      },
     );
     if (!entry) return null;
     return entry;

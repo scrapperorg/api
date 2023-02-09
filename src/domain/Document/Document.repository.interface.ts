@@ -10,4 +10,5 @@ export interface IDocumentRepository {
   save(dto: IDocumentProps): Promise<Document>;
   update(dto: Document): Promise<Document>;
   getById(id: string): Promise<Document | null>;
+  refresh(): Promise<void>;
 }
