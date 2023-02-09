@@ -34,7 +34,12 @@ import {
   AttachmentMockRepository,
 } from '@persistence';
 
-import { AuthController, UserController, DocumentController, ProjectController } from '@controllers';
+import {
+  AuthController,
+  UserController,
+  DocumentController,
+  ProjectController,
+} from '@controllers';
 
 import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
 import { FileRepositoryService } from '@services/FileRepository.service';

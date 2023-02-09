@@ -1,4 +1,9 @@
-import { UserController, AuthController, DocumentController, ProjectController } from '@controllers';
+import {
+  UserController,
+  AuthController,
+  DocumentController,
+  ProjectController,
+} from '@controllers';
 import { Container } from 'inversify';
 import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
 import bodyParser from 'body-parser';
