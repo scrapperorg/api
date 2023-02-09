@@ -1,4 +1,11 @@
-import { EntityRepository, MikroORM, wrap, EntityManager, IDatabaseDriver, Connection } from '@mikro-orm/core';
+import {
+  EntityRepository,
+  MikroORM,
+  wrap,
+  EntityManager,
+  IDatabaseDriver,
+  Connection,
+} from '@mikro-orm/core';
 import { Document, IDocumentProps, IDocumentRepository } from '@domain/Document';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@server/types';

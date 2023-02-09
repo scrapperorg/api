@@ -126,8 +126,8 @@ export class DocumentController {
         }
 
         try {
-          await this.documentService.deleteAttachment(documentId, attachmentId);
-          return res.sendStatus(HttpStatus.OK);
+          const document = await this.documentService.deleteAttachment(documentId, attachmentId);
+          return res.status(HttpStatus.OK).json(document);
         } catch (error: any) {
           const errorType: Exception = error.constructor.name;
           return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

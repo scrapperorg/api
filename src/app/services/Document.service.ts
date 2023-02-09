@@ -7,10 +7,10 @@ import { inject, injectable } from 'inversify';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
 import path from 'path';
 import { FileRepositoryService } from '@services/FileRepository.service';
-import { Attachment, IAttachmentRepository, IAttachmentProps } from '@domain/Attachment';
+import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
-import { Collection, EntityDTO, FlushMode, MikroORM, Reference } from '@mikro-orm/core';
+import { MikroORM } from '@mikro-orm/core';
 
 @injectable()
 export class DocumentService {
@@ -143,7 +143,24 @@ export class DocumentService {
     return this.documentMap.toDTO(updatedDocument);
   }
 
-  async deleteAttachment(documentId: string, attachmentId: string): Promise<void> {
+  async deleteAttachment(documentId: string, attachmentId: string): Promise<any> {
+    const attachment = await this.attachmentRepository.getById(attachmentId);
+
+    if (!attachment) {
+      throw new NoSuchElementException(`Attachment ${attachmentId} does not exist`);
+    }
+
+    // TODO add transaction when switching to aws/real servers
+    // to prevent entity delete when delete io fails
+    await this.fileRepo.delete(attachment.path);
     await this.documentRepository.removeAttachment(documentId, attachmentId);
+
+    const document = await this.documentRepository.getById(documentId);
+
+    if (!document) {
+      throw new NoSuchElementException(`Document ${documentId} does not exist`);
+    }
+
+    return this.documentMap.toDTO(document);
   }
 }
