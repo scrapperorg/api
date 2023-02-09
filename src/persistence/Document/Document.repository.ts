@@ -6,6 +6,7 @@ import { DocumentMap } from '@mappers';
 import { DocumentSchema } from './Document.schema';
 import { NoSuchElementException } from '@lib';
 import { IDocumentsFilters } from '@middlewares/parseDocumentsFilters.middleware';
+import { Attachment } from '@domain/index';
 
 @injectable()
 export class DocumentRepository implements IDocumentRepository {
@@ -67,8 +68,16 @@ export class DocumentRepository implements IDocumentRepository {
     return updated;
   }
 
-  async refresh() {
-    this.entityRepository.flush();
+  async removeAttachment(documentId: string, attachmentId: string) {
+    const document = await this.entityManager.findOneOrFail(Document, documentId, {
+      populate: ['attachments'],
+    });
+
+    const attachment = this.entityManager.getReference<Attachment>(Attachment, attachmentId);
+
+    document.attachments?.remove(attachment);
+
+    await this.entityManager.flush();
   }
 
   async getById(id: string): Promise<Document | null> {

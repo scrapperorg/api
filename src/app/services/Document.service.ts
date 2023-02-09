@@ -143,29 +143,7 @@ export class DocumentService {
     return this.documentMap.toDTO(updatedDocument);
   }
 
-  async deleteAttachment(documentId: string, attachmentId: string): Promise<IDocumentOutgoingDTO> {
-    const document = await this.documentRepository.getById(documentId);
-
-    if (!document) {
-      throw new NoSuchElementException('document not found');
-    }
-
-    const attachment = await this.attachmentRepository.getById(attachmentId);
-
-    if (!attachment) {
-      throw new NoSuchElementException('attachment not found');
-    }
-
-    document.attachments?.remove(attachment);
-
-    await this.documentRepository.refresh();
-
-    const updatedDocument = await this.documentRepository.getById(documentId);
-
-    if (!updatedDocument) {
-      throw new NoSuchElementException('document not found');
-    }
-
-    return this.documentMap.toDTO(updatedDocument);
+  async deleteAttachment(documentId: string, attachmentId: string): Promise<void> {
+    await this.documentRepository.removeAttachment(documentId, attachmentId);
   }
 }

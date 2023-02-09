@@ -27,7 +27,13 @@ export class AttachmentRepository implements IAttachmentRepository {
   }
 
   async getById(id: string): Promise<Attachment | null> {
-    const entry = await this.entityRepository.findOne({ id }, { cache: false });
+    const entry = await this.entityRepository.findOne(
+      { id },
+      {
+        refresh: true,
+        cache: false,
+      },
+    );
     if (!entry) return null;
     return entry;
   }

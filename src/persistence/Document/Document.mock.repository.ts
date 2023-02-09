@@ -37,7 +37,7 @@ export class DocumentMockRepository implements IDocumentRepository {
     return this.entries[0];
   }
 
-  async refresh() {
+  async removeAttachment(documentId: string, attachmentId: string) {
     return Promise.resolve();
   }
 }
