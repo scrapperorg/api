@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { writeFile, mkdir } from 'fs/promises';
-import { dirname } from 'path';
+import { writeFile, mkdir, rm } from 'fs/promises';
+import { dirname, resolve } from 'path';
 
 @injectable()
 export class FileRepositoryService {
@@ -14,5 +14,11 @@ export class FileRepositoryService {
     }
   }
 
-  // download(path: string): any {}
+  async delete(path: string): Promise<void> {
+    try {
+      await rm(resolve(path), { force: true });
+    } catch (err) {
+      throw new Error(`File could not be deleted from path ${path}`);
+    }
+  }
 }

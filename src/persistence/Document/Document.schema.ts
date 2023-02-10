@@ -29,6 +29,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
       reference: '1:m',
       entity: () => 'Attachment',
       mappedBy: (attachment: Attachment) => attachment.document,
+      orphanRemoval: true,
     },
   },
 });

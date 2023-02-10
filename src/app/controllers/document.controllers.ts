@@ -111,6 +111,30 @@ export class DocumentController {
       }
     });
 
+    this.router.delete(
+      '/:documentId/attachment/:attachmentId',
+      isAuthenticated,
+      async (req: Request, res: Response) => {
+        const { documentId, attachmentId } = req.params;
+
+        console.log(req.params);
+        const noDocumentId = documentId === '' || documentId === undefined;
+        const noAttachmentId = documentId === '' || documentId === undefined;
+
+        if (noDocumentId || noAttachmentId) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Document id missing' });
+        }
+
+        try {
+          const document = await this.documentService.deleteAttachment(documentId, attachmentId);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
+
     this.router.post(
       '/upload/:documentId',
       m.single('attachment'),
@@ -126,7 +150,7 @@ export class DocumentController {
         }
 
         try {
-          const document = await this.documentService.uploadDocument(params.documentId, req.file);
+          const document = await this.documentService.addAttachment(params.documentId, req.file);
           return res.status(HttpStatus.OK).json(document);
         } catch (error: any) {
           const errorType: Exception = error.constructor.name;
