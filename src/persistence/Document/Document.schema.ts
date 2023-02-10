@@ -13,6 +13,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     publicationDate: { type: 'Date', nullable: false },
     source: { type: 'string', nullable: false }, // if Source will ever become entity, replace with relation
     link: { type: 'string', nullable: true },
+    storagePath: { type: 'string', nullable: true },
     // activity
     status: { enum: true, default: Status.NOU, items: () => Status },
     assignedUser: { reference: 'm:1', entity: 'User', nullable: true },

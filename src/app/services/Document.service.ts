@@ -1,6 +1,6 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
-import { IDocumentProps, IDocumentRepository } from '@domain/Document';
+import { IDocumentProps, IDocumentRepository, Document } from '@domain/Document';
 import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
@@ -46,6 +46,11 @@ export class DocumentService {
 
   async createDocument(document: IDocumentProps): Promise<IDocumentOutgoingDTO> {
     const entry = await this.repository.save(document);
+    return this.mapper.toDTO(entry);
+  }
+
+  async updateDocument(id: string, document: any): Promise<IDocumentOutgoingDTO> {
+    const entry = await this.repository.update({ ...document, id });
     return this.mapper.toDTO(entry);
   }
 
