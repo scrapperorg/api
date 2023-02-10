@@ -7,7 +7,7 @@ import { UserService } from '@services';
 import { recoverPasswordSchema, resetPasswordSchema } from './validationSchemas/Auth';
 
 @injectable()
-export class AuthContoller {
+export class AuthController {
   public router: Router = Router();
   constructor(
     @inject(TYPES.USER_SERVICE) private readonly userService: UserService,

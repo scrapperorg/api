@@ -7,6 +7,7 @@ export enum TYPES_ENUM {
   RESET_PASSWORD_TOKEN_REPOSITORY = 'IResetPasswordTokenRepository',
   DOCUMENT_REPOSITORY = 'IDocumentRepository',
   PROJECT_REPOSITORY = 'IProjectRepository,',
+  ATTACHMENT_REPOSITORY = 'AttachmentRepository',
 
   // CONTROLLERS
   USER_CONTROLLER = 'UserController',
@@ -19,6 +20,7 @@ export enum TYPES_ENUM {
   RESET_PASSWORD_TOKEN_MAP = 'ResetPasswordTokenMap',
   DOCUMENT_MAP = 'DocumentMap',
   PROJECT_MAP = 'ProjectMap',
+  ATTACHMENT_MAP = 'AttachmentMap',
 
   // SERVICES
   USER_SERVICE = 'UserService',
