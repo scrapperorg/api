@@ -10,7 +10,6 @@ import { FileRepositoryService } from '@services/FileRepository.service';
 import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
-import { MikroORM } from '@mikro-orm/core';
 
 @injectable()
 export class DocumentService {
@@ -21,8 +20,6 @@ export class DocumentService {
     private readonly attachmentRepository: IAttachmentRepository,
     @inject(TYPES.DOCUMENT_MAP) private readonly documentMap: DocumentMap,
     @inject(TYPES.FILE_REPOSITORY_SERVICE) private readonly fileRepo: FileRepositoryService,
-
-    @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
   ) {}
 
   async getAll(

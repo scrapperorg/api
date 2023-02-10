@@ -72,7 +72,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-#    steps:
-#      - name: Run test
-#        working-directory: /app
-#        run: yarn test
+   steps:
+     - name: Run test
+       working-directory: /app
+       run: yarn test
