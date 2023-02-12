@@ -20,6 +20,7 @@ import {
   IDocumentRepository,
   IProjectRepository,
   IAttachmentRepository,
+  IElasticDocumentRepository,
 } from '@domain';
 
 import {
@@ -33,6 +34,7 @@ import {
   ProjectMockRepository,
   AttachmentRepository,
   AttachmentMockRepository,
+  DocumentElasticRepository,
 } from '@persistence';
 
 import {
@@ -172,6 +174,11 @@ export class DiContainer {
     this.diContainer
       .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
       .to(AttachmentRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
+      .to(DocumentElasticRepository)
       .inSingletonScope();
   }
 

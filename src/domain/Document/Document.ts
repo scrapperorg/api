@@ -32,6 +32,7 @@ export interface IDocumentProps {
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
+  postOcrContent?: string;
 }
 
 export class Document extends BaseEntity {
@@ -53,6 +54,7 @@ export class Document extends BaseEntity {
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
+  postOcrContent?: string;
 
   constructor(props: IDocumentProps) {
     super();
@@ -75,6 +77,7 @@ export class Document extends BaseEntity {
       this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
+    if (props.postOcrContent !== null) this.postOcrContent = props.postOcrContent;
   }
 
   addAttachment(attachment: Attachment): void {

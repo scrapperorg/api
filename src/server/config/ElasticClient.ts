@@ -1,7 +1,7 @@
 import { Client } from '@elastic/elasticsearch';
 
 export class ElasticClient {
-  constructor() {
+  static connect(): Client {
     if (process.env.ELASTIC_PASSWORD === undefined)
       throw new Error('cant connect to elastic search');
 

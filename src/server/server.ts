@@ -14,7 +14,7 @@ export async function configServer(isTestServer = false) {
     container = diContainer.configure();
   } else {
     const databaseClient = new DatabaseClient();
-    const elasticClient = new ElasticClient();
+    const elasticClient = ElasticClient.connect();
     container = await diContainer.init(databaseClient, elasticClient);
   }
 

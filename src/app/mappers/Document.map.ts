@@ -1,3 +1,4 @@
+import { IElasticDocument } from './../../domain/Document/Document.elastic.repository.interface';
 import { IDocumentOutgoingDTO } from '@controllers/dtos';
 import { Document } from '@domain/Document';
 import { injectable } from 'inversify';
@@ -41,5 +42,12 @@ export class DocumentMap {
     );
 
     return dtoObject;
+  }
+
+  toElastic(document: Document): IElasticDocument {
+    return {
+      title: document.title,
+      post_ocr_content: document.postOcrContent ?? 'post ocr content field should not be emtpy',
+    };
   }
 }

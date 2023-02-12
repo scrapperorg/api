@@ -32,3 +32,8 @@ export const createSchema = Joi.object({
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
 });
+
+export const addPostOCRContentSchema = Joi.object({
+  documentId: Joi.string().required(),
+  postOcrContent: Joi.string().required(),
+});
