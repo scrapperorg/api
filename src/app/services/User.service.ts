@@ -57,7 +57,6 @@ export class UserService {
     try {
       await this.repository.update(user);
     } catch (e: any) {
-      console.log(e);
       throw new Error(e);
     }
   }

@@ -58,8 +58,7 @@ export class DocumentController {
         const document = await this.documentService.createDocument(req.body);
         return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
-        console.log(error);
-        const errorType: Exception = error.constructor.naÏme;
+        const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
@@ -83,7 +82,6 @@ export class DocumentController {
 
           return res.status(200).json(document);
         } catch (err: any) {
-          console.log(err);
           const errorType: Exception = err.constructor.name;
           return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
         }
@@ -105,7 +103,6 @@ export class DocumentController {
 
         return res.status(200).json(document);
       } catch (err: any) {
-        console.log(err);
         const errorType: Exception = err.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
@@ -116,8 +113,6 @@ export class DocumentController {
       isAuthenticated,
       async (req: Request, res: Response) => {
         const { documentId, attachmentId } = req.params;
-
-        console.log(req.params);
         const noDocumentId = documentId === '' || documentId === undefined;
         const noAttachmentId = documentId === '' || documentId === undefined;
 
