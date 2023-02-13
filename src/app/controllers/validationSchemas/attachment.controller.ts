@@ -1,6 +1,5 @@
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
-import { isAuthenticated } from '@middlewares/isAuthenticated.middleware';
 import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { AttachmentService } from '@services/Attachment.service';
@@ -13,7 +12,6 @@ export class AttachmentController {
   ) {
     this.router.get('/download/:id', async (req: Request, res: Response) => {
       const { id } = req.params;
-
 
       if (id === undefined) {
         return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Attachment id missing' });
