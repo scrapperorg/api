@@ -14,7 +14,6 @@ export class AttachmentController {
     this.router.get('/download/:id', async (req: Request, res: Response) => {
       const { id } = req.params;
 
-      console.log(req.params);
 
       if (id === undefined) {
         return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Attachment id missing' });
