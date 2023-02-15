@@ -1,6 +1,11 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
-import { IDocumentProps, IDocumentRepository, IElasticDocumentRepository } from '@domain/Document';
+import {
+  Document,
+  IDocumentProps,
+  IDocumentRepository,
+  IElasticDocumentRepository,
+} from '@domain/Document';
 import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
@@ -157,19 +162,14 @@ export class DocumentService {
     return this.documentMap.toDTO(document);
   }
 
-  async addOCRisedContent(id: string, ocrisedContent: string): Promise<IDocumentOutgoingDTO> {
-    const document = await this.documentRepository.getById(id);
+  async search(query: Partial<Document>): Promise<IDocumentOutgoingDTO[]> {
+    const elasticResults = await this.elasticDocumentRepository.search(query);
 
-    if (!document) {
-      throw new NoSuchElementException('Document not found.');
-    }
+    const documents = elasticResults.map((result) => {
+      const props = this.documentMap.toDocumentProps(result);
+      return new Document(props);
+    });
 
-    document.postOcrContent = ocrisedContent;
-
-    const updatedDoc = await this.documentRepository.update(document);
-
-    await this.elasticDocumentRepository.indexOrUpdate(id, this.documentMap.toElastic(updatedDoc));
-
-    return this.documentMap.toDTO(updatedDoc);
+    return documents.map((doc) => this.documentMap.toDTO(doc));
   }
 }

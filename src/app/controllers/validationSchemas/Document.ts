@@ -33,7 +33,7 @@ export const createSchema = Joi.object({
   attachments: Joi.array().items(Joi.string()).optional(),
 });
 
-export const addPostOCRContentSchema = Joi.object({
-  documentId: Joi.string().required(),
-  postOcrContent: Joi.string().required(),
+export const searchContentSchema = Joi.object({
+  title: Joi.string(),
+  postOcrContent: Joi.string(),
 });

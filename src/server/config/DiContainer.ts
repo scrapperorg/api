@@ -35,6 +35,7 @@ import {
   AttachmentRepository,
   AttachmentMockRepository,
   DocumentElasticRepository,
+  DocumentMockElasticRepository,
 } from '@persistence';
 
 import {
@@ -206,6 +207,11 @@ export class DiContainer {
     this.diContainer
       .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
       .to(AttachmentMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
+      .to(DocumentMockElasticRepository)
       .inSingletonScope();
   }
 }

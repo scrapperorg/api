@@ -1,7 +1,7 @@
 import {
   assignResponsibleSchema,
   setDeadlineSchema,
-  addPostOCRContentSchema,
+  searchContentSchema,
 } from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
@@ -162,19 +162,17 @@ export class DocumentController {
       },
     );
 
-    this.router.post('/post_ocr_content', isAuthenticated, async (req: Request, res: Response) => {
+    this.router.post('/search', isAuthenticated, async (req: Request, res: Response) => {
       try {
-        await addPostOCRContentSchema.validateAsync(req.body);
+        await searchContentSchema.validateAsync(req.body);
       } catch (err: any) {
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }
 
-      const { documentId, postOcrContent } = req.body;
-
       try {
-        const document = await this.documentService.addOCRisedContent(documentId, postOcrContent);
-        return res.status(HttpStatus.OK).json(document);
+        const documents = await this.documentService.search(req.body);
+        return res.status(HttpStatus.OK).json(documents);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

@@ -16,6 +16,9 @@ export enum Source {
 }
 
 export interface IDocumentProps {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   title: string;
   project: string;
   identifier: string;
@@ -57,7 +60,11 @@ export class Document extends BaseEntity {
   postOcrContent?: string;
 
   constructor(props: IDocumentProps) {
-    super();
+    super({
+      id: props.id,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt,
+    });
     this.title = props.title;
     this.project = props.project;
     this.identifier = props.identifier;
