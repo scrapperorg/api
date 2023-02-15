@@ -55,8 +55,8 @@ export class DocumentService {
   }
 
   async updateDocument(id: string, document: any): Promise<IDocumentOutgoingDTO> {
-    const entry = await this.repository.update({ ...document, id });
-    return this.mapper.toDTO(entry);
+    const entry = await this.documentRepository.update({ ...document, id });
+    return this.documentMap.toDTO(entry);
   }
 
   /**

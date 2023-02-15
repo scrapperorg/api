@@ -19,6 +19,7 @@ export class DocumentMap {
       isRulesBreaker: document.isRulesBreaker,
       attachments: document.attachments?.toArray(),
       assignedUser: document.assignedUser,
+      storagePath: document.storagePath,
     };
 
     if (!excludeProject) {
