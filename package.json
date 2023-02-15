@@ -24,6 +24,7 @@
     "container:prod": "yarn container:build:prod && yarn container:start:prod"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.6.0",
     "@mikro-orm/cli": "^5.4.2",
     "@mikro-orm/core": "^5.4.2",
     "@mikro-orm/migrations": "^5.4.2",

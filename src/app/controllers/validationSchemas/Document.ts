@@ -32,3 +32,8 @@ export const createSchema = Joi.object({
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
 });
+
+export const searchContentSchema = Joi.object({
+  title: Joi.string(),
+  postOcrContent: Joi.string(),
+});

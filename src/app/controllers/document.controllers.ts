@@ -1,4 +1,8 @@
-import { assignResponsibleSchema, setDeadlineSchema } from './validationSchemas/Document';
+import {
+  assignResponsibleSchema,
+  setDeadlineSchema,
+  searchContentSchema,
+} from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
 import { DocumentService } from '@services';
@@ -117,7 +121,6 @@ export class DocumentController {
       async (req: Request, res: Response) => {
         const { documentId, attachmentId } = req.params;
 
-        console.log(req.params);
         const noDocumentId = documentId === '' || documentId === undefined;
         const noAttachmentId = documentId === '' || documentId === undefined;
 
@@ -158,5 +161,22 @@ export class DocumentController {
         }
       },
     );
+
+    this.router.post('/search', isAuthenticated, async (req: Request, res: Response) => {
+      try {
+        await searchContentSchema.validateAsync(req.body);
+      } catch (err: any) {
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        const documents = await this.documentService.search(req.body);
+        return res.status(HttpStatus.OK).json(documents);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
   }
 }

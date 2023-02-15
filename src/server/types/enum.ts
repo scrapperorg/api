@@ -1,11 +1,13 @@
 export enum TYPES_ENUM {
   // Connections
   DATABASE_CONNECTION = 'DATABASE_CONNECTION',
+  ELASTIC_SEARCH_CONNECTION = 'ELASTIC_SEARCH_CONNECTION',
 
   // REPOSITORIES
   USER_REPOSITORY = 'IUserRepository',
   RESET_PASSWORD_TOKEN_REPOSITORY = 'IResetPasswordTokenRepository',
   DOCUMENT_REPOSITORY = 'IDocumentRepository',
+  DOCUMENT_ELASTIC_REPOSITORY = 'IDocumentElasticRepository',
   PROJECT_REPOSITORY = 'IProjectRepository,',
   ATTACHMENT_REPOSITORY = 'AttachmentRepository',
 

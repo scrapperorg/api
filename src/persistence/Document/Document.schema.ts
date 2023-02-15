@@ -31,5 +31,6 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
       mappedBy: (attachment: Attachment) => attachment.document,
       orphanRemoval: true,
     },
+    postOcrContent: { type: 'text', nullable: true },
   },
 });
