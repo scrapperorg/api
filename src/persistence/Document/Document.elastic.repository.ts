@@ -12,13 +12,13 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
   ) {}
 
   async search(query: Partial<Document>) {
-    const postOcrContentQuery = this.computePostOcrContectQuery(query.postOcrContent);
+    const postOcrContentQuery = this.computePostOcrContentQuery(query.postOcrContent);
     const titleQuery = this.computeTitleQuery(query.title);
 
     const criterion: QueryDslQueryContainer[] = [];
 
-    if (postOcrContentQuery !== undefined) Object.assign(criterion, { ...postOcrContentQuery });
-    if (titleQuery !== undefined) Object.assign(criterion, { ...titleQuery });
+    if (postOcrContentQuery !== undefined) criterion.push(postOcrContentQuery);
+    if (titleQuery !== undefined) criterion.push(titleQuery);
 
     const result = await this.elasticClient.search({
       index: this.indexName,
@@ -35,7 +35,9 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
     return documents;
   }
 
-  private computePostOcrContectQuery(queryParam: string | undefined) {
+  private computePostOcrContentQuery(
+    queryParam: string | undefined,
+  ): QueryDslQueryContainer | undefined {
     if (queryParam === undefined) return undefined;
 
     const elasticQuery = {
@@ -50,7 +52,7 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
     return elasticQuery;
   }
 
-  private computeTitleQuery(queryParam: string | undefined) {
+  private computeTitleQuery(queryParam: string | undefined): QueryDslQueryContainer | undefined {
     if (queryParam === undefined) return undefined;
 
     const elasticQuery = {
