@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { writeFile, mkdir, rm } from 'fs/promises';
+import { writeFile, mkdir, rm, readFile } from 'fs/promises';
 import { dirname, resolve } from 'path';
 
 @injectable()
@@ -19,6 +19,14 @@ export class FileRepositoryService {
       await rm(resolve(path), { force: true });
     } catch (err) {
       throw new Error(`File could not be deleted from path ${path}`);
+    }
+  }
+
+  async get(path: string): Promise<Buffer> {
+    try {
+      return await readFile(resolve(path));
+    } catch (err) {
+      throw new Error(`File could not be retrieved from ${path}`);
     }
   }
 }

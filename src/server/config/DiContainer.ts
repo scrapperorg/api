@@ -1,5 +1,6 @@
 import { AsyncContainerModule, Container } from 'inversify';
 import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
+import { Client as ElasticSearchClient } from '@elastic/elasticsearch';
 
 import { DatabaseClient } from './DatabaseClient';
 import { TYPES } from '../types';
@@ -19,6 +20,7 @@ import {
   IDocumentRepository,
   IProjectRepository,
   IAttachmentRepository,
+  IElasticDocumentRepository,
 } from '@domain';
 
 import {
@@ -32,6 +34,8 @@ import {
   ProjectMockRepository,
   AttachmentRepository,
   AttachmentMockRepository,
+  DocumentElasticRepository,
+  DocumentMockElasticRepository,
 } from '@persistence';
 
 import {
@@ -44,16 +48,23 @@ import {
 import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
 import { FileRepositoryService } from '@services/FileRepository.service';
 import { AttachmentMap } from '@mappers/Attachment.map';
+import { AttachmentService } from '@services/Attachment.service';
+import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
 
 export class DiContainer {
   private readonly diContainer: Container;
   private databaseClient?: DatabaseClient;
+  private elasticClient?: ElasticSearchClient;
 
   constructor() {
     this.diContainer = new Container();
   }
 
-  public async init(databaseClient: DatabaseClient): Promise<Container> {
+  public async init(
+    databaseClient: DatabaseClient,
+    elasticClient: ElasticSearchClient,
+  ): Promise<Container> {
+    this.elasticClient = elasticClient;
     this.databaseClient = databaseClient;
     await this.diContainer.loadAsync(this.getBindings());
     return this.diContainer;
@@ -61,7 +72,8 @@ export class DiContainer {
 
   private getBindings() {
     return new AsyncContainerModule(async (bind): Promise<void> => {
-      if (!this.databaseClient) return;
+      if (!this.databaseClient) throw new Error('no database client configured');
+      if (!this.elasticClient) throw new Error('no elastic search client configured');
       const connection = await this.databaseClient.connect();
       if (connection) {
         await connection.getMigrator().up();
@@ -70,6 +82,10 @@ export class DiContainer {
         );
         this.configure();
       }
+
+      bind<ElasticSearchClient>(TYPES.ELASTIC_SEARCH_CONNECTION).toConstantValue(
+        this.elasticClient,
+      );
     });
   }
 
@@ -105,6 +121,10 @@ export class DiContainer {
       .bind<FileRepositoryService>(TYPES.FILE_REPOSITORY_SERVICE)
       .to(FileRepositoryService)
       .inSingletonScope();
+    this.diContainer
+      .bind<AttachmentService>(TYPES.ATTACHMENT_SERVICE)
+      .to(AttachmentService)
+      .inSingletonScope();
 
     // controllers
     this.diContainer
@@ -122,6 +142,10 @@ export class DiContainer {
     this.diContainer
       .bind<ProjectController>(TYPES.PROJECT_CONTROLLER)
       .to(ProjectController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<AttachmentController>(TYPES.ATTACHMENT_CONTROLLER)
+      .to(AttachmentController)
       .inSingletonScope();
 
     return this.diContainer;
@@ -152,6 +176,11 @@ export class DiContainer {
       .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
       .to(AttachmentRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
+      .to(DocumentElasticRepository)
+      .inSingletonScope();
   }
 
   public configureMockRepositories() {
@@ -178,6 +207,11 @@ export class DiContainer {
     this.diContainer
       .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
       .to(AttachmentMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
+      .to(DocumentMockElasticRepository)
       .inSingletonScope();
   }
 }

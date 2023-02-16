@@ -7,7 +7,11 @@ export const assignResponsibleSchema = Joi.object({
 
 export const setDeadlineSchema = Joi.object({
   documentId: Joi.string().required(),
-  date: Joi.string().allow('').required(),
+  date: Joi.date()
+    .allow('')
+    .required()
+    .greater(Date.now())
+    .less(Date.now() + 365 * 24 * 60 * 60 * 1000),
 });
 
 export const createSchema = Joi.object({
@@ -48,4 +52,9 @@ export const updateSchema = Joi.object({
   numberOfIdentifiedArticles: Joi.number().optional(),
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
+});
+
+export const searchContentSchema = Joi.object({
+  title: Joi.string(),
+  postOcrContent: Joi.string(),
 });

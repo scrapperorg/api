@@ -557,6 +557,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "integer"
+        },
+        "post_ocr_content": {
+          "name": "post_ocr_content",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         }
       },
       "name": "document",

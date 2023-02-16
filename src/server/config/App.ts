@@ -10,6 +10,7 @@ import bodyParser from 'body-parser';
 import express, { Express, NextFunction } from 'express';
 import { TYPES } from '../types';
 import cors from 'cors';
+import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
 
 export class App {
   public app: Express;
@@ -23,7 +24,11 @@ export class App {
   }
 
   private middleware(): void {
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        exposedHeaders: ['Content-Disposition'],
+      }),
+    );
     this.app.use(express.json());
     this.app.use(bodyParser.json());
     this.app.use((_req, _res, next: NextFunction): void => {
@@ -45,6 +50,10 @@ export class App {
     this.app.use(
       '/project',
       this.container.get<ProjectController>(TYPES.PROJECT_CONTROLLER).router,
+    );
+    this.app.use(
+      '/attachment',
+      this.container.get<AttachmentController>(TYPES.ATTACHMENT_CONTROLLER).router,
     );
   }
 }

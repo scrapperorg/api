@@ -4,6 +4,7 @@ import { Application } from 'express';
 import { DiContainer } from './config/DiContainer';
 import { DatabaseClient } from './config/DatabaseClient';
 import { App } from './config/App';
+import { ElasticClient } from './config/ElasticClient';
 
 export async function configServer(isTestServer = false) {
   const diContainer = new DiContainer();
@@ -13,7 +14,8 @@ export async function configServer(isTestServer = false) {
     container = diContainer.configure();
   } else {
     const databaseClient = new DatabaseClient();
-    container = await diContainer.init(databaseClient);
+    const elasticClient = ElasticClient.connect();
+    container = await diContainer.init(databaseClient, elasticClient);
   }
 
   const app: Application = new App(container).app;

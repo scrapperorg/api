@@ -1,6 +1,11 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
-import { IDocumentProps, IDocumentRepository, Document } from '@domain/Document';
+import {
+  Document,
+  IDocumentProps,
+  IDocumentRepository,
+  IElasticDocumentRepository,
+} from '@domain/Document';
 import { DocumentMap } from '@mappers';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
@@ -15,6 +20,8 @@ import { InvalidException } from '@lib';
 export class DocumentService {
   constructor(
     @inject(TYPES.DOCUMENT_REPOSITORY) private readonly documentRepository: IDocumentRepository,
+    @inject(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
+    private readonly elasticDocumentRepository: IElasticDocumentRepository,
     @inject(TYPES.USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @inject(TYPES.ATTACHMENT_REPOSITORY)
     private readonly attachmentRepository: IAttachmentRepository,
@@ -84,12 +91,9 @@ export class DocumentService {
       throw new InvalidException(err.message);
     }
 
-    try {
-      const updatedDoc = await this.documentRepository.update(document);
-      return this.documentMap.toDTO(updatedDoc);
-    } catch (e: any) {
-      throw new Error(e);
-    }
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
   }
 
   async setDeadline(documentId: string, date: string): Promise<IDocumentOutgoingDTO> {
@@ -104,12 +108,9 @@ export class DocumentService {
       document.deadline = new Date(date);
     }
 
-    try {
-      const updatedDoc = await this.documentRepository.update(document);
-      return this.documentMap.toDTO(updatedDoc);
-    } catch (e: any) {
-      throw new Error(e);
-    }
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
   }
 
   async addAttachment(id: string, file: Express.Multer.File): Promise<IDocumentOutgoingDTO | null> {
@@ -145,7 +146,7 @@ export class DocumentService {
     return this.documentMap.toDTO(updatedDocument);
   }
 
-  async deleteAttachment(documentId: string, attachmentId: string): Promise<any> {
+  async deleteAttachment(documentId: string, attachmentId: string): Promise<IDocumentOutgoingDTO> {
     const attachment = await this.attachmentRepository.getById(attachmentId);
 
     if (!attachment) {
@@ -164,5 +165,16 @@ export class DocumentService {
     }
 
     return this.documentMap.toDTO(document);
+  }
+
+  async search(query: Partial<Document>): Promise<IDocumentOutgoingDTO[]> {
+    const elasticResults = await this.elasticDocumentRepository.search(query);
+
+    const documents = elasticResults.map((result) => {
+      const props = this.documentMap.toDocumentProps(result);
+      return new Document(props);
+    });
+
+    return documents.map((doc) => this.documentMap.toDTO(doc));
   }
 }

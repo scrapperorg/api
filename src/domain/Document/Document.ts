@@ -16,6 +16,9 @@ export enum Source {
 }
 
 export interface IDocumentProps {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   title: string;
   project: string;
   identifier: string;
@@ -32,6 +35,7 @@ export interface IDocumentProps {
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
+  postOcrContent?: string;
 }
 
 export class Document extends BaseEntity {
@@ -54,9 +58,14 @@ export class Document extends BaseEntity {
   numberOfIdentifiedArticles?: number;
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
+  postOcrContent?: string;
 
   constructor(props: IDocumentProps) {
-    super();
+    super({
+      id: props.id,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt,
+    });
     this.title = props.title;
     this.project = props.project;
     this.identifier = props.identifier;
@@ -76,6 +85,7 @@ export class Document extends BaseEntity {
       this.numberOfIdentifiedTerms = props.numberOfIdentifiedTerms;
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
+    if (props.postOcrContent !== null) this.postOcrContent = props.postOcrContent;
   }
 
   addAttachment(attachment: Attachment): void {

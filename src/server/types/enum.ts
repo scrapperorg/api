@@ -1,11 +1,13 @@
 export enum TYPES_ENUM {
   // Connections
   DATABASE_CONNECTION = 'DATABASE_CONNECTION',
+  ELASTIC_SEARCH_CONNECTION = 'ELASTIC_SEARCH_CONNECTION',
 
   // REPOSITORIES
   USER_REPOSITORY = 'IUserRepository',
   RESET_PASSWORD_TOKEN_REPOSITORY = 'IResetPasswordTokenRepository',
   DOCUMENT_REPOSITORY = 'IDocumentRepository',
+  DOCUMENT_ELASTIC_REPOSITORY = 'IDocumentElasticRepository',
   PROJECT_REPOSITORY = 'IProjectRepository,',
   ATTACHMENT_REPOSITORY = 'AttachmentRepository',
 
@@ -14,6 +16,7 @@ export enum TYPES_ENUM {
   AUTH_CONTROLLER = 'AuthController',
   DOCUMENT_CONTROLLER = 'DocumentController',
   PROJECT_CONTROLLER = 'ProjectController',
+  ATTACHMENT_CONTROLLER = 'AttachmentController',
 
   // MAPPERS
   USER_MAP = 'UserMap',
@@ -30,4 +33,5 @@ export enum TYPES_ENUM {
   DOCUMENT_SERVICE = 'DocumentService',
   PROJECT_SERVICE = 'ProjectService',
   FILE_REPOSITORY_SERVICE = 'FileRepositoryService',
+  ATTACHMENT_SERVICE = 'AttachmentService',
 }
