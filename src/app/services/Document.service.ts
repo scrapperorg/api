@@ -61,6 +61,11 @@ export class DocumentService {
     return this.documentMap.toDTO(entry);
   }
 
+  async updateDocument(id: string, document: any): Promise<IDocumentOutgoingDTO> {
+    const entry = await this.documentRepository.update({ ...document, id });
+    return this.documentMap.toDTO(entry);
+  }
+
   /**
    * Assign responsible on a document.
    * The assigner is required to be at least a LSE as per specification.

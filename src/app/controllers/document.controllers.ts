@@ -1,6 +1,7 @@
 import {
   assignResponsibleSchema,
   setDeadlineSchema,
+  updateSchema,
   searchContentSchema,
 } from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
@@ -63,7 +64,19 @@ export class DocumentController {
         return res.status(HttpStatus.OK).json(document);
       } catch (error: any) {
         console.log(error);
-        const errorType: Exception = error.constructor.naÏme;
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.put('/:id', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
+      try {
+        await updateSchema.validateAsync(req.body);
+        const document = await this.documentService.updateDocument(req.params.id, req.body);
+        return res.status(HttpStatus.OK).json(document);
+      } catch (error: any) {
+        console.log(error);
+        const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });

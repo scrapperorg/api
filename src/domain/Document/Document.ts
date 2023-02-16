@@ -51,6 +51,7 @@ export class Document extends BaseEntity {
   assignedUser?: string;
   deadline?: Date;
   link?: string;
+  storagePath?: string;
   originalFormat?: string;
   numberOfPages?: number;
   textInterpretationPrecision?: number;
