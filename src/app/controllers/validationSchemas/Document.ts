@@ -52,6 +52,7 @@ export const updateSchema = Joi.object({
   numberOfIdentifiedArticles: Joi.number().optional(),
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
+  postOcrContent: Joi.string().optional(),
 });
 
 export const searchContentSchema = Joi.object({

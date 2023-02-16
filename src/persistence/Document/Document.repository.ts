@@ -70,7 +70,7 @@ export class DocumentRepository implements IDocumentRepository {
 
     const updated = wrap(entry).assign(dto, { mergeObjects: true });
 
-    await this.entityRepository.flush();
+    await this.entityRepository.persistAndFlush(updated);
 
     return updated;
   }
