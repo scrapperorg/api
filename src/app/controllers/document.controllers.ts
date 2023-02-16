@@ -71,7 +71,6 @@ export class DocumentController {
 
     this.router.put('/:id', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
       try {
-        console.log('update document', req.params.id, req.body);
         await updateSchema.validateAsync(req.body);
         const document = await this.documentService.updateDocument(req.params.id, req.body);
         return res.status(HttpStatus.OK).json(document);
