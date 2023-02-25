@@ -56,6 +56,14 @@ export const updateSchema = Joi.object({
 });
 
 export const searchContentSchema = Joi.object({
-  title: Joi.string(),
-  postOcrContent: Joi.string(),
+  identificator: Joi.string().allow(''),
+  title: Joi.string().allow(''),
+  source: Joi.string().allow(''),
+  status: Joi.string().allow(''),
+  assignedUserId: Joi.string().allow(''),
+  projectId: Joi.string().allow(''),
+  publishedAfter: Joi.date().allow('').less(Date.now()),
+  publishedBefore: Joi.date().allow('').less(Date.now()),
+  postOcrContent: Joi.string().allow(''),
+  isRulesBreaker: Joi.boolean(),
 });

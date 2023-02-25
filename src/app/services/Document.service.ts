@@ -1,7 +1,7 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import {
-  Document,
+  ElasticSearchProps,
   IDocumentProps,
   IDocumentRepository,
   IElasticDocumentRepository,
@@ -167,14 +167,44 @@ export class DocumentService {
     return this.documentMap.toDTO(document);
   }
 
-  async search(query: Partial<Document>): Promise<IDocumentOutgoingDTO[]> {
-    const elasticResults = await this.elasticDocumentRepository.search(query);
+  async search(query: ElasticSearchProps): Promise<IDocumentOutgoingDTO[]> {
+    const nonEmptyQuery = Object.keys(query)
+      .filter((key) => query[<keyof ElasticSearchProps>key] !== '')
+      .reduce((docObj: Record<string, any>, key: string) => {
+        docObj[key] = query[<keyof ElasticSearchProps>key];
+        return docObj;
+      }, {});
 
-    const documents = elasticResults.map((result) => {
-      const props = this.documentMap.toDocumentProps(result);
-      return new Document(props);
-    });
+    const elasticResults = await this.elasticDocumentRepository.search(nonEmptyQuery);
 
-    return documents.map((doc) => this.documentMap.toDTO(doc));
+    const documents: IDocumentOutgoingDTO[] = [];
+
+    for (let i = 0; i < elasticResults.length; i++) {
+      const result = elasticResults[i];
+
+      if (result.id === null) {
+        // no reason to throw the current op. just log and move on
+        console.log(
+          new InvalidException(`Document index cannot not have an id. Document: ${result.title}`),
+        );
+        continue;
+      }
+
+      const pgDoc = await this.documentRepository.getById(result.id);
+
+      if (pgDoc === null) {
+        // no reason to throw the current op. just log and move on
+        console.log(
+          new NoSuchElementException(
+            `Document with id: ${result.id}, found in the elastic db does not exist in the pg database`,
+          ),
+        );
+        continue;
+      }
+
+      documents.push(this.documentMap.toDTO(pgDoc));
+    }
+
+    return documents;
   }
 }
