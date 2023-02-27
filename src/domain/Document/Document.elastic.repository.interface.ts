@@ -20,6 +20,19 @@ export interface IElasticDocument {
   source: string;
 }
 
+export interface ElasticSearchProps {
+  identificator?: string;
+  title?: string;
+  source?: string;
+  status?: string;
+  assignedUserId?: string;
+  projectId?: string;
+  publishedAfter?: string;
+  publishedBefore?: string;
+  postOcrContent?: string;
+  isRulesBreaker?: boolean;
+}
+
 export interface IElasticDocumentRepository {
-  search(query: Partial<Document>): Promise<IElasticDocument[]>;
+  search(query: ElasticSearchProps): Promise<IElasticDocument[]>;
 }
