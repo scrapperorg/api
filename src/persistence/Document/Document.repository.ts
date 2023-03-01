@@ -43,6 +43,10 @@ export class DocumentRepository implements IDocumentRepository {
       sourceCondition['project'] = filters.project;
     }
 
+    if (filters.processingStatus != null || filters.processingStatus !== undefined) {
+      sourceCondition['processingStatus'] = filters.processingStatus;
+    }
+
     const [entries, count] = await this.entityRepository.findAndCount(sourceCondition, {
       limit,
       offset,

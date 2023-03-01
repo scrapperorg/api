@@ -1,5 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { Document, Status } from '@domain/Document/Document';
+import { Document, ProcessingStatus, Status } from '@domain/Document/Document';
 import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
 import { Attachment } from '@domain/Attachment';
 
@@ -33,5 +33,10 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
       orphanRemoval: true,
     },
     postOcrContent: { type: 'text', nullable: true },
+    processingStatus: {
+      enum: true,
+      default: ProcessingStatus.downloaded,
+      items: () => ProcessingStatus,
+    },
   },
 });

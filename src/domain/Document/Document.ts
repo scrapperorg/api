@@ -9,6 +9,14 @@ export enum Status {
   REVIZUIT = 'revizuit',
 }
 
+export enum ProcessingStatus {
+  downloaded = 'downloaded',
+  'locked' = 'locked',
+  'ocr_in_progress' = 'ocr_in_progress',
+  'ocr_done' = 'ocr_done',
+  'ocr_failed' = 'ocr_failed',
+}
+
 export enum Source {
   CAMERA_DEPUTATILOR = 'camera_deputatilor',
   SENAT = 'senat',
@@ -36,6 +44,7 @@ export interface IDocumentProps {
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
   postOcrContent?: string;
+  processingStatus?: ProcessingStatus;
 }
 
 export class Document extends BaseEntity {
@@ -59,6 +68,7 @@ export class Document extends BaseEntity {
   numberOfIdentifiedTerms?: number;
   attachments?: Collection<Attachment>;
   postOcrContent?: string;
+  processingStatus?: ProcessingStatus = ProcessingStatus.downloaded;
 
   constructor(props: IDocumentProps) {
     super({
@@ -86,6 +96,7 @@ export class Document extends BaseEntity {
     if (props.numberOfIdentifiedArticles !== null)
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
     if (props.postOcrContent !== null) this.postOcrContent = props.postOcrContent;
+    if (props.processingStatus !== null) this.processingStatus = props.processingStatus;
   }
 
   addAttachment(attachment: Attachment): void {

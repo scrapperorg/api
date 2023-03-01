@@ -566,6 +566,23 @@
           "primary": false,
           "nullable": true,
           "mappedType": "text"
+        },
+        "processing_status": {
+          "name": "processing_status",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'downloaded'",
+          "enumItems": [
+            "downloaded",
+            "locked",
+            "ocr_in_progress",
+            "ocr_done",
+            "ocr_failed"
+          ],
+          "mappedType": "enum"
         }
       },
       "name": "document",
