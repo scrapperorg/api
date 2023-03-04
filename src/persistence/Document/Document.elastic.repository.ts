@@ -37,24 +37,29 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
       query.publishedBefore,
     );
 
-    const criterion: QueryDslQueryContainer[] = [];
+    const exactMatchCriterion: QueryDslQueryContainer[] = [];
+    const fuzzyCriterion: QueryDslQueryContainer[] = [];
+    const rangeCriterion: QueryDslQueryContainer[] = [];
 
-    if (postOcrContentQuery) criterion.push(postOcrContentQuery);
-    if (titleQuery) criterion.push(titleQuery);
-    if (identificatorQuery) criterion.push(identificatorQuery);
-    if (sourceQuery) criterion.push(sourceQuery);
-    if (statusQuery) criterion.push(statusQuery);
-    if (assignedUserIdQuery) criterion.push(assignedUserIdQuery);
-    if (projectIdQuery) criterion.push(projectIdQuery);
-    if (isRulesBreakerQuery) criterion.push(isRulesBreakerQuery);
-    if (publishedAfterQuery) criterion.push(publishedAfterQuery);
-    if (publishedBeforeQuery) criterion.push(publishedBeforeQuery);
+    if (postOcrContentQuery) fuzzyCriterion.push(postOcrContentQuery);
+    if (titleQuery) fuzzyCriterion.push(titleQuery);
+    if (identificatorQuery) exactMatchCriterion.push(identificatorQuery);
+    if (sourceQuery) exactMatchCriterion.push(sourceQuery);
+    if (statusQuery) exactMatchCriterion.push(statusQuery);
+    if (assignedUserIdQuery) exactMatchCriterion.push(assignedUserIdQuery);
+    if (projectIdQuery) exactMatchCriterion.push(projectIdQuery);
+    if (isRulesBreakerQuery) exactMatchCriterion.push(isRulesBreakerQuery);
+    if (publishedAfterQuery) rangeCriterion.push(publishedAfterQuery);
+    if (publishedBeforeQuery) rangeCriterion.push(publishedBeforeQuery);
+
+    console.log(exactMatchCriterion);
 
     const result = await this.elasticClient.search({
       index: this.indexName,
       query: {
         bool: {
-          filter: criterion,
+          must: exactMatchCriterion,
+          filter: [...fuzzyCriterion, ...rangeCriterion],
         },
       },
     });
@@ -90,7 +95,7 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
     if (value === undefined) return undefined;
 
     const elasticQuery = {
-      match: {
+      term: {
         [key]: value,
       },
     };

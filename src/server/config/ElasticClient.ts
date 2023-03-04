@@ -6,7 +6,7 @@ export class ElasticClient {
       throw new Error('cant connect to elastic search');
 
     const elasticConfigs = {
-      node: `http://${process.env.LOCAL_INTERNAL_HOST}:9200`,
+      node: `http://3.229.101.152/:9200`,
       auth: {
         username: 'elastic',
         password: process.env.ELASTIC_PASSWORD,
