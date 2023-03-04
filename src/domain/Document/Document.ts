@@ -45,6 +45,8 @@ export interface IDocumentProps {
   attachments?: Collection<Attachment>;
   postOcrContent?: string;
   processingStatus?: ProcessingStatus;
+  part?: number;
+  totalParts?: number;
 }
 
 export class Document extends BaseEntity {
