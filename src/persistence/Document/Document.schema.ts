@@ -23,7 +23,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     isRulesBreaker: { type: 'boolean', nullable: true, default: false },
     originalFormat: { type: 'string', nullable: true },
     numberOfPages: { type: 'number', nullable: true },
-    textInterpretationPrecision: { type: 'number', nullable: true },
+    textInterpretationPrecision: { type: 'decimal', nullable: true },
     numberOfIdentifiedArticles: { type: 'number', nullable: true },
     numberOfIdentifiedTerms: { type: 'number', nullable: true },
     attachments: {
@@ -38,5 +38,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
       default: ProcessingStatus.downloaded,
       items: () => ProcessingStatus,
     },
+    totalParts: { type: 'number', default: 1 },
+    part: { type: 'number', default: 1 },
   },
 });

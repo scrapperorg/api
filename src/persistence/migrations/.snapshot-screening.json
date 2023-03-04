@@ -533,12 +533,14 @@
         },
         "text_interpretation_precision": {
           "name": "text_interpretation_precision",
-          "type": "int",
+          "type": "numeric(10,0)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "integer"
+          "precision": 10,
+          "scale": 0,
+          "mappedType": "decimal"
         },
         "number_of_identified_articles": {
           "name": "number_of_identified_articles",
@@ -583,6 +585,26 @@
             "ocr_failed"
           ],
           "mappedType": "enum"
+        },
+        "total_parts": {
+          "name": "total_parts",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "mappedType": "integer"
+        },
+        "part": {
+          "name": "part",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "mappedType": "integer"
         }
       },
       "name": "document",

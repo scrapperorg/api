@@ -69,6 +69,8 @@ export class Document extends BaseEntity {
   attachments?: Collection<Attachment>;
   postOcrContent?: string;
   processingStatus?: ProcessingStatus = ProcessingStatus.downloaded;
+  part?: number;
+  totalParts?: number;
 
   constructor(props: IDocumentProps) {
     super({
