@@ -20,6 +20,7 @@ export class DocumentMap {
       attachments: document.attachments?.toArray(),
       assignedUser: document.assignedUser,
       storagePath: document.storagePath,
+      processingStatus: document.processingStatus,
     };
 
     if (!excludeProject) {

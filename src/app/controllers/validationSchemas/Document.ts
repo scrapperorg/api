@@ -32,6 +32,7 @@ export const createSchema = Joi.object({
   numberOfIdentifiedArticles: Joi.number().optional(),
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
+  processingStatus: Joi.string().optional(),
 });
 
 export const updateSchema = Joi.object({
@@ -53,6 +54,9 @@ export const updateSchema = Joi.object({
   numberOfIdentifiedTerms: Joi.number().optional(),
   attachments: Joi.array().items(Joi.string()).optional(),
   postOcrContent: Joi.string().optional(),
+  processingStatus: Joi.string().optional(),
+  part: Joi.number().optional(),
+  totalParts: Joi.number().optional(),
 });
 
 export const searchContentSchema = Joi.object({
