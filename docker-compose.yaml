@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=${MIKRO_ORM_PASSWORD}
       - POSTGRES_DB=${MIKRO_ORM_DB_NAME}
     volumes:
-      - postgres-volume:/var/lib/postresql/data
+      - postgres-volume:/var/lib/postgresql/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
