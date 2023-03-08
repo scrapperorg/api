@@ -99,7 +99,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - MIKRO_ORM_HOST=${LOCAL_INTERNAL_HOST}
+      - MIKRO_ORM_HOST=postgres
     depends_on:
       - "postgres"
       - "kibana"
