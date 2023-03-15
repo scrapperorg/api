@@ -179,7 +179,7 @@ export class DocumentController {
       try {
         await searchContentSchema.validateAsync(req.body);
       } catch (err: any) {
-        console.log(error);
+        console.log(err);
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }
