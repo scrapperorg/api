@@ -15,6 +15,7 @@ export enum ProcessingStatus {
   'ocr_in_progress' = 'ocr_in_progress',
   'ocr_done' = 'ocr_done',
   'ocr_failed' = 'ocr_failed',
+  'failed' = 'failed',
 }
 
 export enum Source {

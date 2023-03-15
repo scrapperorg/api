@@ -582,7 +582,8 @@
             "locked",
             "ocr_in_progress",
             "ocr_done",
-            "ocr_failed"
+            "ocr_failed",
+            "failed"
           ],
           "mappedType": "enum"
         },
