@@ -179,6 +179,7 @@ export class DocumentController {
       try {
         await searchContentSchema.validateAsync(req.body);
       } catch (err: any) {
+        console.log(error);
         const error: Error = err;
         return res.status(statusMap[Exception.INVALID]).json(error.message);
       }
@@ -187,6 +188,7 @@ export class DocumentController {
         const documents = await this.documentService.search(req.body);
         return res.status(HttpStatus.OK).json(documents);
       } catch (error: any) {
+        console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
