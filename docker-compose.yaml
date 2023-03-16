@@ -84,6 +84,7 @@ services:
     env_file:
       - ./.env
     environment:
+      - MIKRO_ORM_HOST=postgres
       - ELASTICSEARCH_HOST=elastic:${ELASTIC_PASSWORD}@http://${LOCAL_INTERNAL_HOST}:9200
       - XPACK_MONITORING_ENABLED=false
     command: >
