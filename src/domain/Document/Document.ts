@@ -22,6 +22,11 @@ export enum Source {
   CAMERA_DEPUTATILOR = 'camera_deputatilor',
   SENAT = 'senat',
   GUVERN = 'guvern',
+  MINISTERUL_DEZVOLTARII = 'mdezvoltarii',
+  MINISTERUL_FINANTELOR = 'mfinante',
+  MINISTERUL_EDUCATIEI = 'meducatiei',
+  MINISTERUL_MEDIU = 'mmediu',
+  MINISTERUL_TRANSPORT = 'mtransport',
 }
 
 export interface IDocumentProps {

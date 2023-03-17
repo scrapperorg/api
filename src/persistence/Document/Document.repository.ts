@@ -50,6 +50,7 @@ export class DocumentRepository implements IDocumentRepository {
     const [entries, count] = await this.entityRepository.findAndCount(sourceCondition, {
       limit,
       offset,
+      orderBy: { createdAt: 'DESC' },
       populate: ['project'],
     });
 
