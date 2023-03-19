@@ -606,6 +606,24 @@
           "nullable": false,
           "default": "1",
           "mappedType": "integer"
+        },
+        "highlight_file": {
+          "name": "highlight_file",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "highlight_metadata": {
+          "name": "highlight_metadata",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
         }
       },
       "name": "document",

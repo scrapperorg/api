@@ -1,6 +1,7 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import {
+  Document,
   ElasticSearchProps,
   IDocumentProps,
   IDocumentRepository,
@@ -15,6 +16,7 @@ import { FileRepositoryService } from '@services/FileRepository.service';
 import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
+import { fromBuffer } from 'file-type';
 
 @injectable()
 export class DocumentService {
@@ -206,5 +208,30 @@ export class DocumentService {
     }
 
     return documents;
+  }
+
+  async getHighlightPdf(id: string): Promise<{
+    document: Document;
+    buffer: Buffer;
+    fileType: Awaited<ReturnType<typeof fromBuffer>>;
+  }> {
+    const document = await this.documentRepository.getById(id);
+
+    if (!document) {
+      throw new NoSuchElementException(`Document with ${id} is missing`);
+    }
+
+    if (document.highlightFile === '' || document.highlightFile === undefined) {
+      throw new Error(`Document ${id} does not have a highlight pdf`);
+    }
+
+    const buffer = await this.fileRepo.get(document.highlightFile);
+    const fileType = await fromBuffer(buffer);
+
+    return {
+      document,
+      buffer,
+      fileType,
+    };
   }
 }

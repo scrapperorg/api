@@ -36,6 +36,8 @@ export class DocumentMap {
       'textInterpretationPrecision',
       'numberOfIdentifiedArticles',
       'numberOfIdentifiedTerms',
+      'highlightFile',
+      'highlightMetadata',
     ];
 
     optionalProperties.forEach((property) =>

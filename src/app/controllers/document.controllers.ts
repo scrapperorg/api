@@ -193,5 +193,30 @@ export class DocumentController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
+    this.router.get('/download-highlight-pdf/:id', async (req: Request, res: Response) => {
+      const { id } = req.params;
+
+      if (id === undefined) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Attachment id missing' });
+      }
+
+      try {
+        const { document, buffer, fileType } = await this.documentService.getHighlightPdf(id);
+
+        if (fileType) {
+          res.setHeader('Content-Type', fileType.mime);
+        }
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename=${document.id + '_highlight.pdf'}`,
+        );
+        res.setHeader('Content-Length', buffer.length);
+        return res.send(buffer);
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
   }
 }
