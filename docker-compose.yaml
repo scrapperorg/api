@@ -108,6 +108,7 @@ services:
       - .env
     volumes:
       - ./src:/app/src
+      - '/opt/storage:/opt/storage'
     command: nodemon -L
 
 volumes:
