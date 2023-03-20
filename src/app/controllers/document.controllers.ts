@@ -214,6 +214,7 @@ export class DocumentController {
         res.setHeader('Content-Length', buffer.length);
         return res.send(buffer);
       } catch (error: any) {
+        console.log(error);
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
