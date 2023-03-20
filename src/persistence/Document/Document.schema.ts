@@ -40,5 +40,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     },
     totalParts: { type: 'number', default: 1 },
     part: { type: 'number', default: 1 },
+    highlightFile: { type: 'string', nullable: true },
+    highlightMetadata: { type: 'json', nullable: true },
   },
 });

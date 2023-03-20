@@ -53,6 +53,8 @@ export interface IDocumentProps {
   processingStatus?: ProcessingStatus;
   part?: number;
   totalParts?: number;
+  highlightFile?: string;
+  highlightMetadata?: string;
 }
 
 export class Document extends BaseEntity {
@@ -79,6 +81,8 @@ export class Document extends BaseEntity {
   processingStatus?: ProcessingStatus = ProcessingStatus.downloaded;
   part?: number;
   totalParts?: number;
+  highlightFile?: string;
+  highlightMetadata?: string;
 
   constructor(props: IDocumentProps) {
     super({
@@ -107,6 +111,8 @@ export class Document extends BaseEntity {
       this.numberOfIdentifiedArticles = props.numberOfIdentifiedArticles;
     if (props.postOcrContent !== null) this.postOcrContent = props.postOcrContent;
     if (props.processingStatus !== null) this.processingStatus = props.processingStatus;
+    if (props.highlightFile !== null) this.highlightFile = props.highlightFile;
+    if (props.highlightMetadata !== null) this.highlightMetadata = props.highlightMetadata;
   }
 
   addAttachment(attachment: Attachment): void {

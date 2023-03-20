@@ -57,6 +57,8 @@ export const updateSchema = Joi.object({
   processingStatus: Joi.string().optional(),
   part: Joi.number().optional(),
   totalParts: Joi.number().optional(),
+  highlightFile: Joi.string().optional(),
+  highlightMetadata: Joi.array().optional(),
 });
 
 export const searchContentSchema = Joi.object({
