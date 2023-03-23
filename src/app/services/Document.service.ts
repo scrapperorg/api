@@ -234,4 +234,28 @@ export class DocumentService {
       fileType,
     };
   }
+
+  async getRawPdf(id: string): Promise<{
+    document: Document;
+    buffer: Buffer;
+    fileType: Awaited<ReturnType<typeof fromBuffer>>;
+  }> {
+    const document = await this.documentRepository.getById(id);
+
+    if (!document) {
+      throw new NoSuchElementException(`Document with ${id} is missing`);
+    }
+    if (document.storagePath === '' || document.storagePath === undefined) {
+      throw new Error(`Document ${id} does not have a pdf`);
+    }
+
+    const buffer = await this.fileRepo.get(document.storagePath);
+    const fileType = await fromBuffer(buffer);
+
+    return {
+      document,
+      buffer,
+      fileType,
+    };
+  }
 }
