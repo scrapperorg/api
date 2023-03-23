@@ -24,7 +24,11 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
     const statusQuery = this.computeExactMatch('status', query.status);
     const assignedUserIdQuery = this.computeExactMatch('assigned_user_id', query.assignedUserId);
     const projectIdQuery = this.computeExactMatch('project_id', query.projectId);
-    const isRulesBreakerQuery = this.computeExactMatch('is_rules_breaker', query.isRulesBreaker);
+    const isRulesBreakerQuery = this.computeFuzyQuery(
+      'is_rules_breaker',
+      query.isRulesBreaker,
+      true,
+    );
     const publishedAfterQuery = this.computeRangeQuery(
       'publication_date',
       RangeOperator.GREATER_THAN,
@@ -54,7 +58,7 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
       index: this.indexName,
       query: {
         bool: {
-          filter: criterion,
+          must: criterion,
         },
       },
     });
@@ -67,7 +71,8 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
 
   private computeFuzyQuery(
     key: string,
-    value: string | undefined,
+    value: string | boolean | undefined,
+    isBoolean = false,
   ): QueryDslQueryContainer | undefined {
     if (value === undefined) return undefined;
 
@@ -75,7 +80,7 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
       match: {
         [key]: {
           query: value,
-          fuzziness: 'auto',
+          ...(!isBoolean && { fuzziness: 'auto' }),
         },
       },
     };
@@ -89,9 +94,13 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
   ): QueryDslQueryContainer | undefined {
     if (value === undefined) return undefined;
 
+    const keyword = `${key}.keyword`;
+
     const elasticQuery = {
-      match: {
-        [key]: value,
+      term: {
+        [keyword]: {
+          value,
+        },
       },
     };
 
