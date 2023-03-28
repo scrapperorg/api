@@ -56,6 +56,7 @@ export class DocumentElasticRepository implements IElasticDocumentRepository {
 
     const result = await this.elasticClient.search({
       index: this.indexName,
+      size: 25,
       query: {
         bool: {
           must: criterion,
