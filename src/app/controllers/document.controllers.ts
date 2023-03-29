@@ -229,11 +229,12 @@ export class DocumentController {
 
       try {
         const { document, buffer, fileType } = await this.documentService.getRawPdf(id);
+        const fileName = document.link?.split('/').pop();
 
         if (fileType) {
           res.setHeader('Content-Type', fileType.mime);
         }
-        res.setHeader('Content-Disposition', `attachment; filename=${document.id + '.pdf'}`);
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
         res.setHeader('Content-Length', buffer.length);
         return res.send(buffer);
       } catch (error: any) {
