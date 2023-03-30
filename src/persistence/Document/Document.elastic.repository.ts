@@ -11,7 +11,7 @@ enum RangeOperator {
 
 @injectable()
 export class DocumentElasticRepository implements IElasticDocumentRepository {
-  private indexName = 'document';
+  private indexName = 'document_v1';
   constructor(
     @inject(TYPES.ELASTIC_SEARCH_CONNECTION) private readonly elasticClient: ElasticSearchClient,
   ) {}
