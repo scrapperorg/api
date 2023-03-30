@@ -275,7 +275,12 @@
           "enumItems": [
             "camera_deputatilor",
             "senat",
-            "guvern"
+            "guvern",
+            "mdezvoltarii",
+            "mfinante",
+            "meducatiei",
+            "mmediu",
+            "mtransport"
           ],
           "mappedType": "array"
         }
@@ -470,7 +475,7 @@
           "default": "'nou'",
           "enumItems": [
             "nou",
-            "in analiza",
+            "in_analiza",
             "revizuit"
           ],
           "mappedType": "enum"
