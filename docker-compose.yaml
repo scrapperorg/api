@@ -86,7 +86,7 @@ services:
     environment:
       - MIKRO_ORM_HOST=postgres
       - ELASTICSEARCH_HOST=elastic:${ELASTIC_PASSWORD}@http://${LOCAL_INTERNAL_HOST}:9200
-      - XPACK_MONITORING_ENABLED=true
+      - XPACK_MONITORING_ENABLED=false
     command: >
       bash -c '
         curl -L -o /usr/share/logstash/postgresql-${JDBC_VERSION}.jar https://jdbc.postgresql.org/download/postgresql-${JDBC_VERSION}.jar;
