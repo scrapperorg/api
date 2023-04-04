@@ -1,8 +1,14 @@
-import { NoSuchElementException } from '@lib';
+import { InvalidException, NoSuchElementException } from '@lib';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
-import { IProjectFiltersProps, IProjectRepository, IProjectProps } from '@domain/Project';
-import { DocumentMap, ProjectMap } from '@mappers';
+import {
+  IProjectFiltersProps,
+  IProjectRepository,
+  IProjectProps,
+  IElasticProjectRepository,
+  ProjectElasticSearchProps,
+} from '@domain/Project';
+import { ProjectMap } from '@mappers';
 import { IProjectFilters } from '@middlewares/parseProjectsFilters.middleware';
 import { IPaginatedOutgoingDto } from '@controllers/dtos/Paginated';
 import { IProjectOutgoingDTO, ProjectFiltersDTO } from '@controllers/dtos';
@@ -12,7 +18,8 @@ export class ProjectService {
   constructor(
     @inject(TYPES.PROJECT_REPOSITORY) private repository: IProjectRepository,
     @inject(TYPES.PROJECT_MAP) private mapper: ProjectMap,
-    @inject(TYPES.DOCUMENT_MAP) private documentMapper: DocumentMap,
+    @inject(TYPES.PROJECT_ELASTIC_REPOSITORY)
+    private elasticProjectRepository: IElasticProjectRepository,
   ) {}
 
   async getAll(
@@ -54,5 +61,46 @@ export class ProjectService {
   async find(filters: ProjectFiltersDTO): Promise<IProjectOutgoingDTO[]> {
     const { entries } = await this.repository.getBy(filters);
     return entries.map((entry) => this.mapper.toDTO(entry));
+  }
+
+  async search(query: ProjectElasticSearchProps): Promise<IProjectOutgoingDTO[]> {
+    const nonEmptyQuery = Object.keys(query)
+      .filter((key) => query[<keyof ProjectElasticSearchProps>key] !== '')
+      .reduce((docObj: Record<string, any>, key: string) => {
+        docObj[key] = query[<keyof ProjectElasticSearchProps>key];
+        return docObj;
+      }, {});
+
+    const elasticResults = await this.elasticProjectRepository.search(nonEmptyQuery);
+
+    const projects: IProjectOutgoingDTO[] = [];
+
+    for (let i = 0; i < elasticResults.length; i++) {
+      const result = elasticResults[i];
+
+      if (result.id === null) {
+        // no reason to throw the current op. just log and move on
+        console.log(
+          new InvalidException(`Project index cannot not have an id. Project: ${result.title}`),
+        );
+        continue;
+      }
+
+      const pgProject = await this.repository.getById(result.id);
+
+      if (pgProject === null) {
+        // no reason to throw the current op. just log and move on
+        console.log(
+          new NoSuchElementException(
+            `Project with id: ${result.id}, found in the elastic db does not exist in the pg database`,
+          ),
+        );
+        continue;
+      }
+
+      projects.push(this.mapper.toDTO(pgProject));
+    }
+
+    return projects;
   }
 }

@@ -8,7 +8,8 @@ export enum TYPES_ENUM {
   RESET_PASSWORD_TOKEN_REPOSITORY = 'IResetPasswordTokenRepository',
   DOCUMENT_REPOSITORY = 'IDocumentRepository',
   DOCUMENT_ELASTIC_REPOSITORY = 'IDocumentElasticRepository',
-  PROJECT_REPOSITORY = 'IProjectRepository,',
+  PROJECT_REPOSITORY = 'IProjectRepository',
+  PROJECT_ELASTIC_REPOSITORY = 'IProjectElasticRepository',
   ATTACHMENT_REPOSITORY = 'AttachmentRepository',
 
   // CONTROLLERS

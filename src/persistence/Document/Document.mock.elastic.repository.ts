@@ -8,13 +8,11 @@ export class DocumentMockElasticRepository implements IElasticDocumentRepository
       assigned_user_id: '1',
       publication_date: '',
       identifier: '1',
-      updated_at: '',
       title: 'title',
-      project_id: 'id',
-      created_at: '',
       id: 'id',
       status: 'nou',
       source: '',
+      processing_status: '',
     },
   ];
 

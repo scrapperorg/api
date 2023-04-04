@@ -5,7 +5,7 @@ import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { ProjectService } from '@services/Project.service';
 import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
-import { createSchema } from '@controllers/validationSchemas/Project';
+import { createSchema, searchSchema } from '@controllers/validationSchemas/Project';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 import { parseProjectsFilters } from '@middlewares/parseProjectsFilters.middleware';
 
@@ -71,6 +71,25 @@ export class ProjectController {
         await createSchema.validateAsync(req.body);
         const project = await this.projectService.createProject(req.body);
         return res.status(HttpStatus.OK).json(project);
+      } catch (error: any) {
+        console.log(error);
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('/search', isAuthenticated, async (req: Request, res: Response) => {
+      try {
+        await searchSchema.validateAsync(req.body);
+      } catch (err: any) {
+        console.log(err);
+        const error: Error = err;
+        return res.status(statusMap[Exception.INVALID]).json(error.message);
+      }
+
+      try {
+        const documents = await this.projectService.search(req.body);
+        return res.status(HttpStatus.OK).json(documents);
       } catch (error: any) {
         console.log(error);
         const errorType: Exception = error.constructor.name;
