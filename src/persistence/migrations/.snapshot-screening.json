@@ -275,7 +275,12 @@
           "enumItems": [
             "camera_deputatilor",
             "senat",
-            "guvern"
+            "guvern",
+            "mdezvoltarii",
+            "mfinante",
+            "meducatiei",
+            "mmediu",
+            "mtransport"
           ],
           "mappedType": "array"
         }
@@ -576,14 +581,15 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "'downloaded'",
+          "default": "'created'",
           "enumItems": [
+            "created",
             "downloaded",
+            "unable_to_download",
             "locked",
             "ocr_in_progress",
             "ocr_done",
-            "ocr_failed",
-            "failed"
+            "ocr_failed"
           ],
           "mappedType": "enum"
         },

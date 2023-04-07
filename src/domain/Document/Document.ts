@@ -10,12 +10,13 @@ export enum Status {
 }
 
 export enum ProcessingStatus {
+  created = 'created',
   downloaded = 'downloaded',
+  unable_to_download = 'unable_to_download',
   'locked' = 'locked',
   'ocr_in_progress' = 'ocr_in_progress',
   'ocr_done' = 'ocr_done',
   'ocr_failed' = 'ocr_failed',
-  'failed' = 'failed',
 }
 
 export enum Source {

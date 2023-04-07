@@ -35,7 +35,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     postOcrContent: { type: 'text', nullable: true },
     processingStatus: {
       enum: true,
-      default: ProcessingStatus.downloaded,
+      default: ProcessingStatus.created,
       items: () => ProcessingStatus,
     },
     totalParts: { type: 'number', default: 1 },
