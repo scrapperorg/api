@@ -62,14 +62,14 @@ export const updateSchema = Joi.object({
 });
 
 export const searchContentSchema = Joi.object({
-  identificator: Joi.string().optional().allow(''),
-  title: Joi.string().optional().allow(''),
-  source: Joi.string().optional().allow(''),
-  status: Joi.string().optional().allow(''),
-  assignedUserId: Joi.string().optional().allow(''),
-  projectId: Joi.string().optional().allow(''),
-  publishedAfter: Joi.date().optional().allow('').less(Date.now()),
-  publishedBefore: Joi.date().optional().allow('').less(Date.now()),
-  postOcrContent: Joi.string().optional().allow(''),
+  identificator: Joi.string().optional().allow(null, ''),
+  title: Joi.string().optional().allow(null, ''),
+  source: Joi.string().optional().allow(null, ''),
+  status: Joi.string().optional().allow(null, ''),
+  assignedUserId: Joi.string().optional().allow(null, ''),
+  projectId: Joi.string().optional().allow(null, ''),
+  publishedAfter: Joi.date().optional().allow(null, ''),
+  publishedBefore: Joi.date().optional().allow(null, ''),
+  postOcrContent: Joi.string().optional().allow(null, ''),
   isRulesBreaker: Joi.boolean().optional(),
 });

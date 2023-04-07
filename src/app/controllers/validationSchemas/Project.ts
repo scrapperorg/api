@@ -21,9 +21,9 @@ export const findSchema = Joi.object({
 });
 
 export const searchSchema = Joi.object({
-  title: Joi.string().optional().allow(''),
-  createddAfter: Joi.date().optional().allow('').less(Date.now()),
-  createddBefore: Joi.date().optional().allow('').less(Date.now()),
+  title: Joi.string().optional().allow(null, ''),
+  createdAfter: Joi.date().optional().allow(null, ''),
+  createdBefore: Joi.date().optional().allow(null, ''),
   presentsInterest: Joi.boolean().optional(),
-  postOcrContent: Joi.string().optional().allow(''),
+  postOcrContent: Joi.string().optional().allow(null, ''),
 });
