@@ -184,7 +184,7 @@ export class DocumentService {
     for (let i = 0; i < elasticResults.length; i++) {
       const result = elasticResults[i];
 
-      if (result.id === null) {
+      if (result.document_id === null) {
         // no reason to throw the current op. just log and move on
         console.log(
           new InvalidException(`Document index cannot not have an id. Document: ${result.title}`),
@@ -192,13 +192,13 @@ export class DocumentService {
         continue;
       }
 
-      const pgDoc = await this.documentRepository.getById(result.id);
+      const pgDoc = await this.documentRepository.getById(result.document_id);
 
       if (pgDoc === null) {
         // no reason to throw the current op. just log and move on
         console.log(
           new NoSuchElementException(
-            `Document with id: ${result.id}, found in the elastic db does not exist in the pg database`,
+            `Document with id: ${result.document_id}, found in the elastic db does not exist in the pg database`,
           ),
         );
         continue;

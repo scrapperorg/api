@@ -5,7 +5,7 @@ import { Project, IElasticProject, IElasticProjectRepository } from '@domain/Pro
 export class ProjectMockElasticRepository implements IElasticProjectRepository {
   private elasticProject: IElasticProject[] = [
     {
-      id: 'id',
+      project_id: 'id',
       title: 'title',
       created_at: '',
       numar_inregistrare_senat: '',

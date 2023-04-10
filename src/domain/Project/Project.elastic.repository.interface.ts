@@ -1,5 +1,5 @@
 export interface IElasticProject {
-  id: string;
+  project_id: string;
   title: string;
   created_at: string;
   numar_inregistrare_senat: string;

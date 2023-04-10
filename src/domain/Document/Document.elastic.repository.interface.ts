@@ -1,5 +1,5 @@
 export interface IElasticDocument {
-  id: string;
+  document_id: string;
   identifier: string;
   title: string;
   source: string;

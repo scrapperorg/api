@@ -9,7 +9,7 @@ export class DocumentMockElasticRepository implements IElasticDocumentRepository
       publication_date: '',
       identifier: '1',
       title: 'title',
-      id: 'id',
+      document_id: 'id',
       status: 'nou',
       source: '',
       processing_status: '',

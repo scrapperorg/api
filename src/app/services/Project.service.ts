@@ -78,7 +78,7 @@ export class ProjectService {
     for (let i = 0; i < elasticResults.length; i++) {
       const result = elasticResults[i];
 
-      if (result.id === null) {
+      if (result.project_id === null) {
         // no reason to throw the current op. just log and move on
         console.log(
           new InvalidException(`Project index cannot not have an id. Project: ${result.title}`),
@@ -86,13 +86,13 @@ export class ProjectService {
         continue;
       }
 
-      const pgProject = await this.repository.getById(result.id);
+      const pgProject = await this.repository.getById(result.project_id);
 
       if (pgProject === null) {
         // no reason to throw the current op. just log and move on
         console.log(
           new NoSuchElementException(
-            `Project with id: ${result.id}, found in the elastic db does not exist in the pg database`,
+            `Project with id: ${result.project_id}, found in the elastic db does not exist in the pg database`,
           ),
         );
         continue;
