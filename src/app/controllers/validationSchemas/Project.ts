@@ -19,3 +19,11 @@ export const createSchema = Joi.object({
 export const findSchema = Joi.object({
   title: Joi.string(),
 });
+
+export const searchSchema = Joi.object({
+  title: Joi.string().optional().allow(null, ''),
+  createdAfter: Joi.date().optional().allow(null, ''),
+  createdBefore: Joi.date().optional().allow(null, ''),
+  presentsInterest: Joi.boolean().optional(),
+  postOcrContent: Joi.string().optional().allow(null, ''),
+});

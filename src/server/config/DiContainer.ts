@@ -21,6 +21,7 @@ import {
   IProjectRepository,
   IAttachmentRepository,
   IElasticDocumentRepository,
+  IElasticProjectRepository,
 } from '@domain';
 
 import {
@@ -36,6 +37,8 @@ import {
   AttachmentMockRepository,
   DocumentElasticRepository,
   DocumentMockElasticRepository,
+  ProjectElasticRepository,
+  ProjectMockElasticRepository,
 } from '@persistence';
 
 import {
@@ -181,6 +184,11 @@ export class DiContainer {
       .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
       .to(DocumentElasticRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticProjectRepository>(TYPES.PROJECT_ELASTIC_REPOSITORY)
+      .to(ProjectElasticRepository)
+      .inSingletonScope();
   }
 
   public configureMockRepositories() {
@@ -212,6 +220,11 @@ export class DiContainer {
     this.diContainer
       .bind<IElasticDocumentRepository>(TYPES.DOCUMENT_ELASTIC_REPOSITORY)
       .to(DocumentMockElasticRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IElasticProjectRepository>(TYPES.PROJECT_ELASTIC_REPOSITORY)
+      .to(ProjectMockElasticRepository)
       .inSingletonScope();
   }
 }
