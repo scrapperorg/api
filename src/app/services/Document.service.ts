@@ -2,6 +2,7 @@ import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exc
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import {
   Document,
+  Status,
   ElasticSearchProps,
   IDocumentProps,
   IDocumentRepository,
@@ -92,6 +93,18 @@ export class DocumentService {
       // the only possible error here is a role missmatch
       throw new InvalidException(err.message);
     }
+
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
+  }
+
+  async setStatus(documentId: string, status: Status): Promise<IDocumentOutgoingDTO> {
+    const document = await this.documentRepository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+    document.status = status;
 
     const updatedDoc = await this.documentRepository.update(document);
 
