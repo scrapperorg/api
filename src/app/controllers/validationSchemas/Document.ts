@@ -14,6 +14,11 @@ export const setDeadlineSchema = Joi.object({
     .less(Date.now() + 365 * 24 * 60 * 60 * 1000),
 });
 
+export const setStatusSchema = Joi.object({
+  documentId: Joi.string().required(),
+  status: Joi.string().required(),
+});
+
 export const createSchema = Joi.object({
   title: Joi.string().required(),
   project: Joi.string().required(),
