@@ -4,6 +4,7 @@ import {
   updateSchema,
   searchContentSchema,
   setStatusSchema,
+  setDecisionSchema,
 } from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
@@ -123,6 +124,31 @@ export class DocumentController {
 
         try {
           const document = await documentService.setStatus(documentId, status);
+
+          return res.status(200).json(document);
+        } catch (err: any) {
+          console.log(err);
+          const errorType: Exception = err.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+        }
+      },
+    );
+
+    this.router.post(
+      '/set-decision',
+      isAuthenticated,
+      hasRoleAtLeast(Role.LSS),
+      async (req: Request, res: Response) => {
+        try {
+          await setDecisionSchema.validateAsync(req.body);
+        } catch (err: any) {
+          const error: Error = err;
+          return res.status(statusMap[Exception.INVALID]).json(error.message);
+        }
+        const { documentId, decision } = req.body;
+
+        try {
+          const document = await documentService.setDecision(documentId, decision);
 
           return res.status(200).json(document);
         } catch (err: any) {

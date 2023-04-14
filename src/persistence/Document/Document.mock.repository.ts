@@ -1,4 +1,11 @@
-import { Document, IDocumentProps, IDocumentRepository, Source, Status } from '@domain/Document';
+import {
+  Document,
+  IDocumentProps,
+  IDocumentRepository,
+  Source,
+  Status,
+  Decision,
+} from '@domain/Document';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -12,6 +19,7 @@ export class DocumentMockRepository implements IDocumentRepository {
       publicationDate: new Date(),
       source: Source.SENAT,
       status: Status.NOU,
+      decision: Decision.ADERA_LEGISLATIEI,
     }),
   ];
 

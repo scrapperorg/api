@@ -1,6 +1,7 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
 import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import {
+  Decision,
   Document,
   Status,
   ElasticSearchProps,
@@ -18,6 +19,8 @@ import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
 import { fromBuffer } from 'file-type';
+
+export type NullableDecision = Decision | '';
 
 @injectable()
 export class DocumentService {
@@ -105,6 +108,23 @@ export class DocumentService {
       throw new NoSuchElementException('document not found');
     }
     document.status = status;
+
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
+  }
+
+  async setDecision(documentId: string, decision: NullableDecision): Promise<IDocumentOutgoingDTO> {
+    const document = await this.documentRepository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    if (decision === '') {
+      document.decision = undefined;
+    } else {
+      document.decision = decision;
+    }
 
     const updatedDoc = await this.documentRepository.update(document);
 

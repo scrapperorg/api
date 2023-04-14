@@ -16,6 +16,7 @@ export class DocumentMap {
       publicationDate: document.publicationDate,
       source: document.source,
       status: document.status,
+      decision: document.decision,
       isRulesBreaker: document.isRulesBreaker,
       attachments: document.attachments?.toArray(),
       assignedUser: document.assignedUser,

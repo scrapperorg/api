@@ -508,6 +508,20 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "decision": {
+          "name": "decision",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "enumItems": [
+            "fara_concluzie",
+            "contravine_legislatiei",
+            "adera_legislatiei"
+          ],
+          "mappedType": "enum"
+        },
         "is_rules_breaker": {
           "name": "is_rules_breaker",
           "type": "boolean",

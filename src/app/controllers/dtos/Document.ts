@@ -1,4 +1,4 @@
-import { Status } from '@domain/Document';
+import { Status, Decision } from '@domain/Document';
 
 export interface IDocumentIncomingDTO {
   title: string;
@@ -7,6 +7,7 @@ export interface IDocumentIncomingDTO {
   publicationDate: Date;
   source: string;
   status: Status;
+  decision?: Decision;
   isRulesBreaker?: boolean;
   assignedUser?: string;
   deadline?: Date;
