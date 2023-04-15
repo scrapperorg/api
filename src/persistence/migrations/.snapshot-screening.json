@@ -514,7 +514,8 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
+          "default": "'fara_concluzie'",
           "enumItems": [
             "fara_concluzie",
             "contravine_legislatiei",

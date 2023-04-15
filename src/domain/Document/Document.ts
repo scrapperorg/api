@@ -46,7 +46,7 @@ export interface IDocumentProps {
   publicationDate: Date;
   source: Source;
   status: Status;
-  decision?: Decision;
+  decision: Decision;
   link?: string;
   isRulesBreaker?: boolean;
   assignedUser?: string;
@@ -74,7 +74,7 @@ export class Document extends BaseEntity {
   publicationDate: Date;
   source: Source;
   status: Status;
-  decision?: Decision;
+  decision: Decision;
   isRulesBreaker = false;
   assignedUser?: string;
   deadline?: Date;
@@ -105,7 +105,7 @@ export class Document extends BaseEntity {
     this.publicationDate = props.publicationDate;
     this.source = props.source;
     this.status = props.status;
-    if (props.decision !== null) this.decision = props.decision;
+    this.decision = props.decision;
     if (typeof props.isRulesBreaker === 'boolean') this.isRulesBreaker = props.isRulesBreaker;
     if (props.assignedUser !== null) this.assignedUser = props.assignedUser;
     if (props.deadline !== null) this.deadline = props.deadline;

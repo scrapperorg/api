@@ -21,7 +21,7 @@ export const setStatusSchema = Joi.object({
 
 export const setDecisionSchema = Joi.object({
   documentId: Joi.string().required(),
-  decision: Joi.string().allow('').optional(),
+  decision: Joi.string().required(),
 });
 
 export const createSchema = Joi.object({
@@ -32,7 +32,7 @@ export const createSchema = Joi.object({
   publicationDate: Joi.string().required(),
   source: Joi.string().required(),
   status: Joi.string().required(),
-  decision: Joi.string().optional(),
+  decision: Joi.string().required(),
   isRulesBreaker: Joi.boolean().optional(),
   assignedUser: Joi.string().optional(),
   deadline: Joi.date().optional(),

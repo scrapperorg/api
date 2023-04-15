@@ -20,8 +20,6 @@ import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
 import { fromBuffer } from 'file-type';
 
-export type NullableDecision = Decision | '';
-
 @injectable()
 export class DocumentService {
   constructor(
@@ -114,17 +112,12 @@ export class DocumentService {
     return this.documentMap.toDTO(updatedDoc);
   }
 
-  async setDecision(documentId: string, decision: NullableDecision): Promise<IDocumentOutgoingDTO> {
+  async setDecision(documentId: string, decision: Decision): Promise<IDocumentOutgoingDTO> {
     const document = await this.documentRepository.getById(documentId);
     if (!document) {
       throw new NoSuchElementException('document not found');
     }
-
-    if (decision === '') {
-      document.decision = undefined;
-    } else {
-      document.decision = decision;
-    }
+    document.decision = decision;
 
     const updatedDoc = await this.documentRepository.update(document);
 
