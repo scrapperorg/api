@@ -1,6 +1,7 @@
 import {
   UserController,
   AuthController,
+  RobotController,
   DocumentController,
   ProjectController,
 } from '@controllers';
@@ -55,5 +56,6 @@ export class App {
       '/attachment',
       this.container.get<AttachmentController>(TYPES.ATTACHMENT_CONTROLLER).router,
     );
+    this.app.use('/robot', this.container.get<RobotController>(TYPES.ROBOT_CONTROLLER).router);
   }
 }

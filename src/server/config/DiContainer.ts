@@ -46,6 +46,7 @@ import {
   UserController,
   DocumentController,
   ProjectController,
+  RobotController,
 } from '@controllers';
 
 import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
@@ -53,6 +54,10 @@ import { FileRepositoryService } from '@services/FileRepository.service';
 import { AttachmentMap } from '@mappers/Attachment.map';
 import { AttachmentService } from '@services/Attachment.service';
 import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
+import { IRobotRepository } from '@domain/Robot';
+import { RobotRepository } from '@persistence/Robot';
+import { RobotService } from '@services/Robot.service';
+import { RobotMap } from '@mappers/Robot.map';
 
 export class DiContainer {
   private readonly diContainer: Container;
@@ -102,6 +107,7 @@ export class DiContainer {
     this.diContainer.bind<DocumentMap>(TYPES.DOCUMENT_MAP).to(DocumentMap).inSingletonScope();
     this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope();
     this.diContainer.bind<AttachmentMap>(TYPES.ATTACHMENT_MAP).to(AttachmentMap).inSingletonScope();
+    this.diContainer.bind<RobotMap>(TYPES.ROBOT_MAP).to(RobotMap).inSingletonScope();
 
     // repositories
     if (process.env.MOCK === 'true') {
@@ -120,6 +126,7 @@ export class DiContainer {
       .inSingletonScope();
     this.diContainer.bind<DocumentService>(TYPES.DOCUMENT_SERVICE).to(DocumentService);
     this.diContainer.bind<ProjectService>(TYPES.PROJECT_SERVICE).to(ProjectService);
+    this.diContainer.bind<RobotService>(TYPES.ROBOT_SERVICE).to(RobotService);
     this.diContainer
       .bind<FileRepositoryService>(TYPES.FILE_REPOSITORY_SERVICE)
       .to(FileRepositoryService)
@@ -150,6 +157,10 @@ export class DiContainer {
       .bind<AttachmentController>(TYPES.ATTACHMENT_CONTROLLER)
       .to(AttachmentController)
       .inSingletonScope();
+    this.diContainer
+      .bind<RobotController>(TYPES.ROBOT_CONTROLLER)
+      .to(RobotController)
+      .inSingletonScope();
 
     return this.diContainer;
   }
@@ -178,6 +189,11 @@ export class DiContainer {
     this.diContainer
       .bind<IAttachmentRepository>(TYPES.ATTACHMENT_REPOSITORY)
       .to(AttachmentRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IRobotRepository>(TYPES.ROBOT_REPOSITORY)
+      .to(RobotRepository)
       .inSingletonScope();
 
     this.diContainer
