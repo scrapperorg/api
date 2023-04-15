@@ -58,6 +58,7 @@ import { IRobotRepository } from '@domain/Robot';
 import { RobotRepository } from '@persistence/Robot';
 import { RobotService } from '@services/Robot.service';
 import { RobotMap } from '@mappers/Robot.map';
+import { RobotMockRepository } from '@persistence/Robot/Robot.repository.mock';
 
 export class DiContainer {
   private readonly diContainer: Container;
@@ -241,6 +242,11 @@ export class DiContainer {
     this.diContainer
       .bind<IElasticProjectRepository>(TYPES.PROJECT_ELASTIC_REPOSITORY)
       .to(ProjectMockElasticRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IRobotRepository>(TYPES.ROBOT_REPOSITORY)
+      .to(RobotMockRepository)
       .inSingletonScope();
   }
 }
