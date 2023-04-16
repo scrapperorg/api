@@ -38,6 +38,7 @@ export class DocumentMap {
       'numberOfIdentifiedTerms',
       'highlightFile',
       'highlightMetadata',
+      'ocrFile',
     ];
 
     optionalProperties.forEach((property) =>
