@@ -9,6 +9,11 @@ export enum Role {
   GU = 'GU', // Generic User
 }
 
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+}
+
 export interface IUserProps {
   name: string;
   surname: string;
@@ -16,10 +21,11 @@ export interface IUserProps {
   password: string;
   email: string;
   sources_of_interest?: Source[];
+  status?: UserStatus;
 }
 
 export class User extends BaseEntity {
-  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest';
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest' | 'status';
 
   name: string;
   surname: string;
@@ -27,6 +33,7 @@ export class User extends BaseEntity {
   email: string;
   password: string;
   sourcesOfInterest: Source[];
+  status: UserStatus;
 
   constructor(props: IUserProps) {
     super();
@@ -36,6 +43,7 @@ export class User extends BaseEntity {
     this.email = props.email;
     this.password = props.password;
     this.sourcesOfInterest = props.sources_of_interest ?? [];
+    this.status = props.status ?? UserStatus.ACTIVE;
   }
 
   /**

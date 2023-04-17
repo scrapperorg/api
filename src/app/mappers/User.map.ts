@@ -7,11 +7,13 @@ export class UserMap {
   toDTO(user: User): IUserAPIDTO {
     return {
       id: user.id,
+      createdAt: user.createdAt,
       name: user.name,
       surname: user.surname,
       role: user.role,
       email: user.email,
       sourcesOfInterest: user.sourcesOfInterest,
+      status: user.status,
     };
   }
 }
