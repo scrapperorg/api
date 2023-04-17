@@ -223,6 +223,31 @@ export class DocumentService {
     return documents;
   }
 
+  async getOcrPdf(id: string): Promise<{
+    document: Document;
+    buffer: Buffer;
+    fileType: Awaited<ReturnType<typeof fromBuffer>>;
+  }> {
+    const document = await this.documentRepository.getById(id);
+
+    if (!document) {
+      throw new NoSuchElementException(`Document with ${id} is missing`);
+    }
+
+    if (document.ocrFile === '' || document.ocrFile === undefined) {
+      throw new Error(`Document ${id} does not have a highlight pdf`);
+    }
+
+    const buffer = await this.fileRepo.get(document.ocrFile);
+    const fileType = await fromBuffer(buffer);
+
+    return {
+      document,
+      buffer,
+      fileType,
+    };
+  }
+
   async getHighlightPdf(id: string): Promise<{
     document: Document;
     buffer: Buffer;

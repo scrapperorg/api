@@ -55,6 +55,7 @@ export interface IDocumentProps {
   part?: number;
   totalParts?: number;
   highlightFile?: string;
+  ocrFile?: string;
   highlightMetadata?: string;
 }
 
@@ -83,6 +84,7 @@ export class Document extends BaseEntity {
   part?: number;
   totalParts?: number;
   highlightFile?: string;
+  ocrFile?: string;
   highlightMetadata?: string;
 
   constructor(props: IDocumentProps) {
@@ -113,6 +115,7 @@ export class Document extends BaseEntity {
     if (props.postOcrContent !== null) this.postOcrContent = props.postOcrContent;
     if (props.processingStatus !== null) this.processingStatus = props.processingStatus;
     if (props.highlightFile !== null) this.highlightFile = props.highlightFile;
+    if (props.ocrFile !== null) this.ocrFile = props.ocrFile;
     if (props.highlightMetadata !== null) this.highlightMetadata = props.highlightMetadata;
   }
 

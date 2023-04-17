@@ -64,6 +64,7 @@ export const updateSchema = Joi.object({
   totalParts: Joi.number().optional(),
   highlightFile: Joi.string().optional(),
   highlightMetadata: Joi.array().optional(),
+  ocrFile: Joi.string().optional(),
 });
 
 export const searchContentSchema = Joi.object({

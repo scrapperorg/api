@@ -622,6 +622,15 @@
           "nullable": true,
           "mappedType": "string"
         },
+        "ocr_file": {
+          "name": "ocr_file",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "highlight_metadata": {
           "name": "highlight_metadata",
           "type": "jsonb",
