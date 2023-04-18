@@ -15,7 +15,7 @@ export interface IRobotProps {
 }
 
 export class Robot extends BaseEntity {
-  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest';
+  [OptionalProps]?: 'createdAt' | 'updatedAt';
 
   name: string;
   status: RobotStatus;
