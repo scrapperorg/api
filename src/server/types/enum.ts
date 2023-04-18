@@ -11,6 +11,7 @@ export enum TYPES_ENUM {
   PROJECT_REPOSITORY = 'IProjectRepository',
   PROJECT_ELASTIC_REPOSITORY = 'IProjectElasticRepository',
   ATTACHMENT_REPOSITORY = 'AttachmentRepository',
+  ROBOT_REPOSITORY = 'RobotRepository',
 
   // CONTROLLERS
   USER_CONTROLLER = 'UserController',
@@ -18,9 +19,11 @@ export enum TYPES_ENUM {
   DOCUMENT_CONTROLLER = 'DocumentController',
   PROJECT_CONTROLLER = 'ProjectController',
   ATTACHMENT_CONTROLLER = 'AttachmentController',
+  ROBOT_CONTROLLER = 'RobotController',
 
   // MAPPERS
   USER_MAP = 'UserMap',
+  ROBOT_MAP = 'RobotMap',
   RESET_PASSWORD_TOKEN_MAP = 'ResetPasswordTokenMap',
   DOCUMENT_MAP = 'DocumentMap',
   PROJECT_MAP = 'ProjectMap',
@@ -30,6 +33,7 @@ export enum TYPES_ENUM {
   USER_SERVICE = 'UserService',
   AUTH_SERVICE = 'AuthService',
   EMAIL_SERVICE = 'EmailService',
+  ROBOT_SERVICE = 'RobotService',
   ENCRYPTION_SERVICE = 'EncryptionService',
   DOCUMENT_SERVICE = 'DocumentService',
   PROJECT_SERVICE = 'ProjectService',
