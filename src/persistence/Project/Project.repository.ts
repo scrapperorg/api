@@ -51,8 +51,11 @@ export class ProjectRepository implements IProjectRepository {
     }
     return project;
   }
-  async update(dto: Project): Promise<Project> {
-    throw new Error('Method not implemented.');
+  async update(id: string, dto: Partial<Project>): Promise<Project> {
+    const project = await this.entityRepository.findOneOrFail(id);
+    this.entityRepository.assign(project, dto);
+    await this.entityRepository.persistAndFlush(project);
+    return project;
   }
   async getById(id: string): Promise<Project | null> {
     const entry = await this.entityRepository.findOne(

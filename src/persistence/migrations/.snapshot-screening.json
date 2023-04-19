@@ -92,21 +92,21 @@
         },
         "termen_adoptare": {
           "name": "termen_adoptare",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "tip_initiativa": {
           "name": "tip_initiativa",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "caracter": {
           "name": "caracter",
@@ -129,24 +129,33 @@
         },
         "stadiu": {
           "name": "stadiu",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "initiator": {
           "name": "initiator",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "text"
         },
         "consultati": {
           "name": "consultati",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "source": {
+          "name": "source",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

@@ -9,7 +9,7 @@ export interface IProjectRepository {
 
   save(dto: IProjectProps): Promise<Project>;
 
-  update(dto: Project): Promise<Project>;
+  update(id: string, dto: Partial<Project>): Promise<Project>;
 
   getById(id: string): Promise<Project | null>;
   getBy(filters: any): Promise<{ entries: Project[]; count: number }>;

@@ -58,6 +58,11 @@ export class ProjectService {
     return this.mapper.toDTO(entry);
   }
 
+  async updateProject(id: string, project: IProjectProps): Promise<IProjectOutgoingDTO> {
+    const entry = await this.repository.update(id, project);
+    return this.mapper.toDTO(entry);
+  }
+
   async find(filters: ProjectFiltersDTO): Promise<IProjectOutgoingDTO[]> {
     const { entries } = await this.repository.getBy(filters);
     return entries.map((entry) => this.mapper.toDTO(entry));

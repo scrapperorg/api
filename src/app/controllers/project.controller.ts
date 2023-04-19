@@ -5,7 +5,7 @@ import { Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { ProjectService } from '@services/Project.service';
 import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middleware';
-import { createSchema, searchSchema } from '@controllers/validationSchemas/Project';
+import { createSchema, searchSchema, updateSchema } from '@controllers/validationSchemas/Project';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 import { parseProjectsFilters } from '@middlewares/parseProjectsFilters.middleware';
 
@@ -70,6 +70,18 @@ export class ProjectController {
       try {
         await createSchema.validateAsync(req.body);
         const project = await this.projectService.createProject(req.body);
+        return res.status(HttpStatus.OK).json(project);
+      } catch (error: any) {
+        console.log(error);
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.put('/:id', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
+      try {
+        await updateSchema.validateAsync(req.body);
+        const project = await this.projectService.updateProject(req.params.id, req.body);
         return res.status(HttpStatus.OK).json(project);
       } catch (error: any) {
         console.log(error);
