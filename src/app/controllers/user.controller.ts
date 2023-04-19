@@ -9,6 +9,8 @@ import { UserService } from '@services';
 import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 import { Source } from '@domain/Document';
+import { hasExactRole } from '@middlewares/hasRole.middleware';
+import { Role } from '@domain/index';
 
 @injectable()
 export class UserController {
@@ -44,6 +46,21 @@ export class UserController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
+    this.router.delete(
+      '/:id',
+      isAuthenticated,
+      hasExactRole(Role.ITA),
+      async (req: Request, res: Response) => {
+        try {
+          await this.userService.delete(req.params.id);
+          return res.status(HttpStatus.OK).json({ message: 'User deleted' });
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
 
     this.router.post('/create', async (req: Request, res: Response) => {
       const { name, surname, role, password, email } = req.body;
@@ -92,5 +109,20 @@ export class UserController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
+
+    this.router.put(
+      '/:id/activate',
+      isAuthenticated,
+      hasExactRole(Role.ITA),
+      async (req: Request, res: Response) => {
+        try {
+          await this.userService.activate(req.params.id);
+          return res.status(HttpStatus.OK).json({ message: 'User activated' });
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
   }
 }
