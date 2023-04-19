@@ -15,9 +15,9 @@ export class ProjectMockRepository implements IProjectRepository {
     return this.entries[0];
   }
 
-  async update(dto: Project) {
+  async update(id: string, dto: Partial<Project>): Promise<Project> {
     // to implement
-    return dto;
+    return dto as Project;
   }
 
   async getAll() {

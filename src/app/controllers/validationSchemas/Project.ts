@@ -16,6 +16,22 @@ export const createSchema = Joi.object({
   consultati: Joi.string(),
 });
 
+export const updateSchema = Joi.object({
+  title: Joi.string(),
+  presentsInterest: Joi.boolean(),
+  numarInregistrareSenat: Joi.string(),
+  numarInregistrareGuvern: Joi.string(),
+  proceduraLegislativa: Joi.string(),
+  cameraDecizionala: Joi.string(),
+  termenAdoptare: Joi.string(),
+  tipInitiativa: Joi.string(),
+  caracter: Joi.string(),
+  esteProceduraDeUrgenta: Joi.boolean(),
+  stadiu: Joi.string(),
+  initiator: Joi.string(),
+  consultati: Joi.string(),
+});
+
 export const findSchema = Joi.object({
   title: Joi.string(),
 });

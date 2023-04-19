@@ -17,8 +17,8 @@ export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
     caracter: { type: 'string', nullable: true },
     esteProceduraDeUrgenta: { type: 'boolean', default: false },
     stadiu: { type: 'string', nullable: true },
-    initiator: { type: 'string', nullable: true },
-    consultati: { type: 'string', nullable: true },
+    initiator: { type: 'text', nullable: true },
+    consultati: { type: 'text', nullable: true },
     // end project technical details
     attachments: { type: 'string[]', default: [] }, // todo: create Attachement : { reference: '1:m', entity: 'Attachement' },
     documents: {
