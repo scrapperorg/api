@@ -24,6 +24,7 @@ export interface IProjectOutgoingDTO {
   stadiu?: string;
   initiator?: string;
   consultati?: string;
+  source?: string;
 
   attachments: string[];
 }

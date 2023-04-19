@@ -24,6 +24,7 @@ export interface IProjectProps {
   stadiu?: string;
   initiator?: string;
   consultati?: string;
+  source?: string;
   attachments?: string[];
 }
 
@@ -47,6 +48,7 @@ export class Project extends BaseEntity {
   stadiu?: string;
   initiator?: string;
   consultati?: string;
+  source?: string;
 
   attachments: string[] = [];
 
@@ -80,6 +82,8 @@ export class Project extends BaseEntity {
     if (props.initiator !== null) this.initiator = props.initiator;
 
     if (props.consultati !== null) this.consultati = props.consultati;
+
+    if (props.source !== null) this.source = props.source;
 
     if (props.attachments) this.attachments = props.attachments;
   }

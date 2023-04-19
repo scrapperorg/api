@@ -154,6 +154,15 @@
           "nullable": true,
           "mappedType": "text"
         },
+        "source": {
+          "name": "source",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "attachments": {
           "name": "attachments",
           "type": "text[]",

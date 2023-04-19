@@ -13,6 +13,7 @@ export const createSchema = Joi.object({
   esteProceduraDeUrgenta: Joi.boolean(),
   stadiu: Joi.string(),
   initiator: Joi.string(),
+  source: Joi.string(),
   consultati: Joi.string(),
 });
 
@@ -26,6 +27,7 @@ export const updateSchema = Joi.object({
   termenAdoptare: Joi.string(),
   tipInitiativa: Joi.string(),
   caracter: Joi.string(),
+  source: Joi.string(),
   esteProceduraDeUrgenta: Joi.boolean(),
   stadiu: Joi.string(),
   initiator: Joi.string(),

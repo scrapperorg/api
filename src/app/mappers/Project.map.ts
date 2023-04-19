@@ -4,7 +4,6 @@ import { IDocumentOutgoingDTO, IProjectOutgoingDTO } from '@controllers/dtos';
 import { assignPropertyIfItHasValue } from './helpers/assignPropertyIfItHasValue';
 import { DocumentMap } from './Document.map';
 import { TYPES } from '@server/types';
-import { Document } from '@domain';
 
 @injectable()
 export class ProjectMap {
@@ -19,6 +18,7 @@ export class ProjectMap {
       documents: [],
       presentsInterest: false,
       attachments: project.attachments,
+      source: project.source,
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
 
