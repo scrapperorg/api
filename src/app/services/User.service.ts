@@ -3,7 +3,7 @@ import { IUserAPIincomingDTO, IUserAPIDTO } from '@controllers/dtos/User';
 import { EncryptionService, UserTokenClaims } from './Encryption.service';
 import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
-import { IUserRepository, Role, User } from '@domain/User';
+import { IUserRepository, Role, User, UserStatus } from '@domain/User';
 import { NoSuchElementException } from '@lib';
 import { Source } from '@domain/Document';
 
@@ -60,5 +60,29 @@ export class UserService {
       console.log(e);
       throw new Error(e);
     }
+  }
+
+  async delete(id: string) {
+    const user = await this.repository.getById(id);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    user.status = UserStatus.DELETED;
+
+    await this.repository.update(user);
+  }
+
+  async activate(id: string) {
+    const user = await this.repository.getById(id);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    user.status = UserStatus.ACTIVE;
+
+    await this.repository.update(user);
   }
 }

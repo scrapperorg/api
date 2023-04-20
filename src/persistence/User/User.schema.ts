@@ -1,5 +1,5 @@
 import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
-import { User, Role } from '@domain/User/User';
+import { User, Role, UserStatus } from '@domain/User/User';
 import { EntitySchema } from '@mikro-orm/core';
 import { Source } from '@domain/Document';
 
@@ -13,5 +13,6 @@ export const UserSchema = new EntitySchema<User, BaseEntity>({
     email: { type: 'string', unique: true },
     password: { type: 'string' },
     sourcesOfInterest: { enum: true, array: true, default: [], items: () => Source },
+    status: { enum: true, array: false, default: 'ACTIVE', items: () => UserStatus },
   },
 });

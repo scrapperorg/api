@@ -4,7 +4,7 @@ import { TYPES } from '@server/types';
 import { EmailService } from './Email.service';
 import { ForgotPasswordEmail } from '@domain/Email';
 import { ResetPasswordTokenMap } from '../mappers/ResetPasswordToken.map';
-import { IUserRepository, User } from '@domain/User';
+import { IUserRepository, User, UserStatus } from '@domain/User';
 import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
@@ -27,7 +27,7 @@ export class AuthService {
     const claims = this.encryptionService.verify<UserTokenClaims>(token);
     const user = await this.userRepository.getById(claims.id);
 
-    if (!user) {
+    if (!user || user.status !== UserStatus.ACTIVE) {
       throw new NoSuchElementException('user not found');
     }
 
@@ -47,7 +47,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
     const user = await this.userRepository.getByEmail(email);
 
-    if (!user) {
+    if (!user || user.status !== UserStatus.ACTIVE) {
       throw new NoSuchElementException('user not found');
     }
 

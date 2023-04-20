@@ -18,7 +18,11 @@ export class UserRepository implements IUserRepository {
   }
 
   async getAll() {
-    return await this.userEM.findAll();
+    return await this.userEM.findAll({
+      orderBy: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async save(userDTO: IUserProps): Promise<User> {
@@ -42,6 +46,19 @@ export class UserRepository implements IUserRepository {
     const updatedUser = wrap(user).assign(userDTO, { mergeObjects: true });
     await this.userEM.flush();
     return updatedUser;
+  }
+
+  /**
+   * This method should be used for hard delete.
+   * We use soft delete atm
+   * @param id
+   */
+  async delete(id: string): Promise<void> {
+    const user = await this.userEM.findOne({ id });
+    if (!user) {
+      throw new NoSuchElementException('User not found');
+    }
+    await this.userEM.removeAndFlush(user);
   }
 
   async getById(id: string): Promise<User | null> {
