@@ -22,12 +22,18 @@ export enum ProcessingStatus {
 export enum Source {
   CAMERA_DEPUTATILOR = 'camera_deputatilor',
   SENAT = 'senat',
+  SENAT_PL = 'senat_pl',
   GUVERN = 'guvern',
   MINISTERUL_DEZVOLTARII = 'mdezvoltarii',
   MINISTERUL_FINANTELOR = 'mfinante',
   MINISTERUL_EDUCATIEI = 'meducatiei',
   MINISTERUL_MEDIU = 'mmediu',
   MINISTERUL_TRANSPORT = 'mtransport',
+  MINISTERUL_JUSTITIEI = 'mjustitiei',
+  MINISTERUL_AFACERILOR_EXTERNE = 'mae',
+  MINISTERUL_AFACERILOR_INTERNE = 'mai',
+  MINISTERUL_APARARII_NATIONALE = 'mapn',
+  CAMERA_DEPUTATILOR_PL = 'camera_deputatilor_pl',
 }
 
 export interface IDocumentProps {

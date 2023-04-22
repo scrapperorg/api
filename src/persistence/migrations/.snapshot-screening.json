@@ -375,12 +375,18 @@
           "enumItems": [
             "camera_deputatilor",
             "senat",
+            "senat_pl",
             "guvern",
             "mdezvoltarii",
             "mfinante",
             "meducatiei",
             "mmediu",
-            "mtransport"
+            "mtransport",
+            "mjustitiei",
+            "mae",
+            "mai",
+            "mapn",
+            "camera_deputatilor_pl"
           ],
           "mappedType": "array"
         },
