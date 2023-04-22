@@ -7,6 +7,7 @@ export const createSchema = Joi.object({
   role: Joi.string().valid(Role.LSE, Role.ITA, Role.GU, Role.LSS).required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
+  confirmPassword: Joi.string().optional(),
 });
 
 export const updatedSourcesSchema = Joi.object({
