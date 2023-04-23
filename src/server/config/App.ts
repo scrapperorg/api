@@ -12,6 +12,7 @@ import express, { Express, NextFunction } from 'express';
 import { TYPES } from '../types';
 import cors from 'cors';
 import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
+import { KeywordController } from '@controllers/keyword.controller';
 
 export class App {
   public app: Express;
@@ -57,5 +58,9 @@ export class App {
       this.container.get<AttachmentController>(TYPES.ATTACHMENT_CONTROLLER).router,
     );
     this.app.use('/robot', this.container.get<RobotController>(TYPES.ROBOT_CONTROLLER).router);
+    this.app.use(
+      '/keyword',
+      this.container.get<KeywordController>(TYPES.KEYWORD_CONTROLLER).router,
+    );
   }
 }

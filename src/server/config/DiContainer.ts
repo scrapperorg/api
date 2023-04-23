@@ -59,6 +59,11 @@ import { RobotRepository } from '@persistence/Robot';
 import { RobotService } from '@services/Robot.service';
 import { RobotMap } from '@mappers/Robot.map';
 import { RobotMockRepository } from '@persistence/Robot/Robot.repository.mock';
+import { KeywordMap } from '@mappers/Keyword.map';
+import { KeywordMockRepository, KeywordRepository } from '@persistence/Keyword';
+import { IKeywordRepository } from '@domain/Keyword';
+import { KeywordService } from '@services/Keyword.service';
+import { KeywordController } from '@controllers/keyword.controller';
 
 export class DiContainer {
   private readonly diContainer: Container;
@@ -109,6 +114,7 @@ export class DiContainer {
     this.diContainer.bind<ProjectMap>(TYPES.PROJECT_MAP).to(ProjectMap).inSingletonScope();
     this.diContainer.bind<AttachmentMap>(TYPES.ATTACHMENT_MAP).to(AttachmentMap).inSingletonScope();
     this.diContainer.bind<RobotMap>(TYPES.ROBOT_MAP).to(RobotMap).inSingletonScope();
+    this.diContainer.bind<KeywordMap>(TYPES.KEYWORD_MAP).to(KeywordMap).inSingletonScope();
 
     // repositories
     if (process.env.MOCK === 'true') {
@@ -136,6 +142,10 @@ export class DiContainer {
       .bind<AttachmentService>(TYPES.ATTACHMENT_SERVICE)
       .to(AttachmentService)
       .inSingletonScope();
+    this.diContainer
+      .bind<KeywordService>(TYPES.KEYWORD_SERVICE)
+      .to(KeywordService)
+      .inSingletonScope();
 
     // controllers
     this.diContainer
@@ -161,6 +171,10 @@ export class DiContainer {
     this.diContainer
       .bind<RobotController>(TYPES.ROBOT_CONTROLLER)
       .to(RobotController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<KeywordController>(TYPES.KEYWORD_CONTROLLER)
+      .to(KeywordController)
       .inSingletonScope();
 
     return this.diContainer;
@@ -195,6 +209,11 @@ export class DiContainer {
     this.diContainer
       .bind<IRobotRepository>(TYPES.ROBOT_REPOSITORY)
       .to(RobotRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IKeywordRepository>(TYPES.KEYWORD_REPOSITORY)
+      .to(KeywordRepository)
       .inSingletonScope();
 
     this.diContainer
@@ -247,6 +266,11 @@ export class DiContainer {
     this.diContainer
       .bind<IRobotRepository>(TYPES.ROBOT_REPOSITORY)
       .to(RobotMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<IKeywordRepository>(TYPES.KEYWORD_REPOSITORY)
+      .to(KeywordMockRepository)
       .inSingletonScope();
   }
 }
