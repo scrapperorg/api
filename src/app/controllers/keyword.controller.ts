@@ -12,7 +12,7 @@ export class KeywordController {
     this.router.get('/', isAuthenticatedOrTrustedSource, async (req: Request, res: Response) => {
       try {
         const keywords = await this.keywordService.getAll();
-        return res.status(200).send({ keywords });
+        return res.status(200).send(keywords);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
