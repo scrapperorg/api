@@ -13,3 +13,8 @@ export const createSchema = Joi.object({
 export const updatedSourcesSchema = Joi.object({
   sourcesOfInterest: Joi.array().items(Joi.string()).required(),
 });
+
+export const updatePasswordSchema = Joi.object({
+  password: Joi.string().required(),
+  confirmPassword: Joi.string().required(),
+});
