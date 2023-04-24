@@ -73,6 +73,14 @@ export const updateSchema = Joi.object({
   highlightMetadata: Joi.array().optional(),
 });
 
+export const updateAnalysisSchema = Joi.object({
+  documentId: Joi.string().required(),
+  status: Joi.string().required(),
+  decision: Joi.string().required(),
+  assignedUser: Joi.string().optional(),
+  deadline: Joi.date().optional(),
+});
+
 export const searchContentSchema = Joi.object({
   identificator: Joi.string().optional().allow(null, ''),
   title: Joi.string().optional().allow(null, ''),

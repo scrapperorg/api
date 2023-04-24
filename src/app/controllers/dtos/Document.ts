@@ -31,3 +31,10 @@ export interface IAllDocumentsOutgoingDTO {
   totalNumberOfResults: number;
   results: IDocumentOutgoingDTO[];
 }
+
+export interface IDocumentAnalysisDTO {
+  status: Status;
+  decision: Decision;
+  assignedUser?: string;
+  deadline?: Date;
+}

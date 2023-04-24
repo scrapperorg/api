@@ -1,5 +1,9 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
-import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
+import {
+  IAllDocumentsOutgoingDTO,
+  IDocumentOutgoingDTO,
+  IDocumentAnalysisDTO,
+} from '@controllers/dtos';
 import {
   Decision,
   Document,
@@ -68,6 +72,26 @@ export class DocumentService {
   async updateDocument(id: string, document: any): Promise<IDocumentOutgoingDTO> {
     const entry = await this.documentRepository.update({ ...document, id });
     return this.documentMap.toDTO(entry);
+  }
+
+  async updateAnalysis(
+    documentId: string,
+    documentAnalysis: IDocumentAnalysisDTO,
+  ): Promise<IDocumentOutgoingDTO> {
+    const document = await this.documentRepository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    document.status = documentAnalysis.status;
+    document.decision = documentAnalysis.decision;
+    if (documentAnalysis.deadline !== null && documentAnalysis.deadline !== undefined)
+      document.deadline = documentAnalysis.deadline;
+    if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined)
+      document.assignedUser = documentAnalysis.assignedUser;
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
   }
 
   /**

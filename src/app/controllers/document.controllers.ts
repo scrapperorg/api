@@ -2,6 +2,7 @@ import {
   assignResponsibleSchema,
   setDeadlineSchema,
   updateSchema,
+  updateAnalysisSchema,
   searchContentSchema,
   setStatusSchema,
   setDecisionSchema,
@@ -179,6 +180,24 @@ export class DocumentController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
+
+    this.router.post(
+      '/update-document-analysis',
+      isAuthenticated,
+      async (req: Request, res: Response) => {
+        console.log('reqbody', req.body);
+        try {
+          await updateAnalysisSchema.validateAsync(req.body);
+          const { documentId } = req.body;
+          const document = await documentService.updateAnalysis(documentId, req.body);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          console.log(error);
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
 
     this.router.delete(
       '/:documentId/attachment/:attachmentId',
