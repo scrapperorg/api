@@ -19,6 +19,11 @@ export const setStatusSchema = Joi.object({
   status: Joi.string().required(),
 });
 
+export const setDecisionSchema = Joi.object({
+  documentId: Joi.string().required(),
+  decision: Joi.string().required(),
+});
+
 export const createSchema = Joi.object({
   title: Joi.string().required(),
   project: Joi.string().required(),
@@ -27,6 +32,7 @@ export const createSchema = Joi.object({
   publicationDate: Joi.string().required(),
   source: Joi.string().required(),
   status: Joi.string().required(),
+  decision: Joi.string().required(),
   isRulesBreaker: Joi.boolean().optional(),
   assignedUser: Joi.string().optional(),
   deadline: Joi.date().optional(),
@@ -48,6 +54,7 @@ export const updateSchema = Joi.object({
   publicationDate: Joi.string().optional(),
   source: Joi.string().optional(),
   status: Joi.string().optional(),
+  decision: Joi.string().optional(),
   isRulesBreaker: Joi.boolean().optional(),
   assignedUser: Joi.string().optional(),
   deadline: Joi.date().optional(),
@@ -65,6 +72,14 @@ export const updateSchema = Joi.object({
   highlightFile: Joi.string().optional(),
   highlightMetadata: Joi.array().optional(),
   ocrFile: Joi.string().optional(),
+});
+
+export const updateAnalysisSchema = Joi.object({
+  documentId: Joi.string().required(),
+  status: Joi.string().required(),
+  decision: Joi.string().required(),
+  assignedUser: Joi.string().optional(),
+  deadline: Joi.date().optional(),
 });
 
 export const searchContentSchema = Joi.object({

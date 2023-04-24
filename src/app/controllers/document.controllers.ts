@@ -2,8 +2,10 @@ import {
   assignResponsibleSchema,
   setDeadlineSchema,
   updateSchema,
+  updateAnalysisSchema,
   searchContentSchema,
   setStatusSchema,
+  setDecisionSchema,
 } from './validationSchemas/Document';
 import { Exception, HttpStatus, statusMap } from '@lib';
 import { TYPES } from '@server/types';
@@ -133,6 +135,31 @@ export class DocumentController {
       },
     );
 
+    this.router.post(
+      '/set-decision',
+      isAuthenticated,
+      hasRoleAtLeast(Role.LSS),
+      async (req: Request, res: Response) => {
+        try {
+          await setDecisionSchema.validateAsync(req.body);
+        } catch (err: any) {
+          const error: Error = err;
+          return res.status(statusMap[Exception.INVALID]).json(error.message);
+        }
+        const { documentId, decision } = req.body;
+
+        try {
+          const document = await documentService.setDecision(documentId, decision);
+
+          return res.status(200).json(document);
+        } catch (err: any) {
+          console.log(err);
+          const errorType: Exception = err.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+        }
+      },
+    );
+
     this.router.post('/set-deadline', isAuthenticated, async (req: Request, res: Response) => {
       try {
         await setDeadlineSchema.validateAsync(req.body);
@@ -153,6 +180,24 @@ export class DocumentController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       }
     });
+
+    this.router.post(
+      '/update-document-analysis',
+      isAuthenticated,
+      async (req: Request, res: Response) => {
+        console.log('reqbody', req.body);
+        try {
+          await updateAnalysisSchema.validateAsync(req.body);
+          const { documentId } = req.body;
+          const document = await documentService.updateAnalysis(documentId, req.body);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          console.log(error);
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
 
     this.router.delete(
       '/:documentId/attachment/:attachmentId',

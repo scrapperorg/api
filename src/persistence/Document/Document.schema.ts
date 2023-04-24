@@ -1,5 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { Document, ProcessingStatus, Status } from '@domain/Document/Document';
+import { Document, ProcessingStatus, Status, Decision } from '@domain/Document/Document';
 import { BaseEntity } from '@domain/BaseEntity/BaseEntity';
 import { Attachment } from '@domain/Attachment';
 
@@ -19,6 +19,7 @@ export const DocumentSchema = new EntitySchema<Document, BaseEntity>({
     assignedUser: { reference: 'm:1', entity: 'User', nullable: true },
     project: { reference: 'm:1', entity: 'Project' },
     deadline: { type: 'Date', nullable: true },
+    decision: { enum: true, default: Decision.FARA_CONCLUZIE, items: () => Decision },
     // AI
     isRulesBreaker: { type: 'boolean', nullable: true, default: false },
     originalFormat: { type: 'string', nullable: true },

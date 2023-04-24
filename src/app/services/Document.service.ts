@@ -1,6 +1,11 @@
 import { NoSuchElementException } from './../../lib/exceptions/NoSuchElement.exception';
-import { IAllDocumentsOutgoingDTO, IDocumentOutgoingDTO } from '@controllers/dtos';
 import {
+  IAllDocumentsOutgoingDTO,
+  IDocumentOutgoingDTO,
+  IDocumentAnalysisDTO,
+} from '@controllers/dtos';
+import {
+  Decision,
   Document,
   Status,
   ElasticSearchProps,
@@ -69,6 +74,26 @@ export class DocumentService {
     return this.documentMap.toDTO(entry);
   }
 
+  async updateAnalysis(
+    documentId: string,
+    documentAnalysis: IDocumentAnalysisDTO,
+  ): Promise<IDocumentOutgoingDTO> {
+    const document = await this.documentRepository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+
+    document.status = documentAnalysis.status;
+    document.decision = documentAnalysis.decision;
+    if (documentAnalysis.deadline !== null && documentAnalysis.deadline !== undefined)
+      document.deadline = documentAnalysis.deadline;
+    if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined)
+      document.assignedUser = documentAnalysis.assignedUser;
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
+  }
+
   /**
    * Assign responsible on a document.
    * The assigner is required to be at least a LSE as per specification.
@@ -105,6 +130,18 @@ export class DocumentService {
       throw new NoSuchElementException('document not found');
     }
     document.status = status;
+
+    const updatedDoc = await this.documentRepository.update(document);
+
+    return this.documentMap.toDTO(updatedDoc);
+  }
+
+  async setDecision(documentId: string, decision: Decision): Promise<IDocumentOutgoingDTO> {
+    const document = await this.documentRepository.getById(documentId);
+    if (!document) {
+      throw new NoSuchElementException('document not found');
+    }
+    document.decision = decision;
 
     const updatedDoc = await this.documentRepository.update(document);
 
