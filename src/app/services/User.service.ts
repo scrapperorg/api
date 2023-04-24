@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { IUserAPIincomingDTO, IUserAPIDTO, changePasswordDTO } from '@controllers/dtos/User';
+import { IUserAPIincomingDTO, IUserAPIDTO, ChangePasswordDTO } from '@controllers/dtos/User';
 import { EncryptionService, UserTokenClaims } from './Encryption.service';
 import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
@@ -85,7 +85,7 @@ export class UserService {
     await this.repository.update(user);
   }
 
-  async updatePassword(id: string, values: changePasswordDTO) {
+  async updatePassword(id: string, values: ChangePasswordDTO) {
     const user = await this.repository.getById(id);
 
     if (!user) {

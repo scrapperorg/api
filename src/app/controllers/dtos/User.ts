@@ -13,7 +13,7 @@ export interface IUserAPIincomingDTO extends Omit<IUserAPIDTO, 'id' | 'createdAt
   password: string;
 }
 
-export interface changePasswordDTO {
+export interface ChangePasswordDTO {
   password: string;
   confirmPassword: string;
 }
