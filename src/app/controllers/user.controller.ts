@@ -133,7 +133,7 @@ export class UserController {
         try {
           await updatePasswordSchema.validateAsync(req.body);
         } catch (err: any) {
-          const error: Error = err;
+          const error = err;
           return res.status(statusMap[Exception.INVALID]).json(error.message);
         }
 
