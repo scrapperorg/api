@@ -32,7 +32,7 @@ export const createSchema = Joi.object({
   publicationDate: Joi.string().required(),
   source: Joi.string().required(),
   status: Joi.string().required(),
-  decision: Joi.string().required(),
+  decision: Joi.string().optional(),
   isRulesBreaker: Joi.boolean().optional(),
   assignedUser: Joi.string().optional(),
   deadline: Joi.date().optional(),
