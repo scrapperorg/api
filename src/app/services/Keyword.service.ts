@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { IKeywordRepository, Keyword } from '@domain/Keyword';
 import { IKeywordOutgoingDTO } from '@controllers/dtos/Keyword';
 import { KeywordMap } from '@mappers/Keyword.map';
+import { EncryptionService } from '@services/Encryption.service';
 
 @injectable()
 export class KeywordService {
@@ -11,6 +12,8 @@ export class KeywordService {
     private readonly keywordRepository: IKeywordRepository,
     @inject(TYPES.KEYWORD_MAP)
     private readonly keywordMap: KeywordMap,
+    @inject(TYPES.ENCRYPTION_SERVICE)
+    private readonly encryptionService: EncryptionService,
   ) {}
 
   async create(name: string): Promise<IKeywordOutgoingDTO> {
@@ -18,9 +21,17 @@ export class KeywordService {
     return this.keywordMap.toDTO(keyword);
   }
 
-  async getAll(): Promise<IKeywordOutgoingDTO[]> {
+  async getAll(withHash = false): Promise<[IKeywordOutgoingDTO[], string]> {
     const keywords = await this.keywordRepository.getAll();
-    return keywords.map((k) => this.keywordMap.toDTO(k));
+    let hash = '';
+    if (withHash) {
+      const stringOfKeywords = keywords.reduce((str: string, keyword) => {
+        return str + keyword.name;
+      }, '');
+      hash = this.encryptionService.deterministicHash(stringOfKeywords);
+    }
+    console.log(hash);
+    return [keywords.map((k) => this.keywordMap.toDTO(k)), hash];
   }
 
   async delete(id: string): Promise<boolean> {
