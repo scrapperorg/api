@@ -20,13 +20,17 @@ import { hasRoleAtLeast } from '@middlewares/hasRole.middleware';
 import { createSchema } from '@controllers/validationSchemas/Document';
 import { Role } from '@domain/User';
 import multer from 'multer';
+import { KeywordService } from '@services/Keyword.service';
 
 const m = multer();
 
 @injectable()
 export class DocumentController {
   public router: Router = Router();
-  constructor(@inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService) {
+  constructor(
+    @inject(TYPES.DOCUMENT_SERVICE) private readonly documentService: DocumentService,
+    @inject(TYPES.KEYWORD_SERVICE) private readonly keywordService: KeywordService,
+  ) {
     this.router.get(
       '/',
       isAuthenticatedOrTrustedSource,
@@ -42,7 +46,10 @@ export class DocumentController {
 
           const documents = await this.documentService.getAll(filters, page, pageSize);
 
-          res.status(200).send(documents);
+          const withHash = true;
+          const [keywords, keywordsHash] = await this.keywordService.getAll(withHash);
+
+          res.status(200).send({ keywordsHash, keywords, documents });
         } catch (error: any) {
           const errorType: Exception = error.constructor.name;
           return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

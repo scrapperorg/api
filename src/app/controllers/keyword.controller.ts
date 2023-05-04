@@ -11,7 +11,7 @@ export class KeywordController {
   constructor(@inject(TYPES.KEYWORD_SERVICE) private readonly keywordService: KeywordService) {
     this.router.get('/', isAuthenticatedOrTrustedSource, async (req: Request, res: Response) => {
       try {
-        const keywords = await this.keywordService.getAll();
+        const [keywords] = await this.keywordService.getAll();
         return res.status(200).send(keywords);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;

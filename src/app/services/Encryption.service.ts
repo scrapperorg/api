@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 
 export interface UserTokenClaims {
   id: string;
@@ -11,6 +12,9 @@ export interface UserTokenClaims {
 
 @injectable()
 export class EncryptionService {
+  public deterministicHash(data: string): string {
+    return crypto.createHash('sha256').update(data).digest('hex');
+  }
   public hash(data: string | Buffer, saltRounds = 10): string {
     return bcrypt.hashSync(data, saltRounds);
   }
