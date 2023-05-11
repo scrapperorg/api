@@ -4,6 +4,10 @@ import {
   RobotController,
   DocumentController,
   ProjectController,
+  NotificationController,
+  AttachmentController,
+  KeywordController,
+  PresentationController
 } from '@controllers';
 import { Container } from 'inversify';
 import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
@@ -11,9 +15,6 @@ import bodyParser from 'body-parser';
 import express, { Express, NextFunction } from 'express';
 import { TYPES } from '../types';
 import cors from 'cors';
-import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
-import { KeywordController } from '@controllers/keyword.controller';
-import { PresentationController } from '@controllers/presentation.controller';
 
 export class App {
   public app: Express;
@@ -66,6 +67,10 @@ export class App {
     this.app.use(
       '/presentation',
       this.container.get<PresentationController>(TYPES.PRESENTATION_CONTROLLER).router,
+    );
+    this.app.use(
+      '/notification',
+      this.container.get<NotificationController>(TYPES.NOTIFICATION_CONTROLLER).router,
     );
   }
 }

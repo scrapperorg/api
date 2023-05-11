@@ -12,6 +12,12 @@ import {
   DocumentService,
   EncryptionService,
   ProjectService,
+  NotificationService,
+  FileRepositoryService,
+  AttachmentService,
+  RobotService,
+  KeywordService,
+  PresentationService,
 } from '@services';
 
 import {
@@ -22,6 +28,9 @@ import {
   IAttachmentRepository,
   IElasticDocumentRepository,
   IElasticProjectRepository,
+  INotificationRepository,
+  IRobotRepository,
+  IKeywordRepository,
 } from '@domain';
 
 import {
@@ -39,6 +48,12 @@ import {
   DocumentMockElasticRepository,
   ProjectElasticRepository,
   ProjectMockElasticRepository,
+  NotificationRepository,
+  NotificationMockRepository,
+  KeywordMockRepository,
+  KeywordRepository,
+  RobotRepository,
+  RobotMockRepository,
 } from '@persistence';
 
 import {
@@ -47,25 +62,22 @@ import {
   DocumentController,
   ProjectController,
   RobotController,
+  NotificationController,
+  AttachmentController,
+  KeywordController,
+  PresentationController,
 } from '@controllers';
 
-import { ResetPasswordTokenMap, DocumentMap, UserMap, ProjectMap } from '@mappers';
-import { FileRepositoryService } from '@services/FileRepository.service';
-import { AttachmentMap } from '@mappers/Attachment.map';
-import { AttachmentService } from '@services/Attachment.service';
-import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
-import { IRobotRepository } from '@domain/Robot';
-import { RobotRepository } from '@persistence/Robot';
-import { RobotService } from '@services/Robot.service';
-import { RobotMap } from '@mappers/Robot.map';
-import { RobotMockRepository } from '@persistence/Robot/Robot.repository.mock';
-import { KeywordMap } from '@mappers/Keyword.map';
-import { KeywordMockRepository, KeywordRepository } from '@persistence/Keyword';
-import { IKeywordRepository } from '@domain/Keyword';
-import { KeywordService } from '@services/Keyword.service';
-import { KeywordController } from '@controllers/keyword.controller';
-import { PresentationController } from '@controllers/presentation.controller';
-import { PresentationService } from '@services/Presentation.service';
+import {
+  ResetPasswordTokenMap,
+  DocumentMap,
+  UserMap,
+  ProjectMap,
+  AttachmentMap,
+  RobotMap,
+  KeywordMap,
+  NotificationMap,
+} from '@mappers';
 
 export class DiContainer {
   private readonly diContainer: Container;
@@ -117,6 +129,7 @@ export class DiContainer {
     this.diContainer.bind<AttachmentMap>(TYPES.ATTACHMENT_MAP).to(AttachmentMap).inSingletonScope();
     this.diContainer.bind<RobotMap>(TYPES.ROBOT_MAP).to(RobotMap).inSingletonScope();
     this.diContainer.bind<KeywordMap>(TYPES.KEYWORD_MAP).to(KeywordMap).inSingletonScope();
+    this.diContainer.bind<NotificationMap>(TYPES.NOTIFICATION_MAP).to(NotificationMap);
 
     // repositories
     if (process.env.MOCK === 'true') {
@@ -152,6 +165,10 @@ export class DiContainer {
       .bind<PresentationService>(TYPES.PRESENTATION_SERVICE)
       .to(PresentationService)
       .inSingletonScope();
+    this.diContainer
+      .bind<NotificationService>(TYPES.NOTIFICATION_SERVICE)
+      .to(NotificationService)
+      .inSingletonScope();
 
     // controllers
     this.diContainer
@@ -185,6 +202,10 @@ export class DiContainer {
     this.diContainer
       .bind<PresentationController>(TYPES.PRESENTATION_CONTROLLER)
       .to(PresentationController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<NotificationController>(TYPES.NOTIFICATION_CONTROLLER)
+      .to(NotificationController)
       .inSingletonScope();
 
     return this.diContainer;
@@ -235,6 +256,11 @@ export class DiContainer {
       .bind<IElasticProjectRepository>(TYPES.PROJECT_ELASTIC_REPOSITORY)
       .to(ProjectElasticRepository)
       .inSingletonScope();
+
+    this.diContainer
+      .bind<INotificationRepository>(TYPES.NOTIFICATION_REPOSITORY)
+      .to(NotificationRepository)
+      .inSingletonScope();
   }
 
   public configureMockRepositories() {
@@ -281,6 +307,11 @@ export class DiContainer {
     this.diContainer
       .bind<IKeywordRepository>(TYPES.KEYWORD_REPOSITORY)
       .to(KeywordMockRepository)
+      .inSingletonScope();
+
+    this.diContainer
+      .bind<INotificationRepository>(TYPES.NOTIFICATION_REPOSITORY)
+      .to(NotificationMockRepository)
       .inSingletonScope();
   }
 }
