@@ -192,7 +192,6 @@ export class DocumentController {
       '/update-document-analysis',
       isAuthenticated,
       async (req: Request, res: Response) => {
-        console.log('reqbody', req.body);
         try {
           await updateAnalysisSchema.validateAsync(req.body);
           const { documentId } = req.body;

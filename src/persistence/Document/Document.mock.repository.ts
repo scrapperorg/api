@@ -10,6 +10,9 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class DocumentMockRepository implements IDocumentRepository {
+  countNewDocuments(): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
   private entries: Array<Document> = [
     new Document({
       title: 'primul doc',

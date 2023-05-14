@@ -30,7 +30,6 @@ export class KeywordService {
       }, '');
       hash = this.encryptionService.deterministicHash(stringOfKeywords);
     }
-    console.log(hash);
     return [keywords.map((k) => this.keywordMap.toDTO(k)), hash];
   }
 

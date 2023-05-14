@@ -1,6 +1,7 @@
-import { IProjectFiltersProps, IProjectProps, IProjectRepository, Project } from '@domain/Project';
+import { IProjectFiltersProps, IProjectRepository, Project } from '@domain/Project';
 import { ProjectMap } from '@mappers/Project.map';
-import { EntityRepository, FilterQuery, MikroORM } from '@mikro-orm/core';
+import { FilterQuery, MikroORM } from '@mikro-orm/core';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ProjectSchema } from './Project.schema';
@@ -10,14 +11,25 @@ import { ProjectFiltersDTO } from '@controllers/dtos';
 @injectable()
 export class ProjectRepository implements IProjectRepository {
   private entityRepository: EntityRepository<Project>;
-
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
     @inject(TYPES.PROJECT_MAP) private readonly mapper: ProjectMap,
   ) {
     const entityManager = this.orm.em.fork();
+
     this.entityRepository = entityManager.getRepository(ProjectSchema);
   }
+
+  async countNewProjects(): Promise<number> {
+    return this.entityRepository
+      .qb('p')
+      .join('p.documents', 'd')
+      .where({
+        'd.status': 'nou',
+      })
+      .getCount();
+  }
+
   async getAll(
     filters: IProjectFiltersProps,
     offset = 0,

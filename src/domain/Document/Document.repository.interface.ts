@@ -11,4 +11,5 @@ export interface IDocumentRepository {
   update(dto: Document): Promise<Document>;
   getById(id: string): Promise<Document | null>;
   removeAttachment(documentId: string, attachmentId: string): Promise<void>;
+  countNewDocuments(): Promise<number>;
 }

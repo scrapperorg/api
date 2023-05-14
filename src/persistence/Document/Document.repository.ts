@@ -27,6 +27,10 @@ export class DocumentRepository implements IDocumentRepository {
     this.entityRepository = this.entityManager.getRepository(DocumentSchema);
   }
 
+  countNewDocuments(): Promise<number> {
+    return this.entityRepository.count({ status: 'nou' });
+  }
+
   async getAll(filters: IDocumentsFilters, offset = 0, limit = 0) {
     const sourceCondition: any =
       filters.sourcesOfInterest!.length === 0 ? {} : { source: { $in: filters.sourcesOfInterest } };

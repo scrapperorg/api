@@ -4,6 +4,9 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class ProjectMockRepository implements IProjectRepository {
+  countNewProjects(): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
   private entries: Array<Project> = [
     new Project({
       title: 'primul doc',
