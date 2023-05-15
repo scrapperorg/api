@@ -22,6 +22,7 @@ export enum TYPES_ENUM {
   ATTACHMENT_CONTROLLER = 'AttachmentController',
   ROBOT_CONTROLLER = 'RobotController',
   KEYWORD_CONTROLLER = 'KeywordController',
+  PRESENTATION_CONTROLLER = 'PresentationController',
 
   // MAPPERS
   USER_MAP = 'UserMap',
@@ -43,4 +44,5 @@ export enum TYPES_ENUM {
   FILE_REPOSITORY_SERVICE = 'FileRepositoryService',
   ATTACHMENT_SERVICE = 'AttachmentService',
   KEYWORD_SERVICE = 'KeywordService',
+  PRESENTATION_SERVICE = 'PresentationService',
 }

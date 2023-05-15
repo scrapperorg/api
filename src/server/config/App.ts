@@ -13,6 +13,7 @@ import { TYPES } from '../types';
 import cors from 'cors';
 import { AttachmentController } from '@controllers/validationSchemas/attachment.controller';
 import { KeywordController } from '@controllers/keyword.controller';
+import { PresentationController } from '@controllers/presentation.controller';
 
 export class App {
   public app: Express;
@@ -61,6 +62,10 @@ export class App {
     this.app.use(
       '/keyword',
       this.container.get<KeywordController>(TYPES.KEYWORD_CONTROLLER).router,
+    );
+    this.app.use(
+      '/presentation',
+      this.container.get<PresentationController>(TYPES.PRESENTATION_CONTROLLER).router,
     );
   }
 }

@@ -64,6 +64,8 @@ import { KeywordMockRepository, KeywordRepository } from '@persistence/Keyword';
 import { IKeywordRepository } from '@domain/Keyword';
 import { KeywordService } from '@services/Keyword.service';
 import { KeywordController } from '@controllers/keyword.controller';
+import { PresentationController } from '@controllers/presentation.controller';
+import { PresentationService } from '@services/Presentation.service';
 
 export class DiContainer {
   private readonly diContainer: Container;
@@ -146,6 +148,10 @@ export class DiContainer {
       .bind<KeywordService>(TYPES.KEYWORD_SERVICE)
       .to(KeywordService)
       .inSingletonScope();
+    this.diContainer
+      .bind<PresentationService>(TYPES.PRESENTATION_SERVICE)
+      .to(PresentationService)
+      .inSingletonScope();
 
     // controllers
     this.diContainer
@@ -175,6 +181,10 @@ export class DiContainer {
     this.diContainer
       .bind<KeywordController>(TYPES.KEYWORD_CONTROLLER)
       .to(KeywordController)
+      .inSingletonScope();
+    this.diContainer
+      .bind<PresentationController>(TYPES.PRESENTATION_CONTROLLER)
+      .to(PresentationController)
       .inSingletonScope();
 
     return this.diContainer;

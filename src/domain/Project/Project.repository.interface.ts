@@ -13,4 +13,5 @@ export interface IProjectRepository {
 
   getById(id: string): Promise<Project | null>;
   getBy(filters: any): Promise<{ entries: Project[]; count: number }>;
+  countNewProjects(): Promise<number>;
 }
