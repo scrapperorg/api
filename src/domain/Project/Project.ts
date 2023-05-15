@@ -15,7 +15,6 @@ export interface IProjectProps {
 
   numarInregistrareSenat?: string;
   numarInregistrareGuvern?: string;
-  numarInregistrareCDep?: string;
   proceduraLegislativa?: string;
   cameraDecizionala?: string;
   termenAdoptare?: string;
@@ -40,7 +39,6 @@ export class Project extends BaseEntity {
 
   numarInregistrareSenat?: string;
   numarInregistrareGuvern?: string;
-  numarInregistrareCDep?: string;
   proceduraLegislativa?: string;
   cameraDecizionala?: string;
   termenAdoptare?: string;
@@ -65,9 +63,6 @@ export class Project extends BaseEntity {
 
     if (props.numarInregistrareGuvern !== null)
       this.numarInregistrareGuvern = props.numarInregistrareGuvern;
-
-    if (props.numarInregistrareCDep !== null)
-      this.numarInregistrareCDep = props.numarInregistrareCDep;
 
     if (props.proceduraLegislativa !== null) this.proceduraLegislativa = props.proceduraLegislativa;
 

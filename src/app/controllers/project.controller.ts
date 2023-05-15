@@ -41,20 +41,11 @@ export class ProjectController {
       isAuthenticatedOrTrustedSource,
       async (req: Request, res: Response) => {
         try {
-          const filters: any = {};
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (req.query.title) {
-            filters['title'] = req.query.title;
+          if (!req.query.title) {
+            return res.status(HttpStatus.BAD_REQUEST).json('Missing title');
           }
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (req.query.nrInrCDep) {
-            filters['numarInregistrareCDep'] = req.query.nrInrCDep;
-          }
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (req.query.nrInrSenat) {
-            filters['numarInregistrareSenat'] = req.query.nrInrSenat;
-          }
-          const project = await this.projectService.find(filters);
+          const project = await this.projectService.find({ title: req.query.title as string });
           return res.status(HttpStatus.OK).json(project);
         } catch (error: any) {
           console.log(error);

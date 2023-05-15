@@ -10,7 +10,6 @@ export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
     // project technical details
     numarInregistrareSenat: { type: 'string', nullable: true },
     numarInregistrareGuvern: { type: 'string', nullable: true },
-    numarInregistrareCDep: { type: 'string', nullable: true },
     proceduraLegislativa: { type: 'string', nullable: true },
     cameraDecizionala: { type: 'string', nullable: true },
     termenAdoptare: { type: 'text', nullable: true },
