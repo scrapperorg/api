@@ -15,6 +15,7 @@ export interface IProjectOutgoingDTO {
 
   numarInregistrareSenat?: string;
   numarInregistrareGuvern?: string;
+  numarInregistrareCDep?: string;
   proceduraLegislativa?: string;
   cameraDecizionala?: string;
   termenAdoptare?: string;
@@ -31,4 +32,7 @@ export interface IProjectOutgoingDTO {
 
 export interface ProjectFiltersDTO {
   title?: string;
+  numarInregistrareSenat?: string;
+  numarInregistrareGuvern?: string;
+  numarInregistrareCDep?: string;
 }
