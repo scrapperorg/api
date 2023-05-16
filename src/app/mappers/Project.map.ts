@@ -37,6 +37,7 @@ export class ProjectMap {
     const optionalProperties: Array<keyof Project> = [
       'numarInregistrareSenat',
       'numarInregistrareGuvern',
+      'numarInregistrareCDep',
       'proceduraLegislativa',
       'cameraDecizionala',
       'termenAdoptare',
