@@ -129,6 +129,15 @@
           "nullable": true,
           "mappedType": "string"
         },
+        "numar_inregistrare_cdep": {
+          "name": "numar_inregistrare_cdep",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "procedura_legislativa": {
           "name": "procedura_legislativa",
           "type": "varchar(255)",

@@ -44,7 +44,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
-  
+
   kibana:
     depends_on:
       elasticsearch:

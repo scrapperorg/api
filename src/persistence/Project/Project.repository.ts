@@ -83,7 +83,17 @@ export class ProjectRepository implements IProjectRepository {
   }
 
   async getBy(filters: ProjectFiltersDTO): Promise<{ entries: Project[]; count: number }> {
-    const [entries, count] = await this.entityRepository.findAndCount(filters, {
+    let processedFilters: any = { ...filters };
+    if (filters.numarInregistrareCDep != null) {
+      processedFilters = {
+        $or: [
+          { numarInregistrareCDep: filters.numarInregistrareCDep },
+          { numarInregistrareCDep: filters.numarInregistrareCDep.replace('L', 'l') },
+        ],
+      };
+    }
+
+    const [entries, count] = await this.entityRepository.findAndCount(processedFilters, {
       populate: ['documents'],
       refresh: true,
       cache: false,
