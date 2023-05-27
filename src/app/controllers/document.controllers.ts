@@ -79,7 +79,7 @@ export class DocumentController {
       }
     });
 
-    this.router.put('/:id', isTrustedSourceMiddleware, async (req: Request, res: Response) => {
+    this.router.put('/:id', isAuthenticatedOrTrustedSource, async (req: Request, res: Response) => {
       try {
         await updateSchema.validateAsync(req.body);
         const document = await this.documentService.updateDocument(req.params.id, req.body);
