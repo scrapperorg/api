@@ -5,10 +5,18 @@ import {
   IGetNotificationsParams,
   Notification,
   NotificationType,
+  Document,
+  NotificationTypeMessages,
 } from '@domain';
 import { NotificationMap } from '@mappers/Notification.map';
 import { INotificationAPIDTO, INotificationAPIIncomingDTO } from '@controllers/dtos';
 import { QueueService } from './Queue.service';
+
+interface Reminder {
+  notificationType: NotificationType;
+  message: string;
+  executionDate: Date;
+}
 
 @injectable()
 export class NotificationService {
@@ -88,6 +96,65 @@ export class NotificationService {
     for (let i = 0; i < notificationJobs.length; i++) {
       const job = notificationJobs[i];
       await this.queueService.cancelJob(job.id);
+    }
+  }
+
+  async cancelDeadlineReminders(document: Document): Promise<void> {
+    if (document.assignedUser === null || !document.deadline) {
+      return;
+    }
+
+    const notificationQueues = [
+      `notification-${NotificationType.DEADLINE_APPROACHING}-${document.assignedUser}-${document.id}`,
+      `notification-${NotificationType.DEADLINE_REACHED}-${document.assignedUser}-${document.id}`,
+      `notification-${NotificationType.DEADLINE_PASSED}-${document.assignedUser}-${document.id}`,
+    ];
+
+    for (let i = 0; i < notificationQueues.length; i++) {
+      const queue = notificationQueues[i];
+      await this.cancelNotificationsOnQueue(queue);
+    }
+  }
+
+  async setDeadlineReminders(document: Document) {
+    if (
+      document.assignedUser === null ||
+      document.assignedUser === undefined ||
+      !document.deadline
+    ) {
+      return;
+    }
+
+    const reminders: Reminder[] = [
+      {
+        notificationType: NotificationType.DEADLINE_APPROACHING,
+        message: NotificationTypeMessages.DEADLINE_APPROACHING,
+        executionDate: new Date(document.deadline.getTime() - 1000 * 60 * 60 * 24 * 3),
+      },
+      {
+        notificationType: NotificationType.DEADLINE_REACHED,
+        message: NotificationTypeMessages.DEADLINE_REACHED,
+        executionDate: document.deadline,
+      },
+      {
+        notificationType: NotificationType.DEADLINE_PASSED,
+        message: NotificationTypeMessages.DEADLINE_PASSED,
+        executionDate: new Date(document.deadline.getTime() + 1000 * 60 * 60 * 24 * 1),
+      },
+    ];
+
+    for (let i = 0; i < reminders.length; i++) {
+      const reminder = reminders[i];
+      await this.schedule(
+        reminder.notificationType,
+        {
+          message: reminder.message,
+          type: reminder.notificationType,
+          user: document.assignedUser,
+          document: document.id,
+        },
+        reminder.executionDate,
+      );
     }
   }
 }

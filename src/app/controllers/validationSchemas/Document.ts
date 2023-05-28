@@ -79,7 +79,11 @@ export const updateAnalysisSchema = Joi.object({
   status: Joi.string().required(),
   decision: Joi.string().required(),
   assignedUser: Joi.string().optional(),
-  deadline: Joi.date().optional(),
+  deadline: Joi.date()
+    .allow('')
+    .required()
+    .greater(Date.now())
+    .less(Date.now() + 365 * 24 * 60 * 60 * 1000),
 });
 
 export const searchContentSchema = Joi.object({

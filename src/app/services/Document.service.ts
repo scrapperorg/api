@@ -23,6 +23,8 @@ import { Attachment, IAttachmentRepository } from '@domain/Attachment';
 import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
 import { fromBuffer } from 'file-type';
+import { NotificationService } from './Notification.service';
+import { NotificationType } from '@domain/Notification';
 
 @injectable()
 export class DocumentService {
@@ -35,6 +37,7 @@ export class DocumentService {
     private readonly attachmentRepository: IAttachmentRepository,
     @inject(TYPES.DOCUMENT_MAP) private readonly documentMap: DocumentMap,
     @inject(TYPES.FILE_REPOSITORY_SERVICE) private readonly fileRepo: FileRepositoryService,
+    @inject(TYPES.NOTIFICATION_SERVICE) private readonly notificationService: NotificationService,
   ) {}
 
   async getAll(
@@ -86,10 +89,22 @@ export class DocumentService {
     document.status = documentAnalysis.status;
     document.decision = documentAnalysis.decision;
     if (documentAnalysis.deadline !== null && documentAnalysis.deadline !== undefined)
-      document.deadline = documentAnalysis.deadline;
+      if (documentAnalysis.deadline === '') {
+        document.deadline = undefined;
+      } else {
+        document.deadline = documentAnalysis.deadline;
+      }
     if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined)
       document.assignedUser = documentAnalysis.assignedUser;
+
+    // TODO: type here needs fixing since after the update the Document has populated properties
     const updatedDoc = await this.documentRepository.update(document);
+
+    // cancel existing deadline jobs if there are any
+    await this.notificationService.cancelDeadlineReminders(document);
+
+    // set new deadline jobs
+    await this.notificationService.setDeadlineReminders(document);
 
     return this.documentMap.toDTO(updatedDoc);
   }
