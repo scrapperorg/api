@@ -49,4 +49,5 @@ export enum TYPES_ENUM {
   KEYWORD_SERVICE = 'KeywordService',
   PRESENTATION_SERVICE = 'PresentationService',
   NOTIFICATION_SERVICE = 'NotificationService',
+  QUEUE_SERVICE = 'QueueService',
 }

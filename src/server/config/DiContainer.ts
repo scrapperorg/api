@@ -18,6 +18,7 @@ import {
   RobotService,
   KeywordService,
   PresentationService,
+  QueueService,
 } from '@services';
 
 import {
@@ -108,6 +109,7 @@ export class DiContainer {
         bind<MikroORM<IDatabaseDriver<Connection>>>(TYPES.DATABASE_CONNECTION).toConstantValue(
           connection,
         );
+        await this.customDbSetup(connection);
         this.configure();
       }
 
@@ -115,6 +117,15 @@ export class DiContainer {
         this.elasticClient,
       );
     });
+  }
+
+  private async customDbSetup(connection: MikroORM<IDatabaseDriver<Connection>>) {
+    await connection.em.getConnection().execute('CREATE EXTENSION IF NOT EXISTS pgcrypto');
+    await connection.em
+      .getConnection()
+      .execute(
+        `GRANT CREATE ON DATABASE ${process.env.MIKRO_ORM_DB_NAME} TO ${process.env.MIKRO_ORM_USER}`,
+      );
   }
 
   public configure() {
@@ -169,6 +180,7 @@ export class DiContainer {
       .bind<NotificationService>(TYPES.NOTIFICATION_SERVICE)
       .to(NotificationService)
       .inSingletonScope();
+    this.diContainer.bind<QueueService>(TYPES.QUEUE_SERVICE).to(QueueService).inSingletonScope();
 
     // controllers
     this.diContainer
