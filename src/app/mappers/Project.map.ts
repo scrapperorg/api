@@ -46,6 +46,8 @@ export class ProjectMap {
       'stadiu',
       'initiator',
       'consultati',
+      'publicationDate',
+      'url',
     ];
 
     optionalProperties.forEach((property) =>
