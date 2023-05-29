@@ -7,7 +7,7 @@ import {
   NotificationController,
   AttachmentController,
   KeywordController,
-  PresentationController
+  PresentationController,
 } from '@controllers';
 import { Container } from 'inversify';
 import { RequestContext, MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
