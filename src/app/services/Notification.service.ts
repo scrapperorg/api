@@ -10,7 +10,7 @@ import {
 } from '@domain';
 import { NotificationMap } from '@mappers/Notification.map';
 import { INotificationAPIDTO, INotificationAPIIncomingDTO } from '@controllers/dtos';
-import { QueueService } from './Queue.service';
+import { QueueService } from './Queue/Queue.service';
 
 interface Reminder {
   notificationType: NotificationType;

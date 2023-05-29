@@ -10,4 +10,4 @@ export * from './Attachment.service';
 export * from './Robot.service';
 export * from './Keyword.service';
 export * from './Presentation.service';
-export * from './Queue.service';
+export * from './Queue';

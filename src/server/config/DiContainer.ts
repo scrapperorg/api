@@ -19,6 +19,8 @@ import {
   KeywordService,
   PresentationService,
   QueueService,
+  IQueueService,
+  QueueMockService,
 } from '@services';
 
 import {
@@ -96,7 +98,6 @@ export class DiContainer {
     this.elasticClient = elasticClient;
     this.databaseClient = databaseClient;
     await this.diContainer.loadAsync(this.getBindings());
-    await this.postConfigure();
     return this.diContainer;
   }
 
@@ -112,6 +113,7 @@ export class DiContainer {
         );
         await this.customDbSetup(connection);
         this.configure();
+        await this.postConfigure();
       }
 
       bind<ElasticSearchClient>(TYPES.ELASTIC_SEARCH_CONNECTION).toConstantValue(
@@ -188,7 +190,15 @@ export class DiContainer {
       .bind<NotificationService>(TYPES.NOTIFICATION_SERVICE)
       .to(NotificationService)
       .inSingletonScope();
-    this.diContainer.bind<QueueService>(TYPES.QUEUE_SERVICE).to(QueueService).inSingletonScope();
+
+    if (process.env.MOCK === 'true') {
+      this.diContainer
+        .bind<IQueueService>(TYPES.QUEUE_SERVICE)
+        .to(QueueMockService)
+        .inSingletonScope();
+    } else {
+      this.diContainer.bind<IQueueService>(TYPES.QUEUE_SERVICE).to(QueueService).inSingletonScope();
+    }
 
     // controllers
     this.diContainer

@@ -2,10 +2,11 @@ import PgBoss from 'pg-boss';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@server/types';
 import { MikroORM } from '@mikro-orm/core';
+import { IQueueService } from './Queue.service.interface';
 
 @injectable()
-export class QueueService {
-  queueManager: PgBoss;
+export class QueueService implements IQueueService {
+  private queueManager: PgBoss;
   constructor(@inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM) {
     const connectionOptions = this.orm.config.getAll();
     const { user, password, dbName, port } = connectionOptions;
@@ -31,7 +32,7 @@ export class QueueService {
 
   async addJob(queueName: string, data: any) {
     try {
-      return this.queueManager.send(queueName, data);
+      await this.queueManager.send(queueName, data);
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +40,7 @@ export class QueueService {
 
   async scheduleJob(queueName: string, data: any, date: Date) {
     try {
-      return this.queueManager.sendAfter(queueName, data, {}, date);
+      await this.queueManager.sendAfter(queueName, data, {}, date);
     } catch (error) {
       console.log(error);
     }
