@@ -36,5 +36,5 @@ export interface IDocumentAnalysisDTO {
   status: Status;
   decision: Decision;
   assignedUser?: string;
-  deadline?: Date;
+  deadline?: Date | '';
 }

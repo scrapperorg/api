@@ -5,3 +5,6 @@ export * from './ResetPasswordToken';
 export * from './User';
 export * from './BaseEntity';
 export * from './Attachment';
+export * from './Notification';
+export * from './Robot';
+export * from './Keyword';

@@ -13,6 +13,7 @@ export enum TYPES_ENUM {
   ATTACHMENT_REPOSITORY = 'AttachmentRepository',
   ROBOT_REPOSITORY = 'RobotRepository',
   KEYWORD_REPOSITORY = 'KeywordRepository',
+  NOTIFICATION_REPOSITORY = 'NotificationRepository',
 
   // CONTROLLERS
   USER_CONTROLLER = 'UserController',
@@ -23,6 +24,7 @@ export enum TYPES_ENUM {
   ROBOT_CONTROLLER = 'RobotController',
   KEYWORD_CONTROLLER = 'KeywordController',
   PRESENTATION_CONTROLLER = 'PresentationController',
+  NOTIFICATION_CONTROLLER = 'NotificationController',
 
   // MAPPERS
   USER_MAP = 'UserMap',
@@ -32,6 +34,7 @@ export enum TYPES_ENUM {
   PROJECT_MAP = 'ProjectMap',
   ATTACHMENT_MAP = 'AttachmentMap',
   KEYWORD_MAP = 'KeywordMap',
+  NOTIFICATION_MAP = 'NotificationMap',
 
   // SERVICES
   USER_SERVICE = 'UserService',
@@ -45,4 +48,6 @@ export enum TYPES_ENUM {
   ATTACHMENT_SERVICE = 'AttachmentService',
   KEYWORD_SERVICE = 'KeywordService',
   PRESENTATION_SERVICE = 'PresentationService',
+  NOTIFICATION_SERVICE = 'NotificationService',
+  QUEUE_SERVICE = 'QueueService',
 }
