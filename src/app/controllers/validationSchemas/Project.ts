@@ -16,7 +16,7 @@ export const createSchema = Joi.object({
   initiator: Joi.string(),
   source: Joi.string(),
   consultati: Joi.string(),
-  publicationDate: Joi.date(),
+  publicationDate: Joi.string(),
   url: Joi.string(),
 });
 
@@ -36,7 +36,7 @@ export const updateSchema = Joi.object({
   stadiu: Joi.string(),
   initiator: Joi.string(),
   consultati: Joi.string(),
-  publicationDate: Joi.date(),
+  publicationDate: Joi.string(),
   url: Joi.string(),
 });
 

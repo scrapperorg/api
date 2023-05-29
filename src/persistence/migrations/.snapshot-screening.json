@@ -103,13 +103,12 @@
         },
         "publication_date": {
           "name": "publication_date",
-          "type": "timestamptz(0)",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
+          "mappedType": "string"
         },
         "url": {
           "name": "url",

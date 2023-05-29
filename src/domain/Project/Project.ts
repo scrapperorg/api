@@ -12,7 +12,7 @@ export interface IProjectProps {
   presentsInterest?: boolean;
 
   documents?: Collection<Document>;
-  publicationDate?: Date;
+  publicationDate?: string;
   url?: string;
 
   numarInregistrareSenat?: string;
@@ -40,7 +40,7 @@ export class Project extends BaseEntity {
 
   documents?: Collection<Document>;
 
-  publicationDate?: Date;
+  publicationDate?: string;
 
   url?: string;
 
