@@ -6,7 +6,7 @@ import {
   Notification,
   NotificationType,
   Document,
-  NotificationTypeMessages,
+  User,
 } from '@domain';
 import { NotificationMap } from '@mappers/Notification.map';
 import { INotificationAPIDTO, INotificationAPIIncomingDTO } from '@controllers/dtos';
@@ -24,11 +24,20 @@ export class NotificationService {
     @inject(TYPES.NOTIFICATION_REPOSITORY) private readonly repository: INotificationRepository,
     @inject(TYPES.NOTIFICATION_MAP) private readonly mapper: NotificationMap,
     @inject(TYPES.QUEUE_SERVICE) private readonly queueService: QueueService,
-  ) {
-    this.subscribeToNotificationQueue();
-  }
+  ) {}
 
-  private async subscribeToNotificationQueue(): Promise<void> {
+  private notificationMessages = {
+    GENERIC: () => 'Aveti o notificare noua',
+    NEW_DOCUMENT: (title: string) => `Exista un nou document ce necesita atentie: ${title}`,
+    NEW_ASSIGNMENT: (title: string) => `Ati fost asignat unui nou document: ${title}`,
+    DEADLINE_APPROACHING: (title: string) =>
+      `Mai sunt 3 zile pana la termenul limita pentru documentul: ${title}`,
+    DEADLINE_REACHED: (title: string) => `Termenul limita a fost atins pentru documentul: ${title}`,
+    DEADLINE_PASSED: (title: string) =>
+      `Termenul limita a fost depasit pentru documentul: ${title}`,
+  };
+
+  public async subscribeToNotificationQueue(): Promise<void> {
     await this.queueService.subscribeHandler<INotificationAPIIncomingDTO>(
       'notification-*',
       async (job) => {
@@ -82,37 +91,25 @@ export class NotificationService {
     await this.queueService.scheduleJob(queueName, data, executionDate);
   }
 
-  async cancelNotificationsOnQueue(queueName: string): Promise<void> {
-    const notificationJobs = await this.queueService.getJobs(queueName);
-
-    if (
-      notificationJobs === undefined ||
-      notificationJobs === null ||
-      notificationJobs.length === 0
-    ) {
-      return;
-    }
-
-    for (let i = 0; i < notificationJobs.length; i++) {
-      const job = notificationJobs[i];
-      await this.queueService.cancelJob(job.id);
-    }
-  }
-
   async cancelDeadlineReminders(document: Document): Promise<void> {
     if (document.assignedUser === null || !document.deadline) {
       return;
     }
 
+    // todo fix below
+    // eslint-disable-next-line
+    // @ts-ignore
+    const assignedUser: User = document.assignedUser;
+
     const notificationQueues = [
-      `notification-${NotificationType.DEADLINE_APPROACHING}-${document.assignedUser}-${document.id}`,
-      `notification-${NotificationType.DEADLINE_REACHED}-${document.assignedUser}-${document.id}`,
-      `notification-${NotificationType.DEADLINE_PASSED}-${document.assignedUser}-${document.id}`,
+      `notification-${NotificationType.DEADLINE_APPROACHING}-${assignedUser.id}-${document.id}`,
+      `notification-${NotificationType.DEADLINE_REACHED}-${assignedUser.id}-${document.id}`,
+      `notification-${NotificationType.DEADLINE_PASSED}-${assignedUser.id}-${document.id}`,
     ];
 
     for (let i = 0; i < notificationQueues.length; i++) {
       const queue = notificationQueues[i];
-      await this.cancelNotificationsOnQueue(queue);
+      await this.queueService.cancelJobsOnQueue(queue);
     }
   }
 
@@ -125,20 +122,25 @@ export class NotificationService {
       return;
     }
 
+    // todo fix below
+    // eslint-disable-next-line
+    // @ts-ignore
+    const assignedUser: User = document.assignedUser;
+
     const reminders: Reminder[] = [
       {
         notificationType: NotificationType.DEADLINE_APPROACHING,
-        message: NotificationTypeMessages.DEADLINE_APPROACHING,
+        message: this.notificationMessages.DEADLINE_APPROACHING(document.title),
         executionDate: new Date(document.deadline.getTime() - 1000 * 60 * 60 * 24 * 3),
       },
       {
         notificationType: NotificationType.DEADLINE_REACHED,
-        message: NotificationTypeMessages.DEADLINE_REACHED,
+        message: this.notificationMessages.DEADLINE_REACHED(document.title),
         executionDate: document.deadline,
       },
       {
         notificationType: NotificationType.DEADLINE_PASSED,
-        message: NotificationTypeMessages.DEADLINE_PASSED,
+        message: this.notificationMessages.DEADLINE_PASSED(document.title),
         executionDate: new Date(document.deadline.getTime() + 1000 * 60 * 60 * 24 * 1),
       },
     ];
@@ -150,7 +152,7 @@ export class NotificationService {
         {
           message: reminder.message,
           type: reminder.notificationType,
-          user: document.assignedUser,
+          user: assignedUser.id,
           document: document.id,
         },
         reminder.executionDate,

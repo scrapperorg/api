@@ -96,6 +96,7 @@ export class DiContainer {
     this.elasticClient = elasticClient;
     this.databaseClient = databaseClient;
     await this.diContainer.loadAsync(this.getBindings());
+    await this.postConfigure();
     return this.diContainer;
   }
 
@@ -126,6 +127,13 @@ export class DiContainer {
       .execute(
         `GRANT CREATE ON DATABASE ${process.env.MIKRO_ORM_DB_NAME} TO ${process.env.MIKRO_ORM_USER}`,
       );
+  }
+
+  private async postConfigure() {
+    const NotificationService = this.diContainer.get<NotificationService>(
+      TYPES.NOTIFICATION_SERVICE,
+    );
+    await NotificationService.subscribeToNotificationQueue();
   }
 
   public configure() {

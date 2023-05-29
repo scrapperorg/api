@@ -9,15 +9,6 @@ export enum NotificationType {
   DEADLINE_PASSED = 'DEADLINE_PASSED',
 }
 
-export enum NotificationTypeMessages {
-  GENERIC = 'Aveti o notificare noua',
-  NEW_DOCUMENT = 'Exista un nou document ce necesita atentie',
-  NEW_ASSIGNMENT = 'Ati fost asignat unui nou document',
-  DEADLINE_APPROACHING = 'Mai sunt 3 zile pana la termenul limita',
-  DEADLINE_REACHED = 'Termenul limita a fost atins',
-  DEADLINE_PASSED = 'Termenul limita a fost depasit',
-}
-
 export interface IGetNotificationsParams {
   id?: string;
   user?: string;

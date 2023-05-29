@@ -54,9 +54,10 @@ export class QueueService {
     }
   }
 
-  async getJobs(queueName: string) {
+  async cancelJobsOnQueue(queueName: string) {
     try {
-      return await this.queueManager.fetch(queueName, 20);
+      await this.queueManager.deleteQueue(queueName);
+      console.log(`Cancelled jobs on queue ${queueName}`);
     } catch (error) {
       console.log(error);
     }
