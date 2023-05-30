@@ -6,6 +6,8 @@ export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
   extends: 'BaseEntity',
   properties: {
     title: { type: 'text', nullable: false },
+    publicationDate: { type: 'string', nullable: true },
+    url: { type: 'string', nullable: true },
     presentsInterest: { type: 'boolean', default: false },
     // project technical details
     numarInregistrareSenat: { type: 'string', nullable: true },

@@ -101,6 +101,24 @@
           "nullable": false,
           "mappedType": "text"
         },
+        "publication_date": {
+          "name": "publication_date",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "presents_interest": {
           "name": "presents_interest",
           "type": "boolean",
