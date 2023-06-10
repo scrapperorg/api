@@ -82,7 +82,7 @@ export const updateAnalysisSchema = Joi.object({
   deadline: Joi.date()
     .allow('')
     .required()
-    .greater(Date.now())
+    .min(Date.now())
     .less(Date.now() + 365 * 24 * 60 * 60 * 1000),
 });
 
