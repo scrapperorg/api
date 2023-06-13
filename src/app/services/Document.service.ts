@@ -86,16 +86,35 @@ export class DocumentService {
       throw new NoSuchElementException('document not found');
     }
 
+    let hasDecisionBeenMade = false;
+
     document.status = documentAnalysis.status;
-    document.decision = documentAnalysis.decision;
+    if (documentAnalysis.decision !== null && documentAnalysis.decision !== undefined) {
+      if (documentAnalysis.decision !== document.decision) {
+        document.decision = documentAnalysis.decision;
+        if (
+          documentAnalysis.decision === Decision.ADERA_LEGISLATIEI ||
+          documentAnalysis.decision === Decision.CONTRAVINE_LEGISLATIEI
+        ) {
+          hasDecisionBeenMade = true;
+        }
+      }
+    }
     if (documentAnalysis.deadline !== null && documentAnalysis.deadline !== undefined)
       if (documentAnalysis.deadline === '') {
         document.deadline = undefined;
       } else {
         document.deadline = documentAnalysis.deadline;
       }
-    if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined)
-      document.assignedUser = documentAnalysis.assignedUser;
+    if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined) {
+      if (document.assignedUser !== documentAnalysis.assignedUser) {
+        document.assignedUser = documentAnalysis.assignedUser;
+        await this.notificationService.createNewAssignmentNotification(
+          documentAnalysis.assignedUser,
+          document,
+        );
+      }
+    }
 
     // TODO: type here needs fixing since after the update the Document has populated properties
     const updatedDoc = await this.documentRepository.update(document);
@@ -103,8 +122,10 @@ export class DocumentService {
     // cancel existing deadline jobs if there are any
     await this.notificationService.cancelDeadlineReminders(document);
 
-    // set new deadline jobs
-    await this.notificationService.setDeadlineReminders(document);
+    // set new deadline jobs only if decision has not been made
+    if (!hasDecisionBeenMade) {
+      await this.notificationService.setDeadlineReminders(document);
+    }
 
     return this.documentMap.toDTO(updatedDoc);
   }

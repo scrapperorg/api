@@ -159,4 +159,14 @@ export class NotificationService {
       );
     }
   }
+
+  async createNewAssignmentNotification(userId: string, document: Document) {
+    const message = this.notificationMessages.NEW_ASSIGNMENT(document.title);
+    await this.create({
+      message,
+      type: NotificationType.NEW_ASSIGNMENT,
+      user: userId,
+      document: document.id,
+    });
+  }
 }
