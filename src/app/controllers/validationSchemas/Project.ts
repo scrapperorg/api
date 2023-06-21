@@ -46,6 +46,8 @@ export const findSchema = Joi.object({
 
 export const searchSchema = Joi.object({
   title: Joi.string().optional().allow(null, ''),
+  initiator: Joi.string().optional().allow(null, ''),
+  source: Joi.string().optional().allow(null, ''),
   createdAfter: Joi.date().optional().allow(null, ''),
   createdBefore: Joi.date().optional().allow(null, ''),
   presentsInterest: Joi.boolean().optional(),
