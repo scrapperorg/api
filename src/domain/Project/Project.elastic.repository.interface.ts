@@ -9,6 +9,8 @@ export interface IElasticProject {
 
 export interface ProjectElasticSearchProps {
   title?: string;
+  initiator?: string;
+  source?: string;
   createdAfter?: string;
   createdBefore?: string;
   postOcrContent?: string;

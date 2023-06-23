@@ -22,6 +22,11 @@ export class ProjectElasticRepository implements IElasticProjectRepository {
 
   async search(query: ProjectElasticSearchProps) {
     const titleQuery = this.computeFuzyQuery('title', query.title);
+
+    const initiatorQuery = this.computeFuzyQuery('initiator', query.initiator);
+
+    const sourceQuery = this.computeExactMatch('source', query.source);
+
     const presentsInterestQuery = this.computeFuzyQuery(
       'presents_interest',
       query.presentsInterest,
@@ -45,6 +50,8 @@ export class ProjectElasticRepository implements IElasticProjectRepository {
     if (presentsInterestQuery) criterion.push(presentsInterestQuery);
     if (createdAfterQuery) criterion.push(createdAfterQuery);
     if (createdBeforeQuery) criterion.push(createdBeforeQuery);
+    if (initiatorQuery) criterion.push(initiatorQuery);
+    if (sourceQuery) criterion.push(sourceQuery);
 
     const result = await this.elasticClient.search({
       index: this.indexName,
