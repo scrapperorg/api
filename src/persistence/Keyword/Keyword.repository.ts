@@ -18,12 +18,8 @@ export class KeywordRepository implements IKeywordRepository {
 
   async create(name: string): Promise<Keyword> {
     const keyword = new Keyword({ name });
-    try {
-      await this.entityRepository.persistAndFlush(keyword);
-      return keyword;
-    } catch (error: any) {
-      throw new Error(`Error while creating keyword: ${error.message}`);
-    }
+    await this.entityRepository.persistAndFlush(keyword);
+    return keyword;
   }
 
   async getAll(): Promise<Keyword[]> {

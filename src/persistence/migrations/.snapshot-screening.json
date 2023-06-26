@@ -49,6 +49,15 @@
       "schema": "public",
       "indexes": [
         {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "keyword_name_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "keyword_pkey",
           "columnNames": [
             "id"

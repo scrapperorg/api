@@ -7,6 +7,6 @@ export const KeywordSchema = new EntitySchema<Keyword, BaseEntity>({
   extends: 'BaseEntity',
   properties: {
     // general
-    name: { type: 'text', nullable: false },
+    name: { type: 'text', nullable: false, unique: true },
   },
 });
