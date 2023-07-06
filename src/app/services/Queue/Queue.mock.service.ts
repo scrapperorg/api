@@ -3,6 +3,9 @@ import { IQueueService, Job } from './Queue.service.interface';
 
 @injectable()
 export class QueueMockService implements IQueueService {
+  async startQueueManager() {
+    return;
+  }
   async subscribeHandler<HandlerParams>(
     queueName: string,
     handler: (job: Job<HandlerParams>) => Promise<void>,

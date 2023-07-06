@@ -132,10 +132,13 @@ export class DiContainer {
   }
 
   private async postConfigure() {
-    const NotificationService = this.diContainer.get<NotificationService>(
+    const notificationService = this.diContainer.get<NotificationService>(
       TYPES.NOTIFICATION_SERVICE,
     );
-    await NotificationService.subscribeToNotificationQueue();
+    const queueService = this.diContainer.get<IQueueService>(TYPES.QUEUE_SERVICE);
+
+    await queueService.startQueueManager();
+    await notificationService.subscribeToNotificationQueue();
   }
 
   public configure() {

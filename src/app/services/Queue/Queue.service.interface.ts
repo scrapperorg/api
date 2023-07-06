@@ -5,6 +5,7 @@ export interface Job<T = object> {
 }
 
 export interface IQueueService {
+  startQueueManager(): Promise<void>;
   subscribeHandler<HandlerParams>(
     queueName: string,
     handler: (job: Job<HandlerParams>) => Promise<void>,
