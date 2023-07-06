@@ -13,7 +13,10 @@ export class QueueService implements IQueueService {
     const { user, password, dbName, port } = connectionOptions;
     const dbpath = `postgres://${user}:${password}@${dbHost}:${port}/${dbName}`;
     this.queueManager = new PgBoss(dbpath);
-    this.queueManager.start();
+  }
+
+  async startQueueManager() {
+    await this.queueManager.start();
   }
 
   async subscribeHandler<HandlerParams>(
