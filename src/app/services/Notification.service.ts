@@ -35,6 +35,7 @@ export class NotificationService {
     DEADLINE_REACHED: (title: string) => `Termenul limita a fost atins pentru documentul: ${title}`,
     DEADLINE_PASSED: (title: string) =>
       `Termenul limita a fost depasit pentru documentul: ${title}`,
+    RESET_PASSWORD: (email: string) => `Userul cu email ${email} a solicitat resetarea parolei`,
   };
 
   public async subscribeToNotificationQueue(): Promise<void> {
@@ -158,6 +159,18 @@ export class NotificationService {
         reminder.executionDate,
       );
     }
+  }
+
+  async createNewResetPasswordNotification(usersToNotify: User[], userRequestingChange: User) {
+    const notifications = usersToNotify.map((user) => {
+      return {
+        message: this.notificationMessages.RESET_PASSWORD(userRequestingChange.email),
+        type: NotificationType.RESET_PASSWORD,
+        user: user.id,
+      };
+    });
+
+    await this.repository.bulkSave(notifications);
   }
 
   async createNewAssignmentNotification(userId: string, document: Document) {

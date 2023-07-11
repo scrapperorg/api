@@ -31,6 +31,14 @@ export class NotificationRepository implements INotificationRepository {
     return notification;
   }
 
+  async bulkSave(dtos: Partial<Notification>[]): Promise<void> {
+    dtos.forEach((dto) => {
+      this.notificationEM.persist(this.notificationEM.create(dto as Notification));
+    });
+
+    await this.notificationEM.flush();
+  }
+
   async save(dto: INotificationProps): Promise<Notification> {
     const notification = this.notificationEM.create(dto);
     await this.notificationEM.persistAndFlush(notification);

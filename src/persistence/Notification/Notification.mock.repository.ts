@@ -4,6 +4,9 @@ import { NoSuchElementException } from '@lib';
 
 @injectable()
 export class NotificationMockRepository implements INotificationRepository {
+  bulkSave(dtos: Partial<Notification>[]): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   private entries: Array<Notification> = [
     new Notification({
       message: 'Notification 1',

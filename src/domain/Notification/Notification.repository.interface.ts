@@ -7,6 +7,7 @@ export enum NotificationType {
   DEADLINE_APPROACHING = 'DEADLINE_APPROACHING',
   DEADLINE_REACHED = 'DEADLINE_REACHED',
   DEADLINE_PASSED = 'DEADLINE_PASSED',
+  RESET_PASSWORD = 'RESET_PASSWORD',
 }
 
 export interface IGetNotificationsParams {
@@ -21,6 +22,7 @@ export interface INotificationRepository {
   get(params: IGetNotificationsParams): Promise<Notification[]>;
   getById(id: string): Promise<Notification | null>;
   save(dto: INotificationProps): Promise<Notification>;
+  bulkSave(dtos: Partial<Notification>[]): Promise<void>;
   update(id: string, dto: Partial<Notification>): Promise<Notification>;
   delete(id: string): Promise<void>;
 }
