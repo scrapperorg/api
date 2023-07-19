@@ -97,6 +97,7 @@ export class UserService {
     }
 
     user.password = this.encryptionService.hash(values.password);
+    user.status = UserStatus.ACTIVE;
 
     await this.repository.update(user);
   }

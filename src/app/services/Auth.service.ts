@@ -4,11 +4,12 @@ import { TYPES } from '@server/types';
 import { EmailService } from './Email.service';
 import { ForgotPasswordEmail } from '@domain/Email';
 import { ResetPasswordTokenMap } from '../mappers/ResetPasswordToken.map';
-import { IUserRepository, User, UserStatus } from '@domain/User';
+import { IUserRepository, Role, User, UserStatus } from '@domain/User';
 import { IResetPasswordTokenRepository } from '@domain/ResetPasswordToken';
 import { UserMap } from '../mappers/User.map';
 import { inject, injectable } from 'inversify';
 import { EncryptionService, UserTokenClaims } from './Encryption.service';
+import { NotificationService } from './Notification.service';
 
 @injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly resetPasswordTokenMap: ResetPasswordTokenMap,
     @inject(TYPES.EMAIL_SERVICE) private readonly emailService: EmailService,
     @inject(TYPES.ENCRYPTION_SERVICE) private readonly encryptionService: EncryptionService,
+    @inject(TYPES.NOTIFICATION_SERVICE) private readonly notificationService: NotificationService,
   ) {}
 
   async refreshToken(token: string): Promise<{ user: User; token: string }> {
@@ -66,6 +68,20 @@ export class AuthService {
     return { user, token };
   }
 
+  async notifyAdminToResetPassword(userEmail: string) {
+    const user = await this.userRepository.getByEmail(userEmail);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    user.status = UserStatus.REQUESTED_PASSWORD_CHANGE;
+    await this.userRepository.update(user);
+
+    const admins = await this.userRepository.getByRoles([Role.ITA]);
+    await this.notificationService.createNewResetPasswordNotification(admins, user);
+  }
+
   async generateResetPasswordToken(userEmail: string) {
     const user = await this.userRepository.getByEmail(userEmail);
 
@@ -95,6 +111,9 @@ export class AuthService {
     });
 
     this.emailService.send(email);
+
+    // implmentation to work without sending emails
+    await this.notifyAdminToResetPassword(userEmail);
 
     return this.resetPasswordTokenMap.toDTO(resetPasswordToken);
   }

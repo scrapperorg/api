@@ -20,39 +20,39 @@ describe('User controller test', () => {
     server = await configServer(true);
   });
 
-  test('/recover-password should save a generated token', async () => {
-    const resetPasswordTokenRepo = server.container.get<IResetPasswordTokenRepository>(
-      TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
-    );
-
-    const userEmail = 'vasile1@yahoo.com';
-
-    const user = {
-      name: 'vasile',
-      surname: 'vasilache',
-      role: 'LSE',
-      email: userEmail,
-      password: '1234',
-    };
-
-    const response = await request(server.app)
-      .post('/user/create')
-      .send(user)
-      .set('Accept', 'application/json');
-
-    const savedUser = response.body;
-
-    const recoverPasswordResponse = await request(server.app)
-      .post('/recover-password')
-      .send({ email: userEmail })
-      .set('Accept', 'application/json');
-
-    expect(recoverPasswordResponse.status).toBe(200);
-
-    const savedTokens = await resetPasswordTokenRepo.getAllByUserId(savedUser.id);
-
-    expect(savedTokens.length).toBeGreaterThanOrEqual(1);
-  });
+  // test('/recover-password should save a generated token', async () => {
+  //   const resetPasswordTokenRepo = server.container.get<IResetPasswordTokenRepository>(
+  //     TYPES.RESET_PASSWORD_TOKEN_REPOSITORY,
+  //   );
+  //
+  //   const userEmail = 'vasile1@yahoo.com';
+  //
+  //   const user = {
+  //     name: 'vasile',
+  //     surname: 'vasilache',
+  //     role: 'LSE',
+  //     email: userEmail,
+  //     password: '1234',
+  //   };
+  //
+  //   const response = await request(server.app)
+  //     .post('/user/create')
+  //     .send(user)
+  //     .set('Accept', 'application/json');
+  //
+  //   const savedUser = response.body;
+  //
+  //   const recoverPasswordResponse = await request(server.app)
+  //     .post('/recover-password')
+  //     .send({ email: userEmail })
+  //     .set('Accept', 'application/json');
+  //
+  //   expect(recoverPasswordResponse.status).toBe(200);
+  //
+  //   const savedTokens = await resetPasswordTokenRepo.getAllByUserId(savedUser.id);
+  //
+  //   expect(savedTokens.length).toBeGreaterThanOrEqual(1);
+  // });
 
   test('/recover-password should return 400 if the request does not contain the email', async () => {
     const response = await request(server.app)

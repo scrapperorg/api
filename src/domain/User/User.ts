@@ -12,6 +12,7 @@ export enum Role {
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   DELETED = 'DELETED',
+  REQUESTED_PASSWORD_CHANGE = 'REQUESTED_PASSWORD_CHANGE',
 }
 
 export interface IUserProps {

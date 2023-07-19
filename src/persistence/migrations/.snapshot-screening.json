@@ -493,7 +493,8 @@
           "default": "'ACTIVE'",
           "enumItems": [
             "ACTIVE",
-            "DELETED"
+            "DELETED",
+            "REQUESTED_PASSWORD_CHANGE"
           ],
           "mappedType": "enum"
         }
@@ -965,7 +966,8 @@
             "NEW_ASSIGNMENT",
             "DEADLINE_APPROACHING",
             "DEADLINE_REACHED",
-            "DEADLINE_PASSED"
+            "DEADLINE_PASSED",
+            "RESET_PASSWORD"
           ],
           "mappedType": "enum"
         },
