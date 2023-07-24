@@ -34,6 +34,17 @@ export enum Source {
   MINISTERUL_AFACERILOR_INTERNE = 'mai',
   MINISTERUL_APARARII_NATIONALE = 'mapn',
   CAMERA_DEPUTATILOR_PL = 'camera_deputatilor_pl',
+  MINISTERUL_AGRICULTURII = 'magriculturii',
+  MINISTERUL_CERCETARII = 'mcercetarii',
+  MINISTERUL_CULTURII = 'mculturii',
+  MINISTERUL_ECONOMIEI = 'meconomiei',
+  MINISTERUL_ENERGIEI = 'menergiei',
+  MINISTERUL_FAMILIEI = 'mfamiliei',
+  MINISTERUL_INVESTITIILOR = 'minvestitiilor',
+  MINISTERUL_MUNCII = 'mmuncii',
+  MINISTERUL_SANATATII = 'msanatatii',
+  MINISTERUL_SPORTULUI = 'msport',
+  MINISTERUL_TURISMULUI = 'mturism',
 }
 
 export enum Decision {
