@@ -1,5 +1,5 @@
 import { Collection, OptionalProps } from '@mikro-orm/core';
-import { Document } from '..';
+import { Attachment, Document } from '..';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
 
 export interface IProjectFiltersProps {
@@ -28,7 +28,7 @@ export interface IProjectProps {
   initiator?: string;
   consultati?: string;
   source?: string;
-  attachments?: string[];
+  attachments?: Collection<Attachment>;
 }
 
 export class Project extends BaseEntity {
@@ -58,7 +58,7 @@ export class Project extends BaseEntity {
   consultati?: string;
   source?: string;
 
-  attachments: string[] = [];
+  attachments?: Collection<Attachment>;
 
   constructor(props: IProjectProps) {
     super();
@@ -95,7 +95,14 @@ export class Project extends BaseEntity {
     if (props.consultati !== null) this.consultati = props.consultati;
 
     if (props.source !== null) this.source = props.source;
+  }
 
-    if (props.attachments) this.attachments = props.attachments;
+  addAttachment(attachment: Attachment): void {
+    if (this.attachments) {
+      this.attachments.add(attachment);
+    } else {
+      // TODO change this to not be collection
+      this.attachments = new Collection<Attachment>(attachment);
+    }
   }
 }

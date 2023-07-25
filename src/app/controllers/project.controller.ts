@@ -8,6 +8,9 @@ import { isTrustedSourceMiddleware } from '@middlewares/isTrustedSource.middlewa
 import { createSchema, searchSchema, updateSchema } from '@controllers/validationSchemas/Project';
 import { isAuthenticatedOrTrustedSource } from '@middlewares/isAuthenticatedOrTrustedSource.middleware';
 import { parseProjectsFilters } from '@middlewares/parseProjectsFilters.middleware';
+import multer from 'multer';
+
+const m = multer();
 
 @injectable()
 export class ProjectController {
@@ -117,5 +120,52 @@ export class ProjectController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
+    this.router.delete(
+      '/:documentId/attachment/:attachmentId',
+      isAuthenticated,
+      async (req: Request, res: Response) => {
+        const { documentId, attachmentId } = req.params;
+
+        const noDocumentId = documentId === '' || documentId === undefined;
+        const noAttachmentId = documentId === '' || documentId === undefined;
+
+        if (noDocumentId || noAttachmentId) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Document id missing' });
+        }
+
+        try {
+          const document = await this.projectService.deleteAttachment(documentId, attachmentId);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
+
+    this.router.post(
+      '/upload/:documentId',
+      m.single('attachment'),
+      async (req: Request, res: Response) => {
+        const params = req.params;
+
+        if (params.documentId === '' || params.documentId === undefined) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Project id missing' });
+        }
+
+        if (!req.file) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ error: 'File missing' });
+        }
+
+        try {
+          const document = await this.projectService.addAttachment(params.documentId, req.file);
+          return res.status(HttpStatus.OK).json(document);
+        } catch (error: any) {
+          const errorType: Exception = error.constructor.name;
+          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+        }
+      },
+    );
   }
 }

@@ -16,5 +16,11 @@ export const AttachmentSchema = new EntitySchema<Attachment, BaseEntity>({
       nullable: true,
       eager: false,
     },
+    project: {
+      reference: 'm:1',
+      entity: 'Project',
+      nullable: true,
+      eager: false,
+    },
   },
 });

@@ -1,12 +1,13 @@
 import { OptionalProps } from '@mikro-orm/core';
 import { BaseEntity } from '../BaseEntity/BaseEntity';
-import { Document } from '@domain';
+import { Document, Project } from '@domain';
 
 export interface IAttachmentProps {
   name: string;
   size: number;
   path: string;
-  document: Document;
+  document?: Document;
+  project?: Project;
 }
 
 export class Attachment extends BaseEntity {
@@ -19,11 +20,14 @@ export class Attachment extends BaseEntity {
 
   document?: Document;
 
+  project?: Project;
+
   constructor(props: IAttachmentProps) {
     super();
     this.name = props.name;
     this.size = props.size;
     this.path = props.path;
     this.document = props.document;
+    this.project = props.project;
   }
 }

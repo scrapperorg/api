@@ -11,7 +11,10 @@ import {
 import { ProjectMap } from '@mappers';
 import { IProjectFilters } from '@middlewares/parseProjectsFilters.middleware';
 import { IPaginatedOutgoingDto } from '@controllers/dtos/Paginated';
-import { IProjectOutgoingDTO, ProjectFiltersDTO } from '@controllers/dtos';
+import { IDocumentOutgoingDTO, IProjectOutgoingDTO, ProjectFiltersDTO } from '@controllers/dtos';
+import path from 'path';
+import { Attachment, IAttachmentRepository } from '@domain';
+import { FileRepositoryService } from '@services/FileRepository.service';
 
 @injectable()
 export class ProjectService {
@@ -20,6 +23,9 @@ export class ProjectService {
     @inject(TYPES.PROJECT_MAP) private mapper: ProjectMap,
     @inject(TYPES.PROJECT_ELASTIC_REPOSITORY)
     private elasticProjectRepository: IElasticProjectRepository,
+    @inject(TYPES.FILE_REPOSITORY_SERVICE) private readonly fileRepo: FileRepositoryService,
+    @inject(TYPES.ATTACHMENT_REPOSITORY)
+    private readonly attachmentRepository: IAttachmentRepository,
   ) {}
 
   async getAll(
@@ -107,5 +113,58 @@ export class ProjectService {
     }
 
     return projects;
+  }
+
+  async addAttachment(id: string, file: Express.Multer.File): Promise<IProjectOutgoingDTO | null> {
+    const project = await this.repository.getById(id);
+
+    if (!project) {
+      throw new NoSuchElementException('Prject not found.');
+    }
+
+    const uploadPath = path.resolve(`./file-repository-bucket/${id}/${file.originalname}`);
+
+    const isPathAlreadyUsed = project.attachments?.toArray().find((attachment) => {
+      return attachment.path === uploadPath;
+    });
+
+    if (isPathAlreadyUsed) {
+      throw new Error('Path already exists.');
+    }
+
+    await this.fileRepo.upload(uploadPath, file.buffer);
+
+    const attachment = new Attachment({
+      name: file.originalname,
+      size: file.size,
+      path: uploadPath,
+      project,
+    });
+
+    project.addAttachment(attachment);
+
+    const updatedProject = await this.repository.update(project.id, project);
+
+    return this.mapper.toDTO(updatedProject);
+  }
+  async deleteAttachment(projectId: string, attachmentId: string): Promise<IProjectOutgoingDTO> {
+    const attachment = await this.attachmentRepository.getById(attachmentId);
+
+    if (!attachment) {
+      throw new NoSuchElementException(`Attachment ${attachmentId} does not exist`);
+    }
+
+    // TODO add transaction when switching to aws/real servers
+    // to prevent entity delete when delete io fails
+    await this.fileRepo.delete(attachment.path);
+    await this.repository.removeAttachment(projectId, attachmentId);
+
+    const project = await this.repository.getById(projectId);
+
+    if (!project) {
+      throw new NoSuchElementException(`Project ${projectId} does not exist`);
+    }
+
+    return this.mapper.toDTO(project);
   }
 }

@@ -26,8 +26,7 @@ export interface IProjectOutgoingDTO {
   initiator?: string;
   consultati?: string;
   source?: string;
-
-  attachments: string[];
+  attachments?: { name: string; id: string }[];
 }
 
 export interface ProjectFiltersDTO {

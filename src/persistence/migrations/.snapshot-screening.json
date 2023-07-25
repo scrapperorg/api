@@ -1108,6 +1108,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "uuid"
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
         }
       },
       "name": "attachment",
@@ -1135,6 +1144,19 @@
             "id"
           ],
           "referencedTableName": "public.document",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "attachment_project_id_foreign": {
+          "constraintName": "attachment_project_id_foreign",
+          "columnNames": [
+            "project_id"
+          ],
+          "localTableName": "public.attachment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.project",
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
