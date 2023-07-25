@@ -87,7 +87,7 @@ export class ProjectRepository implements IProjectRepository {
     const entry = await this.entityRepository.findOne(
       { id },
       {
-        populate: ['documents'],
+        populate: ['documents', 'attachments'],
         refresh: true,
         cache: false,
       },
