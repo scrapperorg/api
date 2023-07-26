@@ -80,7 +80,7 @@ services:
       - 9600:9600
       - 5044:5044
     volumes:
-      - ${PWD}/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     env_file:
       - ./.env
     environment:
@@ -118,3 +118,4 @@ volumes:
     driver: local
   kibanadata:
     driver: local
+
