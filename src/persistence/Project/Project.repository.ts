@@ -1,23 +1,37 @@
 import { IProjectFiltersProps, IProjectRepository, Project } from '@domain/Project';
 import { ProjectMap } from '@mappers/Project.map';
-import { FilterQuery, MikroORM } from '@mikro-orm/core';
+import { Connection, EntityManager, FilterQuery, IDatabaseDriver, MikroORM } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { TYPES } from '@server/types';
 import { inject, injectable } from 'inversify';
 import { ProjectSchema } from './Project.schema';
 import { UniqueConstraintViolationException } from '@lib/exceptions/UniqueConstraintValidation.exception';
 import { ProjectFiltersDTO } from '@controllers/dtos';
+import { Attachment, Document } from '@domain';
 
 @injectable()
 export class ProjectRepository implements IProjectRepository {
   private entityRepository: EntityRepository<Project>;
+  private entityManager: EntityManager<IDatabaseDriver<Connection>>;
   constructor(
     @inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM,
     @inject(TYPES.PROJECT_MAP) private readonly mapper: ProjectMap,
   ) {
-    const entityManager = this.orm.em.fork();
+    // const entityManager = this.orm.em.fork();
+    this.entityManager = this.orm.em.fork();
+    this.entityRepository = this.entityManager.getRepository(ProjectSchema);
+  }
 
-    this.entityRepository = entityManager.getRepository(ProjectSchema);
+  async removeAttachment(projectId: string, attachmentId: string) {
+    const project = await this.entityManager.findOneOrFail(Project, projectId, {
+      populate: ['attachments'],
+    });
+
+    const attachment = this.entityManager.getReference<Attachment>(Attachment, attachmentId);
+
+    project.attachments?.remove(attachment);
+
+    await this.entityManager.flush();
   }
 
   async countNewProjects(): Promise<number> {
@@ -73,7 +87,7 @@ export class ProjectRepository implements IProjectRepository {
     const entry = await this.entityRepository.findOne(
       { id },
       {
-        populate: ['documents'],
+        populate: ['documents', 'attachments'],
         refresh: true,
         cache: false,
       },

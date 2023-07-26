@@ -4,6 +4,9 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class ProjectMockRepository implements IProjectRepository {
+  removeAttachment(documentId: string, attachmentId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   countNewProjects(): Promise<number> {
     throw new Error('Method not implemented.');
   }

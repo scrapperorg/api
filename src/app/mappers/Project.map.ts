@@ -17,7 +17,7 @@ export class ProjectMap {
       title: project.title,
       documents: [],
       presentsInterest: false,
-      attachments: project.attachments,
+      attachments: project.attachments?.toArray(),
       source: project.source,
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };

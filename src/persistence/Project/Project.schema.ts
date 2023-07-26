@@ -1,4 +1,4 @@
-import { Project, BaseEntity, Document } from '@domain';
+import { Project, BaseEntity, Document, Attachment } from '@domain';
 import { EntitySchema } from '@mikro-orm/core';
 
 export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
@@ -24,7 +24,12 @@ export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
     consultati: { type: 'text', nullable: true },
     source: { type: 'string', nullable: true },
     // end project technical details
-    attachments: { type: 'string[]', default: [] }, // todo: create Attachement : { reference: '1:m', entity: 'Attachement' },
+    attachments: {
+      reference: '1:m',
+      entity: () => 'Attachment',
+      mappedBy: (attachment: Attachment) => attachment.project,
+      orphanRemoval: true,
+    },
     documents: {
       reference: '1:m',
       entity: () => 'Document',
