@@ -310,7 +310,7 @@ export class DocumentController {
         if (fileType) {
           res.setHeader('Content-Type', fileType.mime);
         }
-        res.setHeader('Content-Disposition', `attachment; filename=${document.id + '_ocr.pdf'}`);
+        res.setHeader('Content-Disposition', `attachment; filename=${document.title + '_ocr.pdf'}`);
         res.setHeader('Content-Length', buffer.length);
         return res.send(buffer);
       } catch (error: any) {
