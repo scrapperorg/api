@@ -4,12 +4,14 @@ import { NoSuchElementException } from '@lib';
 import { IRobotRepository, Robot, RobotStatus } from '@domain/Robot';
 import { RobotMap } from '@mappers/Robot.map';
 import { IRobotAPIDTO, IRobotAPIincomingDTO } from '@controllers/dtos/Robot';
+import { NotificationService } from './Notification.service';
 
 @injectable()
 export class RobotService {
   constructor(
     @inject(TYPES.ROBOT_REPOSITORY) private repository: IRobotRepository,
     @inject(TYPES.ROBOT_MAP) private robotMap: RobotMap,
+    @inject(TYPES.NOTIFICATION_SERVICE) private readonly notificationService: NotificationService,
   ) {}
   async getAll(): Promise<IRobotAPIDTO[]> {
     const robots = await this.repository.getAll();
@@ -46,14 +48,21 @@ export class RobotService {
 
   async update(id: string, robotDTO: IRobotAPIincomingDTO) {
     const robot = await this.repository.getById(id);
+
     if (!robot) {
       throw new NoSuchElementException('robot not found');
     }
+
+    if (robotDTO.status === RobotStatus.NOT_FUNCTIONAL) {
+      await this.notificationService.createRobotNotFunctionalNotifications(robot.name);
+    }
+
     const updatedRobot = await this.repository.update({
       ...robot,
       ...robotDTO,
       last_run: new Date(),
     });
+
     return this.robotMap.toDTO(updatedRobot);
   }
 }

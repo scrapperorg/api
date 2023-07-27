@@ -8,6 +8,7 @@ export enum NotificationType {
   DEADLINE_REACHED = 'DEADLINE_REACHED',
   DEADLINE_PASSED = 'DEADLINE_PASSED',
   RESET_PASSWORD = 'RESET_PASSWORD',
+  ROBOT_NOT_FUNCTIONAL = 'ROBOT_NOT_FUNCTIONAL',
 }
 
 export interface IGetNotificationsParams {
