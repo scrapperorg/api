@@ -255,16 +255,6 @@
           "primary": false,
           "nullable": true,
           "mappedType": "string"
-        },
-        "attachments": {
-          "name": "attachments",
-          "type": "text[]",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'{}'",
-          "mappedType": "array"
         }
       },
       "name": "project",
