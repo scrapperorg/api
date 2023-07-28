@@ -10,6 +10,7 @@ import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 import { Source } from '@domain/Document';
 import { hasExactRole } from '@middlewares/hasRole.middleware';
+import { isAuthorized } from '@middlewares/isAuthorized.middleware';
 import { Role } from '@domain/index';
 
 @injectable()
@@ -125,9 +126,8 @@ export class UserController {
       },
     );
 
-    this.router.put('/:id/update-password', isAuthenticated, async (req, res) => {
+    this.router.put('/:id/update-password', isAuthenticated, isAuthorized(), async (req, res) => {
       const userId = req.params.id;
-      const loggedInUserId = req.user?.id;
 
       try {
         await updatePasswordSchema.validateAsync(req.body);
@@ -136,14 +136,8 @@ export class UserController {
       }
 
       try {
-        if (loggedInUserId === userId || req.user?.role === Role.ITA) {
-          await this.userService.updatePassword(userId, req.body);
-          return res
-            .status(HttpStatus.OK)
-            .json({ message: 'User password is successfully updated' });
-        } else {
-          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Unauthorized' });
-        }
+        await this.userService.updatePassword(userId, req.body);
+        return res.status(HttpStatus.OK).json({ message: 'User password is successfully updated' });
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
