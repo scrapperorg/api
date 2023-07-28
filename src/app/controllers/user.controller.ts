@@ -125,28 +125,29 @@ export class UserController {
       },
     );
 
-    this.router.put(
-      '/:id/update-password',
-      isAuthenticated,
-      hasExactRole(Role.ITA),
-      async (req: Request, res: Response) => {
-        try {
-          await updatePasswordSchema.validateAsync(req.body);
-        } catch (err: any) {
-          const error = err;
-          return res.status(statusMap[Exception.INVALID]).json(error.message);
-        }
+    this.router.put('/:id/update-password', isAuthenticated, async (req, res) => {
+      const userId = req.params.id;
+      const loggedInUserId = req.user?.id;
 
-        try {
-          await this.userService.updatePassword(req.params.id, req.body);
+      try {
+        await updatePasswordSchema.validateAsync(req.body);
+      } catch (err: any) {
+        return res.status(statusMap[Exception.INVALID]).json(err.message);
+      }
+
+      try {
+        if (loggedInUserId === userId || req.user?.role === Role.ITA) {
+          await this.userService.updatePassword(userId, req.body);
           return res
             .status(HttpStatus.OK)
-            .json({ message: 'Users password is successfully updated' });
-        } catch (error: any) {
-          const errorType: Exception = error.constructor.name;
-          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+            .json({ message: 'User password is successfully updated' });
+        } else {
+          return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Unauthorized' });
         }
-      },
-    );
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
   }
 }
