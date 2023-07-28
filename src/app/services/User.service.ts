@@ -101,4 +101,18 @@ export class UserService {
 
     await this.repository.update(user);
   }
+
+  async addAvatar(id: string, file: Express.Multer.File) {
+    const user = await this.repository.getById(id);
+
+    if (!user) {
+      throw new NoSuchElementException('user not found');
+    }
+
+    const base64Photo = file.buffer.toString('base64');
+
+    user.avatar = base64Photo;
+
+    await this.repository.update(user);
+  }
 }

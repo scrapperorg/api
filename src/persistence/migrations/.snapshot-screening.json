@@ -498,6 +498,15 @@
             "REQUESTED_PASSWORD_CHANGE"
           ],
           "mappedType": "enum"
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         }
       },
       "name": "user",
