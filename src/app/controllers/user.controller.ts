@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
+import multer from 'multer';
 import { IUserAPIDTO } from '@controllers/dtos/User';
 import { HttpStatus } from '@lib';
 import { Exception, statusMap } from '@lib';
@@ -12,6 +13,8 @@ import { Source } from '@domain/Document';
 import { hasExactRole } from '@middlewares/hasRole.middleware';
 import { isAuthorized } from '@middlewares/isAuthorized.middleware';
 import { Role } from '@domain/index';
+
+const m = multer();
 
 @injectable()
 export class UserController {
@@ -138,6 +141,22 @@ export class UserController {
       try {
         await this.userService.updatePassword(userId, req.body);
         return res.status(HttpStatus.OK).json({ message: 'User password is successfully updated' });
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
+
+    this.router.post('/:id/avatar', m.single('file'), async (req: Request, res: Response) => {
+      const params = req.params;
+
+      if (!req.file) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ error: 'File missing' });
+      }
+
+      try {
+        const user = await this.userService.addAvatar(params.id, req.file);
+        return res.status(HttpStatus.OK).json(user);
       } catch (error: any) {
         const errorType: Exception = error.constructor.name;
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);

@@ -23,10 +23,11 @@ export interface IUserProps {
   email: string;
   sources_of_interest?: Source[];
   status?: UserStatus;
+  avatar?: string;
 }
 
 export class User extends BaseEntity {
-  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest' | 'status';
+  [OptionalProps]?: 'createdAt' | 'updatedAt' | 'sourcesOfInterest' | 'status' | 'avatar';
 
   name: string;
   surname: string;
@@ -35,6 +36,7 @@ export class User extends BaseEntity {
   password: string;
   sourcesOfInterest: Source[];
   status: UserStatus;
+  avatar: string | undefined;
 
   constructor(props: IUserProps) {
     super();
@@ -45,6 +47,7 @@ export class User extends BaseEntity {
     this.password = props.password;
     this.sourcesOfInterest = props.sources_of_interest ?? [];
     this.status = props.status ?? UserStatus.ACTIVE;
+    this.avatar = props.avatar;
   }
 
   /**

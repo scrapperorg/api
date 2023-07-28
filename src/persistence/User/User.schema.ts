@@ -14,5 +14,6 @@ export const UserSchema = new EntitySchema<User, BaseEntity>({
     password: { type: 'string' },
     sourcesOfInterest: { enum: true, array: true, default: [], items: () => Source },
     status: { enum: true, array: false, default: 'ACTIVE', items: () => UserStatus },
+    avatar: { type: 'text', nullable: true },
   },
 });
