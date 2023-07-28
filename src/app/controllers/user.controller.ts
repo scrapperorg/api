@@ -10,6 +10,7 @@ import { isAuthenticated } from '../middlewares/isAuthenticated.middleware';
 import { EncryptionService, UserTokenClaims } from '@services/Encryption.service';
 import { Source } from '@domain/Document';
 import { hasExactRole } from '@middlewares/hasRole.middleware';
+import { isAuthorized } from '@middlewares/isAuthorized.middleware';
 import { Role } from '@domain/index';
 
 @injectable()
@@ -125,28 +126,22 @@ export class UserController {
       },
     );
 
-    this.router.put(
-      '/:id/update-password',
-      isAuthenticated,
-      hasExactRole(Role.ITA),
-      async (req: Request, res: Response) => {
-        try {
-          await updatePasswordSchema.validateAsync(req.body);
-        } catch (err: any) {
-          const error = err;
-          return res.status(statusMap[Exception.INVALID]).json(error.message);
-        }
+    this.router.put('/:id/update-password', isAuthenticated, isAuthorized(), async (req, res) => {
+      const userId = req.params.id;
 
-        try {
-          await this.userService.updatePassword(req.params.id, req.body);
-          return res
-            .status(HttpStatus.OK)
-            .json({ message: 'Users password is successfully updated' });
-        } catch (error: any) {
-          const errorType: Exception = error.constructor.name;
-          return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
-        }
-      },
-    );
+      try {
+        await updatePasswordSchema.validateAsync(req.body);
+      } catch (err: any) {
+        return res.status(statusMap[Exception.INVALID]).json(err.message);
+      }
+
+      try {
+        await this.userService.updatePassword(userId, req.body);
+        return res.status(HttpStatus.OK).json({ message: 'User password is successfully updated' });
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
   }
 }
