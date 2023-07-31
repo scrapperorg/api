@@ -7,7 +7,7 @@ export const ProjectSchema = new EntitySchema<Project, BaseEntity>({
   properties: {
     title: { type: 'text', nullable: false },
     publicationDate: { type: 'string', nullable: true },
-    url: { type: 'string', nullable: true },
+    url: { type: 'text', nullable: true },
     presentsInterest: { type: 'boolean', default: false },
     // project technical details
     numarInregistrareSenat: { type: 'string', nullable: true },
