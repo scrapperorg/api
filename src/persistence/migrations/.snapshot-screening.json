@@ -977,7 +977,8 @@
             "DEADLINE_APPROACHING",
             "DEADLINE_REACHED",
             "DEADLINE_PASSED",
-            "RESET_PASSWORD"
+            "RESET_PASSWORD",
+            "ROBOT_NOT_FUNCTIONAL"
           ],
           "mappedType": "enum"
         },
