@@ -72,6 +72,7 @@ export class ProjectRepository implements IProjectRepository {
     try {
       await this.entityRepository.persistAndFlush(project);
     } catch (err: any) {
+      console.log(err);
       // to do: the error here is missleading. it can be another error too. we should let the orm throw this kind of errors
       throw new UniqueConstraintViolationException('Project with this name already exists');
     }
