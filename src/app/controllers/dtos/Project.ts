@@ -26,6 +26,8 @@ export interface IProjectOutgoingDTO {
   initiator?: string;
   consultati?: string;
   source?: string;
+  publicationDate?: string;
+  url?: string;
   attachments?: { name: string; id: string }[];
 }
 
