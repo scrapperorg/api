@@ -87,6 +87,15 @@ export class DocumentService {
 
     let hasDecisionBeenMade = false;
 
+    const currentDeadlineUnix = document.deadline
+      ? new Date(document.deadline).getTime()
+      : undefined;
+
+    const documentAnalysisDeadlineUnix =
+      documentAnalysis.deadline !== undefined
+        ? new Date(documentAnalysis.deadline).getTime()
+        : undefined;
+
     document.status = documentAnalysis.status;
     if (documentAnalysis.decision !== null && documentAnalysis.decision !== undefined) {
       if (documentAnalysis.decision !== document.decision) {
@@ -99,12 +108,14 @@ export class DocumentService {
         }
       }
     }
+
     if (documentAnalysis.deadline !== null && documentAnalysis.deadline !== undefined)
       if (documentAnalysis.deadline === '') {
         document.deadline = undefined;
       } else {
         document.deadline = documentAnalysis.deadline;
       }
+
     if (documentAnalysis.assignedUser !== null && documentAnalysis.assignedUser !== undefined) {
       if (document.assignedUser !== documentAnalysis.assignedUser) {
         document.assignedUser = documentAnalysis.assignedUser;
@@ -118,12 +129,16 @@ export class DocumentService {
     // TODO: type here needs fixing since after the update the Document has populated properties
     const updatedDoc = await this.documentRepository.update(document);
 
-    // cancel existing deadline jobs if there are any
-    this.notificationService.cancelDeadlineReminders(document);
+    if (documentAnalysis.deadline !== undefined) {
+      if (currentDeadlineUnix !== documentAnalysisDeadlineUnix) {
+        // cancel existing deadline jobs if there are any
+        this.notificationService.cancelDeadlineReminders(document);
 
-    // set new deadline jobs only if decision has not been made
-    if (!hasDecisionBeenMade) {
-      this.notificationService.setDeadlineReminders(document);
+        // set new deadline jobs only if decision has not been made
+        if (!hasDecisionBeenMade) {
+          this.notificationService.setDeadlineReminders(document);
+        }
+      }
     }
 
     return this.documentMap.toDTO(updatedDoc);
