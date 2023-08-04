@@ -54,7 +54,8 @@ export class RobotService {
     }
 
     if (robotDTO.status === RobotStatus.NOT_FUNCTIONAL) {
-      await this.notificationService.createRobotNotFunctionalNotifications(robot.name);
+      // disable notifications for now
+      // await this.notificationService.createRobotNotFunctionalNotifications(robot.name);
     }
 
     const updatedRobot = await this.repository.update({
