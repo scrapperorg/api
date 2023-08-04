@@ -24,7 +24,6 @@ import { IUserRepository } from '@domain/User';
 import { InvalidException } from '@lib';
 import { fromBuffer } from 'file-type';
 import { NotificationService } from './Notification.service';
-import { NotificationType } from '@domain/Notification';
 
 @injectable()
 export class DocumentService {
@@ -120,11 +119,11 @@ export class DocumentService {
     const updatedDoc = await this.documentRepository.update(document);
 
     // cancel existing deadline jobs if there are any
-    await this.notificationService.cancelDeadlineReminders(document);
+    this.notificationService.cancelDeadlineReminders(document);
 
     // set new deadline jobs only if decision has not been made
     if (!hasDecisionBeenMade) {
-      await this.notificationService.setDeadlineReminders(document);
+      this.notificationService.setDeadlineReminders(document);
     }
 
     return this.documentMap.toDTO(updatedDoc);
