@@ -26,4 +26,5 @@ export interface INotificationRepository {
   bulkSave(dtos: Partial<Notification>[]): Promise<void>;
   update(id: string, dto: Partial<Notification>): Promise<Notification>;
   delete(id: string): Promise<void>;
+  deleteAll(id: string): Promise<void>;
 }
