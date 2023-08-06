@@ -3,7 +3,7 @@ import { IUserAPIincomingDTO, IUserAPIDTO, ChangePasswordDTO } from '@controller
 import { EncryptionService, UserTokenClaims } from './Encryption.service';
 import { TYPES } from '@server/types';
 import { UserMap } from '../mappers/User.map';
-import { IUserRepository, Role, User, UserStatus } from '@domain/User';
+import { IUserRepository, User, UserStatus } from '@domain/User';
 import { NoSuchElementException } from '@lib';
 import { Source } from '@domain/Document';
 @injectable()

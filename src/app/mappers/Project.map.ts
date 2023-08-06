@@ -19,6 +19,8 @@ export class ProjectMap {
       presentsInterest: false,
       attachments: project.attachments?.toArray(),
       source: project.source,
+      publicationDate: project.publicationDate,
+      url: project.url,
       esteProceduraDeUrgenta: project.esteProceduraDeUrgenta,
     };
 

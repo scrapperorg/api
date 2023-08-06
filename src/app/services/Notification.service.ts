@@ -11,6 +11,7 @@ import {
 import { NotificationMap } from '@mappers/Notification.map';
 import { INotificationAPIDTO, INotificationAPIIncomingDTO } from '@controllers/dtos';
 import { QueueService } from './Queue/Queue.service';
+import { UserService } from '@services/User.service';
 
 interface Reminder {
   notificationType: NotificationType;
@@ -24,6 +25,7 @@ export class NotificationService {
     @inject(TYPES.NOTIFICATION_REPOSITORY) private readonly repository: INotificationRepository,
     @inject(TYPES.NOTIFICATION_MAP) private readonly mapper: NotificationMap,
     @inject(TYPES.QUEUE_SERVICE) private readonly queueService: QueueService,
+    @inject(TYPES.USER_SERVICE) private readonly userService: UserService,
   ) {}
 
   private notificationMessages = {
@@ -36,6 +38,7 @@ export class NotificationService {
     DEADLINE_PASSED: (title: string) =>
       `Termenul limita a fost depasit pentru documentul: ${title}`,
     RESET_PASSWORD: (email: string) => `Userul cu email ${email} a solicitat resetarea parolei`,
+    ROBOT_NOT_FUNCTIONAL: (robotName: string) => robotName,
   };
 
   public async subscribeToNotificationQueue(): Promise<void> {
@@ -81,6 +84,16 @@ export class NotificationService {
     }
 
     return await this.repository.delete(id);
+  }
+
+  async deleteAll(id: string): Promise<void> {
+    const entries = await this.repository.get({ user: id });
+
+    if (entries.length === 0) {
+      throw new Error('Notification not found');
+    }
+
+    return await this.repository.deleteAllByUserId(id);
   }
 
   async schedule(
@@ -159,6 +172,27 @@ export class NotificationService {
         reminder.executionDate,
       );
     }
+  }
+
+  async createRobotNotFunctionalNotifications(robotName: string): Promise<void> {
+    const usersToNotify = await this.userService.getAll();
+    const notifications = usersToNotify.map((user) => {
+      return {
+        message: this.notificationMessages.ROBOT_NOT_FUNCTIONAL(robotName),
+        type: NotificationType.ROBOT_NOT_FUNCTIONAL,
+        user: user.id,
+      };
+    });
+
+    await this.repository.bulkSave(notifications);
+  }
+
+  async cancelRobotNotFunctionalNotifications(robotName: string): Promise<void> {
+    const notificationsToCancel = await this.repository.get({
+      message: this.notificationMessages.ROBOT_NOT_FUNCTIONAL(robotName),
+    });
+
+    await this.repository.deleteMany(notificationsToCancel);
   }
 
   async createNewResetPasswordNotification(usersToNotify: User[], userRequestingChange: User) {

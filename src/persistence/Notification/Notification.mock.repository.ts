@@ -4,6 +4,12 @@ import { NoSuchElementException } from '@lib';
 
 @injectable()
 export class NotificationMockRepository implements INotificationRepository {
+  deleteMany(notifications: Notification[]): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  deleteAllByUserId(id: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   bulkSave(dtos: Partial<Notification>[]): Promise<void> {
     throw new Error('Method not implemented.');
   }

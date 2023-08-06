@@ -18,6 +18,23 @@ export class NotificationRepository implements INotificationRepository {
     this.notificationEM = em.getRepository(NotificationSchema);
   }
 
+  async deleteAllByUserId(id: string): Promise<void> {
+    const notifications = await this.notificationEM.find({ user: id });
+    notifications.forEach((notification) => {
+      this.notificationEM.remove(notification);
+    });
+
+    await this.notificationEM.flush();
+  }
+
+  async deleteMany(notifications: Notification[]): Promise<void> {
+    notifications.forEach((notification) => {
+      this.notificationEM.remove(notification);
+    });
+
+    await this.notificationEM.flush();
+  }
+
   async get(params: IGetNotificationsParams): Promise<Notification[]> {
     const notifications = await this.notificationEM.find(params);
     return notifications;

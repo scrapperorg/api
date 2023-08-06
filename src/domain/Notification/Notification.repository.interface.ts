@@ -8,6 +8,7 @@ export enum NotificationType {
   DEADLINE_REACHED = 'DEADLINE_REACHED',
   DEADLINE_PASSED = 'DEADLINE_PASSED',
   RESET_PASSWORD = 'RESET_PASSWORD',
+  ROBOT_NOT_FUNCTIONAL = 'ROBOT_NOT_FUNCTIONAL',
 }
 
 export interface IGetNotificationsParams {
@@ -16,6 +17,7 @@ export interface IGetNotificationsParams {
   read?: boolean;
   type?: NotificationType;
   createdAt?: Date | Record<string, Date>;
+  message?: string;
 }
 
 export interface INotificationRepository {
@@ -25,4 +27,6 @@ export interface INotificationRepository {
   bulkSave(dtos: Partial<Notification>[]): Promise<void>;
   update(id: string, dto: Partial<Notification>): Promise<Notification>;
   delete(id: string): Promise<void>;
+  deleteAllByUserId(id: string): Promise<void>;
+  deleteMany(notifications: Notification[]): Promise<void>;
 }
