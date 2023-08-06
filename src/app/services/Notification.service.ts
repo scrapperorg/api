@@ -87,6 +87,16 @@ export class NotificationService {
     return await this.repository.delete(id);
   }
 
+  async deleteAll(id: string): Promise<void> {
+    const entries = await this.repository.get({ user: id });
+
+    if (entries.length === 0) {
+      throw new Error('Notification not found');
+    }
+
+    return await this.repository.deleteAll(id);
+  }
+
   async schedule(
     type: NotificationType,
     data: INotificationAPIIncomingDTO,

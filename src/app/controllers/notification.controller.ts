@@ -77,5 +77,19 @@ export class NotificationController {
         return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
       }
     });
+
+    this.router.delete('/', isAuthenticated, async (req, res) => {
+      if (!req.user) {
+        return res.status(statusMap.NoSuchElementException);
+      }
+
+      try {
+        await this.notificationService.deleteAll(req.user.id);
+        return res.status(HttpStatus.OK).json({ message: 'Notification deleted' });
+      } catch (error: any) {
+        const errorType: Exception = error.constructor.name;
+        return res.status(statusMap[errorType] ?? HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+      }
+    });
   }
 }
