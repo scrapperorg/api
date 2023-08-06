@@ -286,7 +286,9 @@ export class DocumentController {
         }
         res.setHeader(
           'Content-Disposition',
-          `attachment; filename=${document.id + '_highlight.pdf'}`,
+          `attachment; filename=${
+            document.title.replace(/[\u{0080}-\u{10FFFF}]/gu, '') + '_highlight.pdf'
+          }`,
         );
         res.setHeader('Content-Length', buffer.length);
         return res.send(buffer);
@@ -310,7 +312,12 @@ export class DocumentController {
         if (fileType) {
           res.setHeader('Content-Type', fileType.mime);
         }
-        res.setHeader('Content-Disposition', `attachment; filename=${document.title + '_ocr.pdf'}`);
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename=${
+            document.title.replace(/[\u{0080}-\u{10FFFF}]/gu, '') + '_ocr.pdf'
+          }`,
+        );
         res.setHeader('Content-Length', buffer.length);
         return res.send(buffer);
       } catch (error: any) {
