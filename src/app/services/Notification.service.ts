@@ -38,8 +38,7 @@ export class NotificationService {
     DEADLINE_PASSED: (title: string) =>
       `Termenul limita a fost depasit pentru documentul: ${title}`,
     RESET_PASSWORD: (email: string) => `Userul cu email ${email} a solicitat resetarea parolei`,
-    ROBOT_NOT_FUNCTIONAL: (robotName: string) =>
-      `Robotul ${robotName} a incetat sa mai functioneze`,
+    ROBOT_NOT_FUNCTIONAL: (robotName: string) => robotName,
   };
 
   public async subscribeToNotificationQueue(): Promise<void> {
@@ -94,7 +93,7 @@ export class NotificationService {
       throw new Error('Notification not found');
     }
 
-    return await this.repository.deleteAll(id);
+    return await this.repository.deleteAllByUserId(id);
   }
 
   async schedule(
@@ -186,6 +185,14 @@ export class NotificationService {
     });
 
     await this.repository.bulkSave(notifications);
+  }
+
+  async cancelRobotNotFunctionalNotifications(robotName: string): Promise<void> {
+    const notificationsToCancel = await this.repository.get({
+      message: this.notificationMessages.ROBOT_NOT_FUNCTIONAL(robotName),
+    });
+
+    await this.repository.deleteMany(notificationsToCancel);
   }
 
   async createNewResetPasswordNotification(usersToNotify: User[], userRequestingChange: User) {
