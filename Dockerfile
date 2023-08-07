@@ -23,5 +23,7 @@ COPY --from=dependencies /app/package.json ./package.json
 COPY --from=dependencies /app/prod_yarn.lock ./yarn.lock
 COPY --from=build /app/dist ./dist
 
+RUN export NODE_TLS_REJECT_UNAUTHORIZED=0
+
 EXPOSE 3000
 CMD yarn start
