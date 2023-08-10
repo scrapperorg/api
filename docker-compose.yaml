@@ -3,6 +3,7 @@ version: '3.7'
 services:
   postgres:
     image: postgres:latest
+    restart: on-failure
     ports:
       - 5432:5432
     environment:
@@ -27,6 +28,7 @@ services:
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    restart: on-failure
     ports:
       - ${ES_PORT}:9200
     command: >
@@ -52,6 +54,7 @@ services:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
       - kibanadata:/usr/share/kibana/data
+    restart: on-failure
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -76,6 +79,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+    restart: on-failure
     ports:
       - 9600:9600
       - 5044:5044
@@ -97,6 +101,7 @@ services:
     build:
       context: ./
       target: build
+    restart: on-failure
     ports:
       - 3000:3000
     environment:
