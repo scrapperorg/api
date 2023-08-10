@@ -176,7 +176,19 @@ export class NotificationService {
 
   async createRobotNotFunctionalNotifications(robotName: string): Promise<void> {
     const usersToNotify = await this.userService.getAll();
-    const notifications = usersToNotify.map((user) => {
+    const existingRobotNotFunctionalNotifications = await this.repository.get({
+      message: robotName,
+    });
+
+    const usersWithoutRobotNotFunctionalNotification = usersToNotify.filter((user) => {
+      return !existingRobotNotFunctionalNotifications.find((notification) => {
+        // notification.user type is wrong, it is declared as string but in reality it is a reference to a User
+        // TODO Fix relationship
+        return (notification.user as any).id === user.id;
+      });
+    });
+
+    const notifications = usersWithoutRobotNotFunctionalNotification.map((user) => {
       return {
         message: this.notificationMessages.ROBOT_NOT_FUNCTIONAL(robotName),
         type: NotificationType.ROBOT_NOT_FUNCTIONAL,
