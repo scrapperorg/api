@@ -1,19 +1,11 @@
 import PgBoss from 'pg-boss';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@server/types';
-import { MikroORM } from '@mikro-orm/core';
 import { IQueueService } from './Queue.service.interface';
 
 @injectable()
 export class QueueService implements IQueueService {
-  private queueManager: PgBoss;
-  constructor(@inject(TYPES.DATABASE_CONNECTION) private readonly orm: MikroORM) {
-    const connectionOptions = this.orm.config.getAll();
-    const dbHost = process.env.DB_HOST;
-    const { user, password, dbName, port } = connectionOptions;
-    const dbpath = `postgres://${user}:${password}@${dbHost}:${port}/${dbName}`;
-    this.queueManager = new PgBoss(dbpath);
-  }
+  constructor(@inject(TYPES.JOB_SCHEDULER_CONNECTION) private readonly queueManager: PgBoss) {}
 
   async startQueueManager() {
     await this.queueManager.start();

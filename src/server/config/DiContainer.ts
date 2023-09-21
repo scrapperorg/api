@@ -3,6 +3,7 @@ import { MikroORM, IDatabaseDriver, Connection } from '@mikro-orm/core';
 import { Client as ElasticSearchClient } from '@elastic/elasticsearch';
 
 import { DatabaseClient } from './DatabaseClient';
+import { JobSchedulerClient } from './JobSchedulerClient';
 import { TYPES } from '../types';
 
 import {
@@ -86,6 +87,7 @@ export class DiContainer {
   private readonly diContainer: Container;
   private databaseClient?: DatabaseClient;
   private elasticClient?: ElasticSearchClient;
+  private jobSchedulerClient?: JobSchedulerClient;
 
   constructor() {
     this.diContainer = new Container();
@@ -94,9 +96,11 @@ export class DiContainer {
   public async init(
     databaseClient: DatabaseClient,
     elasticClient: ElasticSearchClient,
+    jobSchedulerClient: JobSchedulerClient,
   ): Promise<Container> {
     this.elasticClient = elasticClient;
     this.databaseClient = databaseClient;
+    this.jobSchedulerClient = jobSchedulerClient;
     await this.diContainer.loadAsync(this.getBindings());
     return this.diContainer;
   }
@@ -105,6 +109,16 @@ export class DiContainer {
     return new AsyncContainerModule(async (bind): Promise<void> => {
       if (!this.databaseClient) throw new Error('no database client configured');
       if (!this.elasticClient) throw new Error('no elastic search client configured');
+      if (!this.jobSchedulerClient) throw new Error('no job scheduler client configured');
+
+      bind<ElasticSearchClient>(TYPES.ELASTIC_SEARCH_CONNECTION).toConstantValue(
+        this.elasticClient,
+      );
+
+      bind<JobSchedulerClient>(TYPES.JOB_SCHEDULER_CONNECTION).toConstantValue(
+        this.jobSchedulerClient,
+      );
+
       const connection = await this.databaseClient.connect();
       if (connection) {
         await connection.getMigrator().up();
@@ -115,10 +129,6 @@ export class DiContainer {
         this.configure();
         await this.postConfigure();
       }
-
-      bind<ElasticSearchClient>(TYPES.ELASTIC_SEARCH_CONNECTION).toConstantValue(
-        this.elasticClient,
-      );
     });
   }
 
